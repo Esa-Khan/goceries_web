@@ -3,7 +3,10 @@
 namespace App\Repositories;
 
 use App\Models\Food;
+use Illuminate\Container\Container as Application;
 use InfyOm\Generator\Common\BaseRepository;
+use Prettus\Repository\Contracts\CacheableInterface;
+use Prettus\Repository\Traits\CacheableRepository;
 
 /**
  * Class FoodRepository
@@ -13,9 +16,11 @@ use InfyOm\Generator\Common\BaseRepository;
  * @method Food findWithoutFail($id, $columns = ['*'])
  * @method Food find($id, $columns = ['*'])
  * @method Food first($columns = ['*'])
-*/
-class FoodRepository extends BaseRepository
+ */
+class FoodRepository extends BaseRepository implements CacheableInterface
 {
+
+    use CacheableRepository;
     /**
      * @var array
      */
@@ -26,6 +31,8 @@ class FoodRepository extends BaseRepository
         'description',
         'ingredients',
         'weight',
+        'package_items_count',
+        'unit',
         'featured',
         'restaurant_id',
         'category_id'
@@ -42,8 +49,18 @@ class FoodRepository extends BaseRepository
     /**
      * get my foods
      **/
-    public function myFoods(){
+    public function myFoods()
+    {
         return Food::join("user_restaurants", "user_restaurants.restaurant_id", "=", "foods.restaurant_id")
             ->where('user_restaurants.user_id', auth()->id())->get();
+    }
+
+    public function groupedByRestaurants()
+    {
+        $foods = [];
+        foreach ($this->all() as $model) {
+            $foods[$model->restaurant->name][$model->id] = $model->name;
+        }
+        return $foods;
     }
 }

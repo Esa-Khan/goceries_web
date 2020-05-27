@@ -31,7 +31,7 @@ class FavoriteDataTable extends DataTable
                 return getDateColumn($favorite, 'updated_at');
             })
             ->editColumn('extras', function ($favorite) {
-                return getLinksColumn($favorite->extras, 'extras', 'id', 'name');
+                return getArrayColumn($favorite->extras, 'name');
             })
             ->addColumn('action', 'favorites.datatables_actions')
             ->rawColumns(array_merge($columns, ['action']));

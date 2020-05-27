@@ -1,42 +1,20 @@
 @if($customFields)
-<h5 class="col-12 pb-4">{!! trans('lang.main_fields') !!}</h5>
+    <h5 class="col-12 pb-4">{!! trans('lang.main_fields') !!}</h5>
 @endif
 <div style="flex: 50%;max-width: 50%;padding: 0 4px;" class="column">
-<!-- Name Field -->
-<div class="form-group row ">
-  {!! Form::label('name', trans("lang.restaurant_name"), ['class' => 'col-3 control-label text-right']) !!}
-  <div class="col-9">
-    {!! Form::text('name', null,  ['class' => 'form-control','placeholder'=>  trans("lang.restaurant_name_placeholder")]) !!}
-    <div class="form-text text-muted">
-      {{ trans("lang.restaurant_name_help") }}
-    </div>
-  </div>
-</div>
-
-@hasrole('admin')
-<!-- Users Field -->
-<div class="form-group row ">
-    {!! Form::label('users[]', trans("lang.restaurant_users"),['class' => 'col-3 control-label text-right']) !!}
-    <div class="col-9">
-        {!! Form::select('users[]', $user, $usersSelected, ['class' => 'select2 form-control' , 'multiple'=>'multiple']) !!}
-        <div class="form-text text-muted">{{ trans("lang.restaurant_users_help") }}</div>
-    </div>
-</div>
-
-<!-- admin_commission Field -->
-<div class="form-group row ">
-    {!! Form::label('admin_commission', trans("lang.restaurant_admin_commission"), ['class' => 'col-3 control-label text-right']) !!}
-    <div class="col-9">
-        {!! Form::number('admin_commission', null,  ['class' => 'form-control','step'=>'any','placeholder'=>  trans("lang.restaurant_admin_commission_placeholder")]) !!}
-        <div class="form-text text-muted">
-            {{ trans("lang.restaurant_admin_commission_help") }}
+    <!-- Name Field -->
+    <div class="form-group row ">
+        {!! Form::label('name', trans("lang.restaurant_name"), ['class' => 'col-3 control-label text-right']) !!}
+        <div class="col-9">
+            {!! Form::text('name', null,  ['class' => 'form-control','placeholder'=>  trans("lang.restaurant_name_placeholder")]) !!}
+            <div class="form-text text-muted">
+                {{ trans("lang.restaurant_name_help") }}
+            </div>
         </div>
     </div>
-</div>
-@endhasrole
 
-@hasanyrole('manager')
-<!-- Users Field -->
+    @hasanyrole('admin|manager')
+    <!-- Users Field -->
     <div class="form-group row ">
         {!! Form::label('drivers[]', trans("lang.restaurant_drivers"),['class' => 'col-3 control-label text-right']) !!}
         <div class="col-9">
@@ -44,7 +22,7 @@
             <div class="form-text text-muted">{{ trans("lang.restaurant_drivers_help") }}</div>
         </div>
     </div>
-<!-- delivery_fee Field -->
+    <!-- delivery_fee Field -->
     <div class="form-group row ">
         {!! Form::label('delivery_fee', trans("lang.restaurant_delivery_fee"), ['class' => 'col-3 control-label text-right']) !!}
         <div class="col-9">
@@ -54,9 +32,32 @@
             </div>
         </div>
     </div>
-@endhasrole
 
-<!-- Phone Field -->
+    <!-- delivery_range Field -->
+    <div class="form-group row ">
+        {!! Form::label('delivery_range', trans("lang.restaurant_delivery_range"), ['class' => 'col-3 control-label text-right']) !!}
+        <div class="col-9">
+            {!! Form::number('delivery_range', null,  ['class' => 'form-control', 'step'=>'any','placeholder'=>  trans("lang.restaurant_delivery_range_placeholder")]) !!}
+            <div class="form-text text-muted">
+                {{ trans("lang.restaurant_delivery_range_help") }}
+            </div>
+        </div>
+    </div>
+
+    <!-- default_tax Field -->
+    <div class="form-group row ">
+        {!! Form::label('default_tax', trans("lang.restaurant_default_tax"), ['class' => 'col-3 control-label text-right']) !!}
+        <div class="col-9">
+            {!! Form::number('default_tax', null,  ['class' => 'form-control', 'step'=>'any','placeholder'=>  trans("lang.restaurant_default_tax_placeholder")]) !!}
+            <div class="form-text text-muted">
+                {{ trans("lang.restaurant_default_tax_help") }}
+            </div>
+        </div>
+    </div>
+
+    @endhasrole
+
+    <!-- Phone Field -->
     <div class="form-group row ">
         {!! Form::label('phone', trans("lang.restaurant_phone"), ['class' => 'col-3 control-label text-right']) !!}
         <div class="col-9">
@@ -67,7 +68,7 @@
         </div>
     </div>
 
-<!-- Mobile Field -->
+    <!-- Mobile Field -->
     <div class="form-group row ">
         {!! Form::label('mobile', trans("lang.restaurant_mobile"), ['class' => 'col-3 control-label text-right']) !!}
         <div class="col-9">
@@ -78,19 +79,18 @@
         </div>
     </div>
 
-<!-- Address Field -->
-<div class="form-group row ">
-  {!! Form::label('address', trans("lang.restaurant_address"), ['class' => 'col-3 control-label text-right']) !!}
-  <div class="col-9">
-    {!! Form::text('address', null,  ['class' => 'form-control','placeholder'=>  trans("lang.restaurant_address_placeholder")]) !!}
-    <div class="form-text text-muted">
-      {{ trans("lang.restaurant_address_help") }}
+    <!-- Address Field -->
+    <div class="form-group row ">
+        {!! Form::label('address', trans("lang.restaurant_address"), ['class' => 'col-3 control-label text-right']) !!}
+        <div class="col-9">
+            {!! Form::text('address', null,  ['class' => 'form-control','placeholder'=>  trans("lang.restaurant_address_placeholder")]) !!}
+            <div class="form-text text-muted">
+                {{ trans("lang.restaurant_address_help") }}
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
-
-<!-- Latitude Field -->
+    <!-- Latitude Field -->
     <div class="form-group row ">
         {!! Form::label('latitude', trans("lang.restaurant_latitude"), ['class' => 'col-3 control-label text-right']) !!}
         <div class="col-9">
@@ -101,7 +101,7 @@
         </div>
     </div>
 
-<!-- Longitude Field -->
+    <!-- Longitude Field -->
     <div class="form-group row ">
         {!! Form::label('longitude', trans("lang.restaurant_longitude"), ['class' => 'col-3 control-label text-right']) !!}
         <div class="col-9">
@@ -109,6 +109,27 @@
             <div class="form-text text-muted">
                 {{ trans("lang.restaurant_longitude_help") }}
             </div>
+        </div>
+    </div>
+    <!-- 'Boolean closed Field' -->
+    <div class="form-group row ">
+        {!! Form::label('closed', trans("lang.restaurant_closed"),['class' => 'col-3 control-label text-right']) !!}
+        <div class="checkbox icheck">
+            <label class="col-9 ml-2 form-check-inline">
+                {!! Form::hidden('closed', 0) !!}
+                {!! Form::checkbox('closed', 1, null) !!}
+            </label>
+        </div>
+    </div>
+
+    <!-- 'Boolean available_for_delivery Field' -->
+    <div class="form-group row ">
+        {!! Form::label('available_for_delivery', trans("lang.restaurant_available_for_delivery"),['class' => 'col-3 control-label text-right']) !!}
+        <div class="checkbox icheck">
+            <label class="col-9 ml-2 form-check-inline">
+                {!! Form::hidden('available_for_delivery', 0) !!}
+                {!! Form::checkbox('available_for_delivery', 1, null) !!}
+            </label>
         </div>
     </div>
 
@@ -136,7 +157,8 @@
                 name: "{!! $restaurant->getFirstMedia('image')->name !!}",
                 size: "{!! $restaurant->getFirstMedia('image')->size !!}",
                 type: "{!! $restaurant->getFirstMedia('image')->mime_type !!}",
-                collection_name: "{!! $restaurant->getFirstMedia('image')->collection_name !!}"};
+                collection_name: "{!! $restaurant->getFirstMedia('image')->collection_name !!}"
+            };
                     @endif
             var dz_var15671147011688676454ble = $(".dropzone.image").dropzone({
                     url: "{!!url('uploads/store')!!}",
@@ -144,18 +166,18 @@
                     maxFiles: 1,
                     init: function () {
                         @if(isset($restaurant) && $restaurant->hasMedia('image'))
-                        dzInit(this,var15671147011688676454ble,'{!! url($restaurant->getFirstMediaUrl('image','thumb')) !!}')
+                        dzInit(this, var15671147011688676454ble, '{!! url($restaurant->getFirstMediaUrl('image','thumb')) !!}')
                         @endif
                     },
-                    accept: function(file, done) {
-                        dzAccept(file,done,this.element,"{!!config('medialibrary.icons_folder')!!}");
+                    accept: function (file, done) {
+                        dzAccept(file, done, this.element, "{!!config('medialibrary.icons_folder')!!}");
                     },
                     sending: function (file, xhr, formData) {
-                        dzSending(this,file,formData,'{!! csrf_token() !!}');
+                        dzSending(this, file, formData, '{!! csrf_token() !!}');
                     },
                     maxfilesexceeded: function (file) {
                         dz_var15671147011688676454ble[0].mockFile = '';
-                        dzMaxfile(this,file);
+                        dzMaxfile(this, file);
                     },
                     complete: function (file) {
                         dzComplete(this, file, var15671147011688676454ble, dz_var15671147011688676454ble[0].mockFile);
@@ -182,26 +204,65 @@
             <div class="form-text text-muted">{{ trans("lang.restaurant_description_help") }}</div>
         </div>
     </div>
-<!-- Information Field -->
-<div class="form-group row ">
-  {!! Form::label('information', trans("lang.restaurant_information"), ['class' => 'col-3 control-label text-right']) !!}
-  <div class="col-9">
-    {!! Form::textarea('information', null, ['class' => 'form-control','placeholder'=>
-     trans("lang.restaurant_information_placeholder")  ]) !!}
-    <div class="form-text text-muted">{{ trans("lang.restaurant_information_help") }}</div>
-  </div>
-</div>
+    <!-- Information Field -->
+    <div class="form-group row ">
+        {!! Form::label('information', trans("lang.restaurant_information"), ['class' => 'col-3 control-label text-right']) !!}
+        <div class="col-9">
+            {!! Form::textarea('information', null, ['class' => 'form-control','placeholder'=>
+             trans("lang.restaurant_information_placeholder")  ]) !!}
+            <div class="form-text text-muted">{{ trans("lang.restaurant_information_help") }}</div>
+        </div>
+    </div>
 
 </div>
-@if($customFields)
-<div class="clearfix"></div>
+
+@hasrole('admin')
 <div class="col-12 custom-field-container">
-  <h5 class="col-12 pb-4">{!! trans('lang.custom_field_plural') !!}</h5>
-  {!! $customFields !!}
+    <h5 class="col-12 pb-4">{!! trans('lang.admin_area') !!}</h5>
+    <div style="flex: 50%;max-width: 50%;padding: 0 4px;" class="column">
+        <!-- Users Field -->
+        <div class="form-group row ">
+            {!! Form::label('users[]', trans("lang.restaurant_users"),['class' => 'col-3 control-label text-right']) !!}
+            <div class="col-9">
+                {!! Form::select('users[]', $user, $usersSelected, ['class' => 'select2 form-control' , 'multiple'=>'multiple']) !!}
+                <div class="form-text text-muted">{{ trans("lang.restaurant_users_help") }}</div>
+            </div>
+        </div>
+
+        <!-- cuisines Field -->
+        <div class="form-group row ">
+            {!! Form::label('cuisines[]', trans("lang.restaurant_cuisines"),['class' => 'col-3 control-label text-right']) !!}
+            <div class="col-9">
+                {!! Form::select('cuisines[]', $cuisine, $cuisinesSelected, ['class' => 'select2 form-control' , 'multiple'=>'multiple']) !!}
+                <div class="form-text text-muted">{{ trans("lang.restaurant_cuisines_help") }}</div>
+            </div>
+        </div>
+
+    </div>
+    <div style="flex: 50%;max-width: 50%;padding: 0 4px;" class="column">
+        <!-- admin_commission Field -->
+        <div class="form-group row ">
+            {!! Form::label('admin_commission', trans("lang.restaurant_admin_commission"), ['class' => 'col-3 control-label text-right']) !!}
+            <div class="col-9">
+                {!! Form::number('admin_commission', null,  ['class' => 'form-control', 'step'=>'any', 'placeholder'=>  trans("lang.restaurant_admin_commission_placeholder")]) !!}
+                <div class="form-text text-muted">
+                    {{ trans("lang.restaurant_admin_commission_help") }}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+@endhasrole
+
+@if($customFields)
+    <div class="clearfix"></div>
+    <div class="col-12 custom-field-container">
+        <h5 class="col-12 pb-4">{!! trans('lang.custom_field_plural') !!}</h5>
+        {!! $customFields !!}
+    </div>
 @endif
 <!-- Submit Field -->
 <div class="form-group col-12 text-right">
-  <button type="submit" class="btn btn-{{setting('theme_color')}}" ><i class="fa fa-save"></i> {{trans('lang.save')}} {{trans('lang.restaurant')}}</button>
-  <a href="{!! route('restaurants.index') !!}" class="btn btn-default"><i class="fa fa-undo"></i> {{trans('lang.cancel')}}</a>
+    <button type="submit" class="btn btn-{{setting('theme_color')}}"><i class="fa fa-save"></i> {{trans('lang.save')}} {{trans('lang.restaurant')}}</button>
+    <a href="{!! route('restaurants.index') !!}" class="btn btn-default"><i class="fa fa-undo"></i> {{trans('lang.cancel')}}</a>
 </div>

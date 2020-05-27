@@ -15,7 +15,7 @@
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h1 class="m-0 text-dark">{{trans('lang.restaurants_payout_plural')}} <small>{{trans('lang.restaurants_payout_desc')}}</small></h1>
+        <h1 class="m-0 text-dark">{{trans('lang.restaurants_payout_plural')}}<small class="ml-3 mr-3">|</small><small>{{trans('lang.restaurants_payout_desc')}}</small></h1>
       </div><!-- /.col -->
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">

@@ -1,12 +1,19 @@
 <?php
+/**
+ * File name: ExtraDataTable.php
+ * Last modified: 2020.04.30 at 08:21:09
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 namespace App\DataTables;
 
-use App\Models\Extra;
 use App\Models\CustomField;
-use Yajra\DataTables\Services\DataTable;
-use Yajra\DataTables\EloquentDataTable;
+use App\Models\Extra;
 use Barryvdh\DomPDF\Facade as PDF;
+use Yajra\DataTables\EloquentDataTable;
+use Yajra\DataTables\Services\DataTable;
 
 class ExtraDataTable extends DataTable
 {
@@ -31,7 +38,13 @@ class ExtraDataTable extends DataTable
                 return getMediaColumn($extra, 'image');
             })
             ->editColumn('price', function ($extra) {
-                return getPriceColumn($extra);
+                return getPriceColumn($extra, 'price');
+            })
+            ->editColumn('food.name', function ($extra) {
+                return getLinksColumnByRouteName([$extra->food->toArray()], 'foods.edit','id','name');
+            })
+            ->editColumn('food.restaurant.name', function ($extra) {
+                return getLinksColumnByRouteName([$extra->food->restaurant->toArray()], 'restaurants.edit', 'id', 'name');
             })
             ->editColumn('updated_at', function ($extra) {
                 return getDateColumn($extra, 'updated_at');
@@ -40,45 +53,6 @@ class ExtraDataTable extends DataTable
             ->rawColumns(array_merge($columns, ['action']));
 
         return $dataTable;
-    }
-
-    /**
-     * Get query source of dataTable.
-     *
-     * @param \App\Models\Post $model
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function query(Extra $model)
-    {
-        if (auth()->user()->hasRole('admin')) {
-            return $model->newQuery()->with("food")->select('extras.*');
-        } else {
-            return $model->newQuery()->with("food")
-                ->join("foods","foods.id","=","extras.food_id")
-                ->join("user_restaurants", "user_restaurants.restaurant_id", "=", "foods.restaurant_id")
-                ->where('user_restaurants.user_id', auth()->id())
-                ->select('extras.*');
-        }
-    }
-
-    /**
-     * Optional method if you want to use html builder.
-     *
-     * @return \Yajra\DataTables\Html\Builder
-     */
-    public function html()
-    {
-        return $this->builder()
-            ->columns($this->getColumns())
-            ->minifiedAjax()
-            ->addAction(['width' => '80px', 'printable' => false, 'responsivePriority' => '100'])
-            ->parameters(array_merge(
-                config('datatables-buttons.parameters'), [
-                    'language' => json_decode(
-                        file_get_contents(base_path('resources/lang/' . app()->getLocale() . '/datatable.json')
-                        ), true)
-                ]
-            ));
     }
 
     /**
@@ -106,7 +80,18 @@ class ExtraDataTable extends DataTable
             ],
             [
                 'data' => 'food.name',
-                'title' => trans('lang.extra_food_id'),
+                'title' => trans('lang.food'),
+
+            ],
+            [
+                'data' => 'food.restaurant.name',
+                'title' => trans('lang.restaurant'),
+
+            ],
+            [
+                'data' => 'extra_group.name',
+                'name' => 'extraGroup.name',
+                'title' => trans('lang.extra_group'),
 
             ],
             [
@@ -132,13 +117,45 @@ class ExtraDataTable extends DataTable
     }
 
     /**
-     * Get filename for export.
+     * Get query source of dataTable.
      *
-     * @return string
+     * @param \App\Models\Post $model
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    protected function filename()
+    public function query(Extra $model)
     {
-        return 'extrasdatatable_' . time();
+        if (auth()->user()->hasRole('admin')) {
+            return $model->newQuery()->with("food")->with("extraGroup")->with('food.restaurant');
+        } else if (auth()->user()->hasRole('manager')) {
+            return $model->newQuery()->with("food")->with("extraGroup")->with('food.restaurant')
+                ->join("foods", "extras.food_id", "=", "foods.id")
+                ->join("user_restaurants", "foods.restaurant_id", "=", "user_restaurants.restaurant_id")
+                ->where('user_restaurants.user_id', auth()->id())
+                ->groupBy("extras.id")
+                ->select('extras.*');
+        } else {
+            return $model->newQuery()->with("food")->with("extraGroup")->with('food.restaurant');
+        }
+    }
+
+    /**
+     * Optional method if you want to use html builder.
+     *
+     * @return \Yajra\DataTables\Html\Builder
+     */
+    public function html()
+    {
+        return $this->builder()
+            ->columns($this->getColumns())
+            ->minifiedAjax()
+            ->addAction(['width' => '80px', 'printable' => false, 'responsivePriority' => '100'])
+            ->parameters(array_merge(
+                config('datatables-buttons.parameters'), [
+                    'language' => json_decode(
+                        file_get_contents(base_path('resources/lang/' . app()->getLocale() . '/datatable.json')
+                        ), true)
+                ]
+            ));
     }
 
     /**
@@ -150,5 +167,15 @@ class ExtraDataTable extends DataTable
         $data = $this->getDataForPrint();
         $pdf = PDF::loadView($this->printPreview, compact('data'));
         return $pdf->download($this->filename() . '.pdf');
+    }
+
+    /**
+     * Get filename for export.
+     *
+     * @return string
+     */
+    protected function filename()
+    {
+        return 'extrasdatatable_' . time();
     }
 }

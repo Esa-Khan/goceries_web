@@ -1,4 +1,11 @@
 <?php
+/**
+ * File name: 2019_08_29_213821_create_restaurants_table.php
+ * Last modified: 2020.05.03 at 10:56:45
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -16,13 +23,19 @@ class CreateRestaurantsTable extends Migration
         Schema::create('restaurants', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name', 127);
-            $table->text('description');
-            $table->string('address', 255);
+            $table->text('description')->nullable();
+            $table->string('address', 255)->nullable();
             $table->string('latitude', 24);
             $table->string('longitude', 24);
-            $table->string('phone', 50);
-            $table->string('mobile', 50);
-            $table->text('information');
+            $table->string('phone', 50)->nullable();
+            $table->string('mobile', 50)->nullable();
+            $table->text('information')->nullable();
+            $table->double('admin_commission', 8, 2)->nullable()->default(0);
+            $table->double('delivery_fee', 8, 2)->nullable()->default(0);
+            $table->double('delivery_range', 8, 2)->nullable()->default(0);//added
+            $table->double('default_tax', 8, 2)->nullable()->default(0); // //added
+            $table->boolean('closed')->nullable()->default(0); // //added
+            $table->boolean('available_for_delivery')->nullable()->default(1); //added
             $table->timestamps();
         });
     }

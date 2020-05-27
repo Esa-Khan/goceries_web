@@ -1,16 +1,23 @@
 <?php
+/**
+ * File name: FoodController.php
+ * Last modified: 2020.04.30 at 08:21:08
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 namespace App\Http\Controllers;
 
+use App\Criteria\Foods\FoodsOfUserCriteria;
 use App\DataTables\FoodDataTable;
-use App\Http\Requests;
 use App\Http\Requests\CreateFoodRequest;
 use App\Http\Requests\UpdateFoodRequest;
-use App\Repositories\FoodRepository;
-use App\Repositories\CustomFieldRepository;
-use App\Repositories\UploadRepository;
-use App\Repositories\RestaurantRepository;
 use App\Repositories\CategoryRepository;
+use App\Repositories\CustomFieldRepository;
+use App\Repositories\RestaurantRepository;
+use App\Repositories\FoodRepository;
+use App\Repositories\UploadRepository;
 use Flash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -72,9 +79,9 @@ class FoodController extends Controller
     {
 
         $category = $this->categoryRepository->pluck('name', 'id');
-        if (auth()->user()->hasRole('admin')){
+        if (auth()->user()->hasRole('admin')) {
             $restaurant = $this->restaurantRepository->pluck('name', 'id');
-        }else{
+        } else {
             $restaurant = $this->restaurantRepository->myRestaurants()->pluck('name', 'id');
         }
         $hasCustomField = in_array($this->foodRepository->model(), setting('custom_field_models', []));
@@ -119,9 +126,11 @@ class FoodController extends Controller
      * @param int $id
      *
      * @return Response
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function show($id)
     {
+        $this->foodRepository->pushCriteria(new FoodsOfUserCriteria(auth()->id()));
         $food = $this->foodRepository->findWithoutFail($id);
 
         if (empty($food)) {
@@ -139,19 +148,20 @@ class FoodController extends Controller
      * @param int $id
      *
      * @return Response
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function edit($id)
     {
+        $this->foodRepository->pushCriteria(new FoodsOfUserCriteria(auth()->id()));
         $food = $this->foodRepository->findWithoutFail($id);
         if (empty($food)) {
             Flash::error(__('lang.not_found', ['operator' => __('lang.food')]));
-
             return redirect(route('foods.index'));
         }
         $category = $this->categoryRepository->pluck('name', 'id');
-        if (auth()->user()->hasRole('admin')){
+        if (auth()->user()->hasRole('admin')) {
             $restaurant = $this->restaurantRepository->pluck('name', 'id');
-        }else{
+        } else {
             $restaurant = $this->restaurantRepository->myRestaurants()->pluck('name', 'id');
         }
         $customFieldsValues = $food->customFieldsValues()->with('customField')->get();
@@ -171,9 +181,11 @@ class FoodController extends Controller
      * @param UpdateFoodRequest $request
      *
      * @return Response
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function update($id, UpdateFoodRequest $request)
     {
+        $this->foodRepository->pushCriteria(new FoodsOfUserCriteria(auth()->id()));
         $food = $this->foodRepository->findWithoutFail($id);
 
         if (empty($food)) {
@@ -212,18 +224,23 @@ class FoodController extends Controller
      */
     public function destroy($id)
     {
-        $food = $this->foodRepository->findWithoutFail($id);
+        if (!env('APP_DEMO', false)) {
+            $this->foodRepository->pushCriteria(new FoodsOfUserCriteria(auth()->id()));
+            $food = $this->foodRepository->findWithoutFail($id);
 
-        if (empty($food)) {
-            Flash::error('Food not found');
+            if (empty($food)) {
+                Flash::error('Food not found');
 
-            return redirect(route('foods.index'));
+                return redirect(route('foods.index'));
+            }
+
+            $this->foodRepository->delete($id);
+
+            Flash::success(__('lang.deleted_successfully', ['operator' => __('lang.food')]));
+
+        } else {
+            Flash::warning('This is only demo app you can\'t change this section ');
         }
-
-        $this->foodRepository->delete($id);
-
-        Flash::success(__('lang.deleted_successfully', ['operator' => __('lang.food')]));
-
         return redirect(route('foods.index'));
     }
 

@@ -1,4 +1,11 @@
 <?php
+/**
+ * File name: PayPalController.php
+ * Last modified: 2020.05.04 at 09:04:18
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 namespace App\Http\Controllers;
 
@@ -7,10 +14,10 @@ use App\IPNStatus;
 use App\Item;
 use App\Notifications\NewOrder;
 use App\Repositories\CartRepository;
-use App\Repositories\FoodOrderRepository;
 use App\Repositories\NotificationRepository;
 use App\Repositories\OrderRepository;
 use App\Repositories\PaymentRepository;
+use App\Repositories\FoodOrderRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -64,14 +71,15 @@ class PayPalController extends Controller
         $delivery_id = $request->get('delivery_address_id');
         if (!empty($user)) {
             $cart = $this->getCheckoutData($user->id, $delivery_id);
-
             try {
                 $response = $this->provider->setExpressCheckout($cart);
                 return redirect($response['paypal_link']);
             } catch (\Exception $e) {
                 session()->put(['code' => 'danger', 'message' => "Error processing PayPal payment for your order :" . $e->getMessage()]);
+                return redirect(route('paypal.index'));
             }
         }
+        return redirect(route('paypal.index'));
     }
 
     /**
@@ -92,7 +100,7 @@ class PayPalController extends Controller
             if (!empty($user)) {
                 $carts = $this->cartRepository->findByField('user_id', $user_id);
                 foreach ($carts as $cart) {
-                    $price = $cart->food->price;
+                    $price = $cart->food->discount_price > 0 ? $cart->food->discount_price : $cart->food->price;
                     foreach ($cart->extras as $extra){
                         $price += $extra->price;
                     }
@@ -143,7 +151,6 @@ class PayPalController extends Controller
 
         // Verify Express Checkout Token
         $response = $this->provider->getExpressCheckoutDetails($token);
-//        $userId = $response['DESC'];
         $cart = $this->getCheckoutData($userId, $deliveryAddressId);
 
         if (in_array(strtoupper($response['ACK']), ['SUCCESS', 'SUCCESSWITHWARNING'])) {
@@ -173,7 +180,7 @@ class PayPalController extends Controller
      *
      * @return \App\Models\Order
      */
-    protected function createOrder($userId, $deliveryAddressId, $status)
+    protected function createOrder($userId, $deliveryAddressId = null, $status = '')
     {
         if (!strcasecmp($status, 'Completed') || !strcasecmp($status, 'Processed')) {
             $amount = 0;
@@ -184,14 +191,16 @@ class PayPalController extends Controller
                 foreach ($carts as $cart) {
                     $orders['foods'][] = [
                         'food_id' => $cart->food->id,
-                        'price' => $cart->food->price,
+                        'price' => $cart->food->discount_price > 0 ? $cart->food->discount_price : $cart->food->price,
                         'quantity' => $cart->quantity,
                         'extras' => $cart->extras->pluck('id')->toArray(),
                     ];
 
                 }
                 $orders['user_id'] = $user->id;
-                $orders['delivery_address_id'] = $deliveryAddressId;
+                if (!empty($deliveryAddressId)) {
+                    $orders['delivery_address_id'] = $deliveryAddressId;
+                }
                 $orders['order_status_id'] = 1;
                 $orders['tax'] = setting('default_tax', 0);
                 $orders['delivery_fee'] = $cart->food->restaurant->delivery_fee;

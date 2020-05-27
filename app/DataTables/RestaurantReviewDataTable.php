@@ -1,13 +1,27 @@
 <?php
+/**
+ * File name: RestaurantReviewDataTable.php
+ * Last modified: 2020.05.04 at 09:04:19
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 namespace App\DataTables;
 
-use App\Models\RestaurantReview;
+use App\Criteria\RestaurantReviews\RestaurantReviewsOfUserCriteria;
+use App\Criteria\RestaurantReviews\OrderRestaurantReviewsOfUserCriteria;
 use App\Models\CustomField;
-use Yajra\DataTables\Services\DataTable;
-use Yajra\DataTables\EloquentDataTable;
+use App\Models\RestaurantReview;
+use App\Repositories\RestaurantReviewRepository;
 use Barryvdh\DomPDF\Facade as PDF;
+use Yajra\DataTables\EloquentDataTable;
+use Yajra\DataTables\Services\DataTable;
 
+/**
+ * Class RestaurantReviewDataTable
+ * @package App\DataTables
+ */
 class RestaurantReviewDataTable extends DataTable
 {
     /**
@@ -15,6 +29,24 @@ class RestaurantReviewDataTable extends DataTable
      * @var array
      */
     public static $customFields = [];
+
+    /**
+     * @var RestaurantReviewRepository
+     */
+    private $restaurantReviewRepo;
+
+    private $myReviews;
+
+
+    /**
+     * RestaurantReviewDataTable constructor.
+     * @param RestaurantReviewRepository $restaurantReviewRepo
+     */
+    public function __construct(RestaurantReviewRepository $restaurantReviewRepo)
+    {
+        $this->restaurantReviewRepo = $restaurantReviewRepo;
+        $this->myReviews = $this->restaurantReviewRepo->getByCriteria(new RestaurantReviewsOfUserCriteria(auth()->id()))->pluck('id')->toArray();
+    }
 
     /**
      * Build DataTable class.
@@ -29,8 +61,9 @@ class RestaurantReviewDataTable extends DataTable
         $dataTable = $dataTable
             ->editColumn('updated_at', function ($restaurant_review) {
                 return getDateColumn($restaurant_review, 'updated_at');
+            })->addColumn('action', function ($restaurant_review) {
+                return view('restaurant_reviews.datatables_actions', ['id' => $restaurant_review->id, 'myReviews' => $this->myReviews])->render();
             })
-            ->addColumn('action', 'restaurant_reviews.datatables_actions')
             ->rawColumns(array_merge($columns, ['action']));
 
         return $dataTable;
@@ -39,19 +72,14 @@ class RestaurantReviewDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\Post $model
+     * @param \App\Models\RestaurantReview $model
      * @return \Illuminate\Database\Eloquent\Builder
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function query(RestaurantReview $model)
     {
-        if (auth()->user()->hasRole('admin')) {
-            return $model->newQuery()->with("user")->with("restaurant")->select('restaurant_reviews.*');
-        } else {
-            return $model->newQuery()->with("user")->with("restaurant")
-                ->join("user_restaurants", "user_restaurants.restaurant_id", "=", "restaurant_reviews.restaurant_id")
-                ->where('user_restaurants.user_id', auth()->id())
-                ->select('restaurant_reviews.*');
-        }
+        $this->restaurantReviewRepo->pushCriteria(new OrderRestaurantReviewsOfUserCriteria(auth()->id()));
+        return $this->restaurantReviewRepo->with("user")->with("restaurant")->newQuery();
 
     }
 

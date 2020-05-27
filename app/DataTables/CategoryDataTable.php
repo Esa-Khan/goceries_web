@@ -1,4 +1,11 @@
 <?php
+/**
+ * File name: CategoryDataTable.php
+ * Last modified: 2020.04.30 at 08:21:08
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 namespace App\DataTables;
 
@@ -37,37 +44,6 @@ class CategoryDataTable extends DataTable
             ->rawColumns(array_merge($columns, ['action']));
 
         return $dataTable;
-    }
-
-    /**
-     * Get query source of dataTable.
-     *
-     * @param \App\Models\Post $model
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function query(Category $model)
-    {
-        return $model->newQuery();
-    }
-
-    /**
-     * Optional method if you want to use html builder.
-     *
-     * @return \Yajra\DataTables\Html\Builder
-     */
-    public function html()
-    {
-        return $this->builder()
-            ->columns($this->getColumns())
-            ->minifiedAjax()
-            ->addAction(['width' => '80px', 'printable' => false, 'responsivePriority' => '100'])
-            ->parameters(array_merge(
-                config('datatables-buttons.parameters'), [
-                    'language' => json_decode(
-                        file_get_contents(base_path('resources/lang/' . app()->getLocale() . '/datatable.json')
-                        ), true)
-                ]
-            ));
     }
 
     /**
@@ -111,13 +87,34 @@ class CategoryDataTable extends DataTable
     }
 
     /**
-     * Get filename for export.
+     * Get query source of dataTable.
      *
-     * @return string
+     * @param \App\Models\Post $model
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    protected function filename()
+    public function query(Category $model)
     {
-        return 'categoriesdatatable_' . time();
+        return $model->newQuery();
+    }
+
+    /**
+     * Optional method if you want to use html builder.
+     *
+     * @return \Yajra\DataTables\Html\Builder
+     */
+    public function html()
+    {
+        return $this->builder()
+            ->columns($this->getColumns())
+            ->minifiedAjax()
+            ->addAction(['width' => '80px', 'printable' => false, 'responsivePriority' => '100'])
+            ->parameters(array_merge(
+                config('datatables-buttons.parameters'), [
+                    'language' => json_decode(
+                        file_get_contents(base_path('resources/lang/' . app()->getLocale() . '/datatable.json')
+                        ), true)
+                ]
+            ));
     }
 
     /**
@@ -129,5 +126,15 @@ class CategoryDataTable extends DataTable
         $data = $this->getDataForPrint();
         $pdf = PDF::loadView($this->printPreview, compact('data'));
         return $pdf->download($this->filename() . '.pdf');
+    }
+
+    /**
+     * Get filename for export.
+     *
+     * @return string
+     */
+    protected function filename()
+    {
+        return 'categoriesdatatable_' . time();
     }
 }

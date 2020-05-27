@@ -41,8 +41,8 @@ class DeliveryAddress extends Model
     protected $casts = [
         'description' => 'string',
         'address' => 'string',
-        'latitude' => 'string',
-        'longitude' => 'string',
+        'latitude' => 'double',
+        'longitude' => 'double',
         'is_default' => 'boolean',
         'user_id' => 'integer'
     ];

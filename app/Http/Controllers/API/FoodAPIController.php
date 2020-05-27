@@ -1,28 +1,34 @@
 <?php
+/**
+ * File name: FoodAPIController.php
+ * Last modified: 2020.05.04 at 09:04:19
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 namespace App\Http\Controllers\API;
 
 
+use App\Criteria\Foods\NearCriteria;
+use App\Criteria\Foods\FoodsOfCuisinesCriteria;
+use App\Criteria\Foods\TrendingWeekCriteria;
+use App\Http\Controllers\Controller;
 use App\Models\Food;
-use App\Repositories\CategoryRepository;
 use App\Repositories\CustomFieldRepository;
 use App\Repositories\FoodRepository;
-use App\Repositories\RestaurantRepository;
 use App\Repositories\UploadRepository;
+use Flash;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use InfyOm\Generator\Criteria\LimitOffsetCriteria;
 use Prettus\Repository\Criteria\RequestCriteria;
-use Illuminate\Support\Facades\Response;
 use Prettus\Repository\Exceptions\RepositoryException;
-use Flash;
 use Prettus\Validator\Exceptions\ValidatorException;
 
 /**
  * Class FoodController
  * @package App\Http\Controllers\API
  */
-
 class FoodAPIController extends Controller
 {
     /** @var  FoodRepository */
@@ -57,10 +63,20 @@ class FoodAPIController extends Controller
         try{
             $this->foodRepository->pushCriteria(new RequestCriteria($request));
             $this->foodRepository->pushCriteria(new LimitOffsetCriteria($request));
+            $this->foodRepository->pushCriteria(new FoodsOfCuisinesCriteria($request));
+            if ($request->get('trending', null) == 'week') {
+                $this->foodRepository->pushCriteria(new TrendingWeekCriteria($request));
+            } else {
+                $this->foodRepository->pushCriteria(new NearCriteria($request));
+            }
+
+//            $this->foodRepository->orderBy('closed');
+//            $this->foodRepository->orderBy('area');
+            $foods = $this->foodRepository->all();
+
         } catch (RepositoryException $e) {
             return $this->sendError($e->getMessage());
         }
-        $foods = $this->foodRepository->all();
 
         return $this->sendResponse($foods->toArray(), 'Foods retrieved successfully');
     }

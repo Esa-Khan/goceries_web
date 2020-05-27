@@ -32,21 +32,11 @@
     function initICheck(){
         $('input[type="checkbox"].permission').on('ifCreated', function (event) {
             var checkbox = $(this);
-            var roleId = $(this).data('role-id');
+            var roleName = $(this).data('role-name');
             var permission = $(this).data('permission');
-            $.ajax({
-                method: "GET",
-                url: "{{url('permissions/role-has-permission')}}",
-                data: {roleId: roleId, permission: permission},
-                dataType: "json"
-            })
-                .done(function (msg) {
-                    if (msg.result) {
-                        checkbox.iCheck('check');
-                    }
-
-                }).always(function () {
-            });
+            if (permission.roles.indexOf(roleName) > -1) {
+                checkbox.iCheck('check');
+            }
         });
 
         $('.icheck input').iCheck({
@@ -68,7 +58,7 @@
             $.ajax({
                 method: "POST",
                 url: url,
-                data: {_token: "{{csrf_token()}}", roleId: roleId, permission: permission}
+                data: {_token: "{{csrf_token()}}", roleId: roleId, permission: permission.permission}
             })
                 .done(function (msg) {
 
@@ -140,7 +130,7 @@
         });
 
         $("#" + tableId + "_filter").html("<div class=\"input-group input-group-sm\">\n" +
-            "  <input type=\"text\" class=\"form-control\" placeholder=\"{{trans('lang.search')}}\" aria-label=\"{{trans('lang.search')}}\">\n" +
+            "  <input type=\"text\" value=\"" + dtable.state().search.search + "\" class=\"form-control\" placeholder=\"{{trans('lang.search')}}\" aria-label=\"{{trans('lang.search')}}\">\n" +
             "  <div class=\"input-group-append\">\n" +
             "    <span class=\"input-group-text\"><i class=\"fa fa-search\"></i></span>\n" +
             "  </div>\n" +

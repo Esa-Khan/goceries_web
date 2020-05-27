@@ -14,6 +14,14 @@
   </div>
 </div>
 
+<!-- Description Field -->
+<div class="form-group row col-6">
+  {!! Form::label('description', 'Description:', ['class' => 'col-3 control-label text-right']) !!}
+  <div class="col-9">
+    <p>{!! $category->description !!}</p>
+  </div>
+</div>
+
 <!-- Image Field -->
 <div class="form-group row col-6">
   {!! Form::label('image', 'Image:', ['class' => 'col-3 control-label text-right']) !!}

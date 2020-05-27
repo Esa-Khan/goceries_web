@@ -85,7 +85,7 @@
                     <div class="form-group row ">
                         {!! Form::label('mail_password', trans("lang.app_setting_mail_password"), ['class' => 'col-4 control-label text-right']) !!}
                         <div class="col-8">
-                            {!! Form::text('mail_password', setting('mail_password'),  ['class' => 'form-control','placeholder'=>  trans("lang.app_setting_mail_password_placeholder")]) !!}
+                            {!! Form::password('mail_password',  ['class' => 'form-control','placeholder'=>  trans("lang.app_setting_mail_password_placeholder")]) !!}
                             <div class="form-text text-muted">
                                 {{ trans("lang.app_setting_mail_password_help") }}
                             </div>

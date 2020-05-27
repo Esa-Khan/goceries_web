@@ -1,28 +1,33 @@
 <?php
+/**
+ * File name: RestaurantAPIController.php
+ * Last modified: 2020.05.04 at 09:04:19
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 namespace App\Http\Controllers\API;
 
 
+use App\Criteria\Restaurants\RestaurantsOfCuisinesCriteria;
+use App\Criteria\Restaurants\NearCriteria;
+use App\Criteria\Restaurants\PopularCriteria;
+use App\Http\Controllers\Controller;
 use App\Models\Restaurant;
 use App\Repositories\CustomFieldRepository;
 use App\Repositories\RestaurantRepository;
 use App\Repositories\UploadRepository;
-use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Log;
 use InfyOm\Generator\Criteria\LimitOffsetCriteria;
 use Prettus\Repository\Criteria\RequestCriteria;
-use Illuminate\Support\Facades\Response;
 use Prettus\Repository\Exceptions\RepositoryException;
-use Flash;
 use Prettus\Validator\Exceptions\ValidatorException;
 
 /**
  * Class RestaurantController
  * @package App\Http\Controllers\API
  */
-
 class RestaurantAPIController extends Controller
 {
     /** @var  RestaurantRepository */
@@ -57,17 +62,19 @@ class RestaurantAPIController extends Controller
      */
     public function index(Request $request)
     {
-        try{
+        try {
             $this->restaurantRepository->pushCriteria(new RequestCriteria($request));
             $this->restaurantRepository->pushCriteria(new LimitOffsetCriteria($request));
+            $this->restaurantRepository->pushCriteria(new RestaurantsOfCuisinesCriteria($request));
+            if ($request->has('popular')) {
+                $this->restaurantRepository->pushCriteria(new PopularCriteria($request));
+            } else {
+                $this->restaurantRepository->pushCriteria(new NearCriteria($request));
+            }
+            $restaurants = $this->restaurantRepository->all();
+
         } catch (RepositoryException $e) {
             return $this->sendError($e->getMessage());
-        }
-        $inputs = $request->all();
-        if($request->has(['myLon','myLat','areaLon','areaLat'])){
-            $restaurants = $this->restaurantRepository->near($inputs['myLon'],$inputs['myLat'],$inputs['areaLon'],$inputs['areaLat']);
-        }else{
-            $restaurants = $this->restaurantRepository->all();
         }
 
         return $this->sendResponse($restaurants->toArray(), 'Restaurants retrieved successfully');
@@ -77,7 +84,7 @@ class RestaurantAPIController extends Controller
      * Display the specified Restaurant.
      * GET|HEAD /restaurants/{id}
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -85,9 +92,12 @@ class RestaurantAPIController extends Controller
     {
         /** @var Restaurant $restaurant */
         if (!empty($this->restaurantRepository)) {
-            try{
+            try {
                 $this->restaurantRepository->pushCriteria(new RequestCriteria($request));
                 $this->restaurantRepository->pushCriteria(new LimitOffsetCriteria($request));
+                if ($request->has(['myLon', 'myLat', 'areaLon', 'areaLat'])) {
+                    $this->restaurantRepository->pushCriteria(new NearCriteria($request));
+                }
             } catch (RepositoryException $e) {
                 return $this->sendError($e->getMessage());
             }
@@ -111,7 +121,7 @@ class RestaurantAPIController extends Controller
     public function store(Request $request)
     {
         $input = $request->all();
-        if (auth()->user()->hasRole('manager')){
+        if (auth()->user()->hasRole('manager')) {
             $input['users'] = [auth()->id()];
         }
         $customFields = $this->customFieldRepository->findByField('custom_field_model', $this->restaurantRepository->model());
@@ -127,7 +137,7 @@ class RestaurantAPIController extends Controller
             return $this->sendError($e->getMessage());
         }
 
-        return $this->sendResponse($restaurant->toArray(),__('lang.saved_successfully', ['operator' => __('lang.restaurant')]));
+        return $this->sendResponse($restaurant->toArray(), __('lang.saved_successfully', ['operator' => __('lang.restaurant')]));
     }
 
     /**
@@ -164,7 +174,7 @@ class RestaurantAPIController extends Controller
             return $this->sendError($e->getMessage());
         }
 
-        return $this->sendResponse($restaurant->toArray(),__('lang.updated_successfully', ['operator' => __('lang.restaurant')]));
+        return $this->sendResponse($restaurant->toArray(), __('lang.updated_successfully', ['operator' => __('lang.restaurant')]));
     }
 
     /**
@@ -184,6 +194,6 @@ class RestaurantAPIController extends Controller
 
         $restaurant = $this->restaurantRepository->delete($id);
 
-        return $this->sendResponse($restaurant,__('lang.deleted_successfully', ['operator' => __('lang.restaurant')]));
+        return $this->sendResponse($restaurant, __('lang.deleted_successfully', ['operator' => __('lang.restaurant')]));
     }
 }

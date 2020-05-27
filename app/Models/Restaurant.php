@@ -1,4 +1,11 @@
 <?php
+/**
+ * File name: Restaurant.php
+ * Last modified: 2020.04.30 at 08:21:09
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 namespace App\Models;
 
@@ -17,6 +24,7 @@ use Spatie\MediaLibrary\Models\Media;
  * @property \Illuminate\Database\Eloquent\Collection Food
  * @property \Illuminate\Database\Eloquent\Collection Gallery
  * @property \Illuminate\Database\Eloquent\Collection RestaurantsReview
+ * @property \Illuminate\Database\Eloquent\Collection[] cuisines
  * @property \Illuminate\Database\Eloquent\Collection User
  * @property \Illuminate\Database\Eloquent\Collection[] Restaurant
  * @property string name
@@ -26,9 +34,13 @@ use Spatie\MediaLibrary\Models\Media;
  * @property string longitude
  * @property string phone
  * @property string mobile
+ * @property string information
  * @property double admin_commission
  * @property double delivery_fee
- * @property string information
+ * @property double default_tax
+ * @property double delivery_range
+ * @property boolean available_for_delivery
+ * @property boolean closed
  */
 class Restaurant extends Model implements HasMedia
 {
@@ -50,6 +62,10 @@ class Restaurant extends Model implements HasMedia
         'mobile',
         'admin_commission',
         'delivery_fee',
+        'default_tax',
+        'delivery_range',
+        'available_for_delivery',
+        'closed',
         'information'
     ];
 
@@ -69,35 +85,38 @@ class Restaurant extends Model implements HasMedia
         'mobile' => 'string',
         'admin_commission' =>'double',
         'delivery_fee'=>'double',
+        'default_tax'=>'double',
+        'delivery_range'=>'double',
+        'available_for_delivery'=>'boolean',
+        'closed'=>'boolean',
         'information' => 'string'
     ];
 
     /**
-     * Validation $adminRules
+     * Validation rules
      *
      * @var array
      */
     public static $adminRules = [
         'name' => 'required',
         'description' => 'required',
-        'image' => 'required',
-        'address' => 'required',
-        'latitude' => 'required',
-        'longitude' => 'required',
-        'admin_commission' => 'required',
+        'delivery_fee' => 'nullable|numeric|min:0',
+        'longitude' => 'required|numeric',
+        'latitude' => 'required|numeric',
+        'admin_commission' => 'required|numeric|min:0',
     ];
 
     /**
-     * Validation $managerRules
+     * Validation rules
      *
      * @var array
      */
     public static $managerRules = [
         'name' => 'required',
         'description' => 'required',
-        'address' => 'required',
-        'latitude' => 'required',
-        'longitude' => 'required',
+        'delivery_fee' => 'nullable|numeric|min:0',
+        'longitude' => 'required|numeric',
+        'latitude' => 'required|numeric',
     ];
 
     /**
@@ -222,5 +241,13 @@ class Restaurant extends Model implements HasMedia
         return $this->belongsToMany(\App\Models\User::class, 'driver_restaurants');
     }
 
-    
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     **/
+    public function cuisines()
+    {
+        return $this->belongsToMany(\App\Models\Cuisine::class, 'restaurant_cuisines');
+    }
+
+
 }

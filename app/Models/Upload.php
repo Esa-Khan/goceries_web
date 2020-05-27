@@ -40,12 +40,16 @@ class Upload extends Model implements HasMedia
     public function getFirstMediaUrl($collectionName = 'default', $conversion = '')
     {
         $url = $this->getFirstMediaUrlTrait($collectionName);
-        $array = explode('.', $url);
-        $extension = strtolower(end($array));
-        if (in_array($extension, ['jpg', 'png', 'gif', 'bmp', 'jpeg'])) {
-            return asset($this->getFirstMediaUrlTrait($collectionName, $conversion));
-        } else {
-            return asset('images/icons/' . $extension . '.png');
+        if($url){
+            $array = explode('.', $url);
+            $extension = strtolower(end($array));
+            if (in_array($extension, ['jpg', 'png', 'gif', 'bmp', 'jpeg'])) {
+                return asset($this->getFirstMediaUrlTrait($collectionName, $conversion));
+            } else {
+                return asset('images/icons/' . $extension . '.png');
+            }
+        }else{
+            return asset('images/image_default.png');
         }
     }
 

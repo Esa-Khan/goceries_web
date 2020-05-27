@@ -1,4 +1,11 @@
 <?php
+/**
+ * File name: Order.php
+ * Last modified: 2020.04.30 at 08:21:08
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 namespace App\Models;
 
@@ -34,6 +41,7 @@ class Order extends Model
         'payment_id',
         'delivery_address_id',
         'delivery_fee',
+        'active',
         'driver_id'
     ];
 
@@ -51,6 +59,7 @@ class Order extends Model
         'payment_id' => 'integer',
         'delivery_address_id' => 'integer',
         'delivery_fee'=>'double',
+        'active'=>'boolean',
         'driver_id' => 'integer',
     ];
 
@@ -63,7 +72,7 @@ class Order extends Model
         'user_id' => 'required|exists:users,id',
         'order_status_id' => 'required|exists:order_statuses,id',
         'payment_id' => 'exists:payments,id',
-        'driver_id' => 'exists:users,id',
+        'driver_id' => 'nullable|exists:users,id',
     ];
 
     /**

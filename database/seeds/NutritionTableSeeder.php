@@ -15,7 +15,8 @@ class NutritionTableSeeder extends Seeder
         
 
         \DB::table('nutrition')->delete();
-        
+        factory(\App\Models\Nutrition::class,50)->create();
+        /*
         \DB::table('nutrition')->insert(array (
             0 => 
             array (
@@ -377,7 +378,7 @@ class NutritionTableSeeder extends Seeder
                 'created_at' => '2019-10-17 23:11:17',
                 'updated_at' => '2019-10-17 23:11:17',
             ),
-        ));
+        ));*/
         
         
     }

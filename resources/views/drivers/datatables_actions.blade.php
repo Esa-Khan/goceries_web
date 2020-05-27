@@ -6,7 +6,7 @@
   @endcan
 
   @can('drivers.edit')
-  <a data-toggle="tooltip" data-placement="bottom" title="{{trans('lang.driver_edit')}}" href="{{ route('drivers.edit', $id) }}" class='btn btn-link'>
+  <a data-toggle="tooltip" data-placement="bottom" title="{{trans('lang.driver_edit')}}" href="{{ route('users.edit', $user_id) }}" class='btn btn-link'>
     <i class="fa fa-edit"></i>
   </a>
   @endcan

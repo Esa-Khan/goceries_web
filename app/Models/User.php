@@ -30,9 +30,17 @@ class User extends Authenticatable implements HasMedia
     }
     use HasRoles;
 
+    /**
+     * Validation rules
+     *
+     * @var array
+     */
+    public static $rules = [
+        'name' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255|unique:users',
+        // 'password' => 'required',
+    ];
     public $table = 'users';
-
-
     /**
      * The attributes that are mass assignable.
      *
@@ -45,7 +53,6 @@ class User extends Authenticatable implements HasMedia
         'api_token',
         'device_token',
     ];
-
     /**
      * The attributes that should be casted to native types.
      *
@@ -59,18 +66,6 @@ class User extends Authenticatable implements HasMedia
         'device_token' => 'string',
         'remember_token' => 'string'
     ];
-
-    /**
-     * Validation rules
-     *
-     * @var array
-     */
-    public static $rules = [
-        'name' => 'required|string|max:255',
-        'email' => 'required|string|email|max:255|unique:users',
-        // 'password' => 'required',
-    ];
-
     /**
      * New Attributes
      *
@@ -124,18 +119,17 @@ class User extends Authenticatable implements HasMedia
     public function getFirstMediaUrl($collectionName = 'default', $conversion = '')
     {
         $url = $this->getFirstMediaUrlTrait($collectionName);
-        $array = explode('.', $url);
-        $extension = strtolower(end($array));
-        if (in_array($extension, config('medialibrary.extensions_has_thumb'))) {
-            return asset($this->getFirstMediaUrlTrait($collectionName, $conversion));
-        } else {
-            return asset(config('medialibrary.icons_folder') . '/' . $extension . '.png');
+        if ($url) {
+            $array = explode('.', $url);
+            $extension = strtolower(end($array));
+            if (in_array($extension, config('medialibrary.extensions_has_thumb'))) {
+                return asset($this->getFirstMediaUrlTrait($collectionName, $conversion));
+            } else {
+                return asset(config('medialibrary.icons_folder') . '/' . $extension . '.png');
+            }
+        }else{
+            return asset('images/avatar_default.png');
         }
-    }
-
-    public function customFieldsValues()
-    {
-        return $this->morphMany('App\Models\CustomFieldValue', 'customizable');
     }
 
     public function getCustomFieldsAttribute()
@@ -151,6 +145,11 @@ class User extends Authenticatable implements HasMedia
             ->get()->toArray();
 
         return convertToAssoc($array, 'name');
+    }
+
+    public function customFieldsValues()
+    {
+        return $this->morphMany('App\Models\CustomFieldValue', 'customizable');
     }
 
     /**

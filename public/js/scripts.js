@@ -1,4 +1,14 @@
+/*
+ * File name: scripts.js
+ * Last modified: 2020.04.30 at 08:21:08
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
+
 $(document).ready(function () {
+    let select2;
+    let options;
     if ($('.icheck input').length > 0) {
         $('.icheck input').iCheck({
             checkboxClass: 'icheckbox_flat-blue',
@@ -12,12 +22,23 @@ $(document).ready(function () {
         });
     }
     if ($('select.select2').length > 0) {
-        var options = {};
-        var select2 = $('select.select2');
+        options = {};
+        select2 = $('select.select2');
+
         if(select2.data('tags')){
             options.tags = select2.data('tags');
         }
-        $('select.select2').select2(options);
+        select2.select2(options);
+    }
+    if ($('select.select2.not-required').length > 0) {
+        options = {};
+        select2 = $('select.select2.not-required');
+        $.each(select2, function (i, element) {
+            options.placeholder = $(element).data('empty');
+            options.allowClear = true;
+            $(element).select2(options);
+            options = {};
+        });
     }
 
     $('[data-toggle=tooltip]').tooltip();

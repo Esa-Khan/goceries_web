@@ -8,6 +8,7 @@ use App\Repositories\RoleRepository;
 use App\Repositories\UploadRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
@@ -53,7 +54,7 @@ class RegisterController extends Controller
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $data
+     * @param array $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
@@ -68,14 +69,14 @@ class RegisterController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param array $data
      * @return
      */
     protected function create(array $data)
     {
         $user = new User;
-        $user->name =  $data['name'];
-        $user->email =  $data['email'];
+        $user->name = $data['name'];
+        $user->email = $data['email'];
         $user->password = Hash::make($data['password']);
         $user->api_token = str_random(60);
         $user->save();
@@ -83,12 +84,6 @@ class RegisterController extends Controller
         $defaultRoles = $this->roleRepository->findByField('default', '1');
         $defaultRoles = $defaultRoles->pluck('name')->toArray();
         $user->assignRole($defaultRoles);
-
-        if(copy(public_path('images/avatar_default.png'),public_path('images/avatar_default_temp.png'))){
-            $user->addMedia(public_path('images/avatar_default_temp.png'))
-                ->withCustomProperties(['uuid' => bcrypt(str_random())])
-                ->toMediaCollection('avatar');
-        }
 
         return $user;
     }

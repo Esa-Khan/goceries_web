@@ -148,7 +148,7 @@
                     <div class="col-8">
                         {!! Form::select('default_currency',
                         $currencies
-                        , setting('default_currency'), ['class' => 'select2 form-control']) !!}
+                        , setting('default_currency_id',1), ['class' => 'select2 form-control']) !!}
                         <div class="form-text text-muted">{{ trans("lang.app_setting_default_currency_help") }}</div>
                     </div>
                 </div>

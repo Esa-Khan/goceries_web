@@ -16,7 +16,7 @@ class CreateNutritionTable extends Migration
         Schema::create('nutrition', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name', 127);
-            $table->integer('quantity')->unsigned()->default(0);
+            $table->integer('quantity')->unsigned()->nullable()->default(0);
             $table->integer('food_id')->unsigned();
             $table->timestamps();
             $table->foreign('food_id')->references('id')->on('foods')->onDelete('cascade')->onUpdate('cascade');

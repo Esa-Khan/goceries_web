@@ -16,7 +16,7 @@
 <div class="form-group row ">
   {!! Form::label('method', trans("lang.restaurants_payout_method"),['class' => 'col-3 control-label text-right']) !!}
   <div class="col-9">
-    {!! Form::select('method', ['Bank' => 'Bank','Cache'=>'Cache'], null, ['class' => 'select2 form-control']) !!}
+      {!! Form::select('method', ['Bank' => trans('lang.bank'),'Cash'=> trans('lang.cash')], null, ['class' => 'select2 form-control']) !!}
     <div class="form-text text-muted">{{ trans("lang.restaurants_payout_method_help") }}</div>
   </div>
 </div>
@@ -26,7 +26,7 @@
 <div class="form-group row ">
   {!! Form::label('amount', trans("lang.restaurants_payout_amount"), ['class' => 'col-3 control-label text-right']) !!}
   <div class="col-9">
-    {!! Form::number('amount', null,  ['class' => 'form-control','placeholder'=>  trans("lang.restaurants_payout_amount_placeholder")]) !!}
+      {!! Form::number('amount', null,  ['class' => 'form-control','step'=>"any",'placeholder'=>  trans("lang.restaurants_payout_amount_placeholder")]) !!}
     <div class="form-text text-muted">
       {{ trans("lang.restaurants_payout_amount_help") }}
     </div>

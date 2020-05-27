@@ -1,12 +1,19 @@
 <?php
+/**
+ * File name: FoodDataTable.php
+ * Last modified: 2020.05.04 at 09:04:18
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 namespace App\DataTables;
 
-use App\Models\Food;
 use App\Models\CustomField;
-use Yajra\DataTables\Services\DataTable;
-use Yajra\DataTables\EloquentDataTable;
+use App\Models\Food;
 use Barryvdh\DomPDF\Facade as PDF;
+use Yajra\DataTables\EloquentDataTable;
+use Yajra\DataTables\Services\DataTable;
 
 class FoodDataTable extends DataTable
 {
@@ -59,11 +66,25 @@ class FoodDataTable extends DataTable
 
         if (auth()->user()->hasRole('admin')) {
             return $model->newQuery()->with("restaurant")->with("category")->select('foods.*')->orderBy('foods.updated_at','desc');
-        } else {
+        } else if (auth()->user()->hasRole('manager')) {
             return $model->newQuery()->with("restaurant")->with("category")
                 ->join("user_restaurants", "user_restaurants.restaurant_id", "=", "foods.restaurant_id")
                 ->where('user_restaurants.user_id', auth()->id())
-                ->select('foods.*')->orderBy('foods.updated_at','desc');
+                ->groupBy('foods.id')
+                ->select('foods.*')->orderBy('foods.updated_at', 'desc');
+        } else if (auth()->user()->hasRole('driver')) {
+            return $model->newQuery()->with("restaurant")->with("category")
+                ->join("driver_restaurants", "driver_restaurants.restaurant_id", "=", "foods.restaurant_id")
+                ->where('driver_restaurants.user_id', auth()->id())
+                ->groupBy('foods.id')
+                ->select('foods.*')->orderBy('foods.updated_at', 'desc');
+        } else if (auth()->user()->hasRole('client')) {
+            return $model->newQuery()->with("restaurant")->with("category")
+                ->join("food_orders", "food_orders.food_id", "=", "foods.id")
+                ->join("orders", "food_orders.order_id", "=", "orders.id")
+                ->where('orders.user_id', auth()->id())
+                ->groupBy('foods.id')
+                ->select('foods.*')->orderBy('foods.updated_at', 'desc');
         }
     }
 

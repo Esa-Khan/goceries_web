@@ -1,4 +1,11 @@
 <?php
+/**
+ * File name: Category.php
+ * Last modified: 2020.05.02 at 08:39:42
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 namespace App\Models;
 
@@ -11,10 +18,11 @@ use Spatie\MediaLibrary\Models\Media;
 /**
  * Class Category
  * @package App\Models
- * @version August 29, 2019, 9:38 pm UTC
+ * @version April 11, 2020, 1:57 pm UTC
  *
  * @property \Illuminate\Database\Eloquent\Collection Food
  * @property string name
+ * @property string description
  */
 class Category extends Model implements HasMedia
 {
@@ -27,7 +35,8 @@ class Category extends Model implements HasMedia
 
 
     public $fillable = [
-        'name'
+        'name',
+        'description'
     ];
 
     /**
@@ -37,6 +46,7 @@ class Category extends Model implements HasMedia
      */
     protected $casts = [
         'name' => 'string',
+        'description' => 'string',
         'image' => 'string'
     ];
 
@@ -46,7 +56,8 @@ class Category extends Model implements HasMedia
      * @var array
      */
     public static $rules = [
-        'name' => 'required'
+        'name' => 'required',
+        'description' => 'required'
     ];
 
     /**
@@ -129,5 +140,13 @@ class Category extends Model implements HasMedia
         return $this->hasMany(\App\Models\Food::class, 'category_id');
     }
 
-    
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     **/
+    public function restaurants()
+    {
+        return $this->belongsToMany(\App\Models\Restaurant::class, 'foods');
+    }
+
+
 }

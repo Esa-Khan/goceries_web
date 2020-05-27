@@ -38,7 +38,7 @@ class RestaurantReview extends Model
     protected $casts = [
         'review' => 'string',
         'user_id' => 'integer',
-        'restaurant_id' => 'integer'
+        'restaurant_id' => 'integer',
     ];
 
     /**
@@ -48,7 +48,9 @@ class RestaurantReview extends Model
      */
     public static $rules = [
         'user_id' => 'required|exists:users,id',
-        'restaurant_id' => 'required|exists:restaurants,id'
+        'restaurant_id' => 'required|exists:restaurants,id',
+        'review' => 'required',
+        'rate' => 'required',
     ];
 
     /**

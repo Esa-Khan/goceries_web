@@ -1,4 +1,10 @@
 <?php
+/**
+ * File name: OrderAPIController.php
+ * Last modified: 2020.05.13 at 19:32:10
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ */
 
 namespace App\Http\Controllers\API;
 
@@ -9,10 +15,10 @@ use App\Models\Order;
 use App\Notifications\NewOrder;
 use App\Notifications\StatusChangedOrder;
 use App\Repositories\CartRepository;
-use App\Repositories\FoodOrderRepository;
 use App\Repositories\NotificationRepository;
 use App\Repositories\OrderRepository;
 use App\Repositories\PaymentRepository;
+use App\Repositories\FoodOrderRepository;
 use App\Repositories\UserRepository;
 use Braintree\Gateway;
 use Flash;
@@ -23,7 +29,6 @@ use InfyOm\Generator\Criteria\LimitOffsetCriteria;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Exceptions\ValidatorException;
-use Stripe\Stripe;
 use Stripe\Token;
 
 /**
@@ -45,6 +50,15 @@ class OrderAPIController extends Controller
     /** @var  NotificationRepository */
     private $notificationRepository;
 
+    /**
+     * OrderAPIController constructor.
+     * @param OrderRepository $orderRepo
+     * @param FoodOrderRepository $foodOrderRepository
+     * @param CartRepository $cartRepo
+     * @param PaymentRepository $paymentRepo
+     * @param NotificationRepository $notificationRepo
+     * @param UserRepository $userRepository
+     */
     public function __construct(OrderRepository $orderRepo, FoodOrderRepository $foodOrderRepository, CartRepository $cartRepo, PaymentRepository $paymentRepo, NotificationRepository $notificationRepo, UserRepository $userRepository)
     {
         $this->orderRepository = $orderRepo;
@@ -126,6 +140,10 @@ class OrderAPIController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|mixed
+     */
     private function stripPayment(Request $request)
     {
         $input = $request->all();
@@ -145,14 +163,21 @@ class OrderAPIController extends Controller
                 )
             ));
             if ($stripeToken->created > 0) {
-                $order = $this->orderRepository->create(
-                    $request->only('user_id', 'order_status_id', 'tax', 'delivery_address_id','delivery_fee')
-                );
+                if (empty($input['delivery_address_id'])) {
+                    $order = $this->orderRepository->create(
+                        $request->only('user_id', 'order_status_id', 'tax')
+                    );
+                } else {
+                    $order = $this->orderRepository->create(
+                        $request->only('user_id', 'order_status_id', 'tax', 'delivery_address_id', 'delivery_fee')
+                    );
+                }
                 foreach ($input['foods'] as $foodOrder) {
                     $foodOrder['order_id'] = $order->id;
                     $amount += $foodOrder['price'] * $foodOrder['quantity'];
                     $this->foodOrderRepository->create($foodOrder);
                 }
+                $amount += $order->delivery_fee;
                 $amountWithTax = $amount + ($amount * $order->tax / 100);
                 $charge = $user->charge((int)($amountWithTax * 100), ['source' => $stripeToken]);
                 $payment = $this->paymentRepository->create([
@@ -175,20 +200,31 @@ class OrderAPIController extends Controller
         return $this->sendResponse($order->toArray(), __('lang.saved_successfully', ['operator' => __('lang.order')]));
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|mixed
+     */
     private function cashPayment(Request $request)
     {
         $input = $request->all();
         $amount = 0;
         try {
-            $order = $this->orderRepository->create(
-                $request->only('user_id', 'order_status_id', 'tax', 'delivery_address_id','delivery_fee')
-            );
+            if (empty($input['delivery_address_id'])) {
+                $order = $this->orderRepository->create(
+                    $request->only('user_id', 'order_status_id', 'tax')
+                );
+            } else {
+                $order = $this->orderRepository->create(
+                    $request->only('user_id', 'order_status_id', 'tax', 'delivery_address_id', 'delivery_fee')
+                );
+            }
             foreach ($input['foods'] as $foodOrder) {
                 $foodOrder['order_id'] = $order->id;
                 $amount += $foodOrder['price'] * $foodOrder['quantity'];
                 $this->foodOrderRepository->create($foodOrder);
             }
-            $amountWithTax = $amount + ($amount * $order->tax / 100);
+            $amount += $order->delivery_fee;
+            $amountWithTax = $amount  + ($amount * $order->tax / 100);
             $payment = $this->paymentRepository->create([
                 "user_id" => $input['user_id'],
                 "description" => trans("lang.payment_order_waiting"),
@@ -220,19 +256,19 @@ class OrderAPIController extends Controller
      */
     public function update($id, Request $request)
     {
-        $order = $this->orderRepository->findWithoutFail($id);
-
-        if (empty($order)) {
+        $oldOrder = $this->orderRepository->findWithoutFail($id);
+        if (empty($oldOrder)) {
             return $this->sendError('Order not found');
         }
+        $oldStatus = $oldOrder->payment->status;
         $input = $request->all();
 
         try {
             $order = $this->orderRepository->update($input, $id);
             if ($input['order_status_id'] == 5 && !empty($order)) {
                 $this->paymentRepository->update(['status' => 'Paid'], $order['payment_id']);
-                event(new OrderChangedEvent($order));
             }
+            event(new OrderChangedEvent($oldStatus, $order));
             Notification::send([$order->user], new StatusChangedOrder($order));
 
         } catch (ValidatorException $e) {

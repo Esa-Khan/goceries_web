@@ -1,8 +1,14 @@
 <?php
+/**
+ * File name: OrderChangedEvent.php
+ * Last modified: 2020.05.06 at 10:12:53
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 namespace App\Events;
 
-use App\Models\Order;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -10,19 +16,21 @@ use Illuminate\Queue\SerializesModels;
 class OrderChangedEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    /**
-     * @var Order
-     */
-    public $order;
+
+    public $oldStatus;
+
+    public $updatedOrder;
 
     /**
-     * Create a new event instance.
-     *
-     * @return void
+     * OrderChangedEvent constructor.
+     * @param $oldOrder
+     * @param $updatedOrder
      */
-    public function __construct(Order $order)
+    public function __construct($oldStatus, $updatedOrder)
     {
-        //
-        $this->order = $order;
+        $this->oldStatus = $oldStatus;
+        $this->updatedOrder = $updatedOrder;
     }
+
+
 }

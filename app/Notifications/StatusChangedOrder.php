@@ -1,13 +1,19 @@
 <?php
+/**
+ * File name: StatusChangedOrder.php
+ * Last modified: 2020.04.30 at 08:21:09
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 namespace App\Notifications;
 
 use App\Models\Order;
-use FontLib\Table\Type\name;
+use Benwilkins\FCM\FcmMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Benwilkins\FCM\FcmMessage;
 
 class StatusChangedOrder extends Notification
 {
@@ -36,7 +42,7 @@ class StatusChangedOrder extends Notification
      */
     public function via($notifiable)
     {
-        return ['database','fcm'];
+        return ['database', 'fcm'];
     }
 
     /**
@@ -57,13 +63,14 @@ class StatusChangedOrder extends Notification
     {
         $message = new FcmMessage();
         $notification = [
-            'title'        => "Order #".$this->order->id." of ".$this->order->user->name." ".$this->order->orderStatus->status,
-            'text'         => $this->order->foodOrders[0]->food->restaurant->name,
+            'title' => trans('lang.notification_your_order', ['order_id' => $this->order->id, 'order_status' => $this->order->orderStatus->status]),
+            'text' => $this->order->foodOrders[0]->food->restaurant->name,
             'image' => $this->order->foodOrders[0]->food->restaurant->getFirstMediaUrl('image', 'thumb')
         ];
         $data = [
             'click_action' => "FLUTTER_NOTIFICATION_CLICK",
-            'id' => '1',
+            'sound' => 'default',
+            'id' => 'orders',
             'status' => 'done',
             'message' => $notification,
         ];

@@ -1,4 +1,11 @@
 <?php
+/**
+ * File name: Extra.php
+ * Last modified: 2020.04.30 at 08:21:09
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 namespace App\Models;
 
@@ -11,13 +18,15 @@ use Spatie\MediaLibrary\Models\Media;
 /**
  * Class Extra
  * @package App\Models
- * @version August 29, 2019, 9:39 pm UTC
+ * @version April 6, 2020, 10:56 am UTC
  *
  * @property \App\Models\Food food
+ * @property \App\Models\ExtraGroup extraGroup
  * @property string name
  * @property string description
  * @property double price
  * @property integer food_id
+ * @property integer extra_group_id
  */
 class Extra extends Model implements HasMedia
 {
@@ -33,7 +42,8 @@ class Extra extends Model implements HasMedia
         'name',
         'description',
         'price',
-        'food_id'
+        'food_id',
+        'extra_group_id'
     ];
 
     /**
@@ -46,7 +56,8 @@ class Extra extends Model implements HasMedia
         'image' => 'string',
         'description' => 'string',
         'price' => 'double',
-        'food_id' => 'integer'
+        'food_id' => 'integer',
+        'extra_group_id' => 'integer'
     ];
 
     /**
@@ -56,9 +67,9 @@ class Extra extends Model implements HasMedia
      */
     public static $rules = [
         'name' => 'required',
-        'description' => 'required',
-        'price' => 'required',
-        'food_id' => 'required|exists:foods,id'
+        'price' => 'nullable|numeric|min:0',
+        'food_id' => 'required|exists:foods,id',
+        'extra_group_id' => 'required|exists:extra_groups,id'
     ];
 
     /**
@@ -141,5 +152,13 @@ class Extra extends Model implements HasMedia
         return $this->belongsTo(\App\Models\Food::class, 'food_id', 'id');
     }
 
-    
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     **/
+    public function extraGroup()
+    {
+        return $this->belongsTo(\App\Models\ExtraGroup::class, 'extra_group_id', 'id');
+    }
+
+
 }
