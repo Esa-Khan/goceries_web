@@ -1,15 +1,22 @@
 <?php
+/**
+ * File name: FoodReviewController.php
+ * Last modified: 2020.05.04 at 09:04:18
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 namespace App\Http\Controllers;
 
+use App\Criteria\FoodReviews\FoodReviewsOfUserCriteria;
 use App\DataTables\FoodReviewDataTable;
-use App\Http\Requests;
 use App\Http\Requests\CreateFoodReviewRequest;
 use App\Http\Requests\UpdateFoodReviewRequest;
-use App\Repositories\FoodReviewRepository;
 use App\Repositories\CustomFieldRepository;
+use App\Repositories\FoodRepository;
+use App\Repositories\FoodReviewRepository;
 use App\Repositories\UserRepository;
-                use App\Repositories\FoodRepository;
 use Flash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -27,21 +34,22 @@ class FoodReviewController extends Controller
     private $customFieldRepository;
 
     /**
-  * @var UserRepository
-  */
-private $userRepository;/**
-  * @var FoodRepository
-  */
-private $foodRepository;
+     * @var UserRepository
+     */
+    private $userRepository;
+    /**
+     * @var FoodRepository
+     */
+    private $foodRepository;
 
-    public function __construct(FoodReviewRepository $foodReviewRepo, CustomFieldRepository $customFieldRepo , UserRepository $userRepo
-                , FoodRepository $foodRepo)
+    public function __construct(FoodReviewRepository $foodReviewRepo, CustomFieldRepository $customFieldRepo, UserRepository $userRepo
+        , FoodRepository $foodRepo)
     {
         parent::__construct();
         $this->foodReviewRepository = $foodReviewRepo;
         $this->customFieldRepository = $customFieldRepo;
         $this->userRepository = $userRepo;
-                $this->foodRepository = $foodRepo;
+        $this->foodRepository = $foodRepo;
     }
 
     /**
@@ -62,15 +70,15 @@ private $foodRepository;
      */
     public function create()
     {
-        $user = $this->userRepository->pluck('name','id');
-                $food = $this->foodRepository->pluck('name','id');
-        
-        $hasCustomField = in_array($this->foodReviewRepository->model(),setting('custom_field_models',[]));
-            if($hasCustomField){
-                $customFields = $this->customFieldRepository->findByField('custom_field_model', $this->foodReviewRepository->model());
-                $html = generateCustomField($customFields);
-            }
-        return view('food_reviews.create')->with("customFields", isset($html) ? $html : false)->with("user",$user)->with("food",$food);
+        $user = $this->userRepository->pluck('name', 'id');
+        $food = $this->foodRepository->groupedByRestaurants();
+
+        $hasCustomField = in_array($this->foodReviewRepository->model(), setting('custom_field_models', []));
+        if ($hasCustomField) {
+            $customFields = $this->customFieldRepository->findByField('custom_field_model', $this->foodReviewRepository->model());
+            $html = generateCustomField($customFields);
+        }
+        return view('food_reviews.create')->with("customFields", isset($html) ? $html : false)->with("user", $user)->with("food", $food);
     }
 
     /**
@@ -86,13 +94,13 @@ private $foodRepository;
         $customFields = $this->customFieldRepository->findByField('custom_field_model', $this->foodReviewRepository->model());
         try {
             $foodReview = $this->foodReviewRepository->create($input);
-            $foodReview->customFieldsValues()->createMany(getCustomFieldsValues($customFields,$request));
-            
+            $foodReview->customFieldsValues()->createMany(getCustomFieldsValues($customFields, $request));
+
         } catch (ValidatorException $e) {
             Flash::error($e->getMessage());
         }
 
-        Flash::success(__('lang.saved_successfully',['operator' => __('lang.food_review')]));
+        Flash::success(__('lang.saved_successfully', ['operator' => __('lang.food_review')]));
 
         return redirect(route('foodReviews.index'));
     }
@@ -100,12 +108,14 @@ private $foodRepository;
     /**
      * Display the specified FoodReview.
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return Response
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function show($id)
     {
+        $this->foodReviewRepository->pushCriteria(new FoodReviewsOfUserCriteria(auth()->id()));
         $foodReview = $this->foodReviewRepository->findWithoutFail($id);
 
         if (empty($foodReview)) {
@@ -120,42 +130,45 @@ private $foodRepository;
     /**
      * Show the form for editing the specified FoodReview.
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return Response
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function edit($id)
     {
+        $this->foodReviewRepository->pushCriteria(new FoodReviewsOfUserCriteria(auth()->id()));
         $foodReview = $this->foodReviewRepository->findWithoutFail($id);
-        $user = $this->userRepository->pluck('name','id');
-                $food = $this->foodRepository->pluck('name','id');
-        
-
         if (empty($foodReview)) {
-            Flash::error(__('lang.not_found',['operator' => __('lang.food_review')]));
-
+            Flash::error(__('lang.not_found', ['operator' => __('lang.food_review')]));
             return redirect(route('foodReviews.index'));
         }
+        $user = $this->userRepository->pluck('name', 'id');
+        $food = $this->foodRepository->groupedByRestaurants();
+
+
         $customFieldsValues = $foodReview->customFieldsValues()->with('customField')->get();
-        $customFields =  $this->customFieldRepository->findByField('custom_field_model', $this->foodReviewRepository->model());
-        $hasCustomField = in_array($this->foodReviewRepository->model(),setting('custom_field_models',[]));
-        if($hasCustomField) {
+        $customFields = $this->customFieldRepository->findByField('custom_field_model', $this->foodReviewRepository->model());
+        $hasCustomField = in_array($this->foodReviewRepository->model(), setting('custom_field_models', []));
+        if ($hasCustomField) {
             $html = generateCustomField($customFields, $customFieldsValues);
         }
 
-        return view('food_reviews.edit')->with('foodReview', $foodReview)->with("customFields", isset($html) ? $html : false)->with("user",$user)->with("food",$food);
+        return view('food_reviews.edit')->with('foodReview', $foodReview)->with("customFields", isset($html) ? $html : false)->with("user", $user)->with("food", $food);
     }
 
     /**
      * Update the specified FoodReview in storage.
      *
-     * @param  int              $id
+     * @param int $id
      * @param UpdateFoodReviewRequest $request
      *
      * @return Response
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function update($id, UpdateFoodReviewRequest $request)
     {
+        $this->foodReviewRepository->pushCriteria(new FoodReviewsOfUserCriteria(auth()->id()));
         $foodReview = $this->foodReviewRepository->findWithoutFail($id);
 
         if (empty($foodReview)) {
@@ -166,17 +179,17 @@ private $foodRepository;
         $customFields = $this->customFieldRepository->findByField('custom_field_model', $this->foodReviewRepository->model());
         try {
             $foodReview = $this->foodReviewRepository->update($input, $id);
-            
-            
-            foreach (getCustomFieldsValues($customFields, $request) as $value){
+
+
+            foreach (getCustomFieldsValues($customFields, $request) as $value) {
                 $foodReview->customFieldsValues()
-                    ->updateOrCreate(['custom_field_id'=>$value['custom_field_id']],$value);
+                    ->updateOrCreate(['custom_field_id' => $value['custom_field_id']], $value);
             }
         } catch (ValidatorException $e) {
             Flash::error($e->getMessage());
         }
 
-        Flash::success(__('lang.updated_successfully',['operator' => __('lang.food_review')]));
+        Flash::success(__('lang.updated_successfully', ['operator' => __('lang.food_review')]));
 
         return redirect(route('foodReviews.index'));
     }
@@ -184,12 +197,14 @@ private $foodRepository;
     /**
      * Remove the specified FoodReview from storage.
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return Response
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function destroy($id)
     {
+        $this->foodReviewRepository->pushCriteria(new FoodReviewsOfUserCriteria(auth()->id()));
         $foodReview = $this->foodReviewRepository->findWithoutFail($id);
 
         if (empty($foodReview)) {
@@ -200,12 +215,12 @@ private $foodRepository;
 
         $this->foodReviewRepository->delete($id);
 
-        Flash::success(__('lang.deleted_successfully',['operator' => __('lang.food_review')]));
+        Flash::success(__('lang.deleted_successfully', ['operator' => __('lang.food_review')]));
 
         return redirect(route('foodReviews.index'));
     }
 
-        /**
+    /**
      * Remove Media of FoodReview
      * @param Request $request
      */
@@ -214,7 +229,7 @@ private $foodRepository;
         $input = $request->all();
         $foodReview = $this->foodReviewRepository->findWithoutFail($input['id']);
         try {
-            if($foodReview->hasMedia($input['collection'])){
+            if ($foodReview->hasMedia($input['collection'])) {
                 $foodReview->getFirstMedia($input['collection'])->delete();
             }
         } catch (\Exception $e) {

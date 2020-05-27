@@ -1,12 +1,20 @@
 <?php
+/**
+ * File name: OrderController.php
+ * Last modified: 2020.05.05 at 16:55:08
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 namespace App\Http\Controllers;
 
+use App\Criteria\Orders\OrdersOfUserCriteria;
 use App\Criteria\Users\ClientsCriteria;
 use App\Criteria\Users\DriversCriteria;
 use App\Criteria\Users\DriversOfRestaurantCriteria;
-use App\DataTables\FoodOrderDataTable;
 use App\DataTables\OrderDataTable;
+use App\DataTables\FoodOrderDataTable;
 use App\Events\OrderChangedEvent;
 use App\Http\Requests\CreateOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
@@ -122,18 +130,20 @@ class OrderController extends Controller
      * @param FoodOrderDataTable $foodOrderDataTable
      *
      * @return Response
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
 
     public function show(FoodOrderDataTable $foodOrderDataTable, $id)
     {
+        $this->orderRepository->pushCriteria(new OrdersOfUserCriteria(auth()->id()));
         $order = $this->orderRepository->findWithoutFail($id);
-        $subtotal = 0;
-
         if (empty($order)) {
-            Flash::error('Order not found');
+            Flash::error(__('lang.not_found', ['operator' => __('lang.order')]));
 
             return redirect(route('orders.index'));
         }
+        $subtotal = 0;
+
         foreach ($order->foodOrders as $foodOrder) {
             $subtotal += $foodOrder->price * $foodOrder->quantity;
         }
@@ -151,26 +161,26 @@ class OrderController extends Controller
      * @param int $id
      *
      * @return Response
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function edit($id)
     {
-
+        $this->orderRepository->pushCriteria(new OrdersOfUserCriteria(auth()->id()));
         $order = $this->orderRepository->findWithoutFail($id);
+        if (empty($order)) {
+            Flash::error(__('lang.not_found', ['operator' => __('lang.order')]));
+
+            return redirect(route('orders.index'));
+        }
 
         $restaurant = $order->foodOrders()->first();
         $restaurant = isset($restaurant) ? $restaurant->food['restaurant_id'] : 0;
 
         $user = $this->userRepository->getByCriteria(new ClientsCriteria())->pluck('name', 'id');
         $driver = $this->userRepository->getByCriteria(new DriversOfRestaurantCriteria($restaurant))->pluck('name', 'id');
-        $driver = $driver->put(null, trans('lang.order_driver_id_placeholder'))->sortKeysDesc();
         $orderStatus = $this->orderStatusRepository->pluck('status', 'id');
 
 
-        if (empty($order)) {
-            Flash::error(__('lang.not_found', ['operator' => __('lang.order')]));
-
-            return redirect(route('orders.index'));
-        }
         $customFieldsValues = $order->customFieldsValues()->with('customField')->get();
         $customFields = $this->customFieldRepository->findByField('custom_field_model', $this->orderRepository->model());
         $hasCustomField = in_array($this->orderRepository->model(), setting('custom_field_models', []));
@@ -188,17 +198,21 @@ class OrderController extends Controller
      * @param UpdateOrderRequest $request
      *
      * @return Response
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function update($id, UpdateOrderRequest $request)
     {
+        $this->orderRepository->pushCriteria(new OrdersOfUserCriteria(auth()->id()));
         $oldOrder = $this->orderRepository->findWithoutFail($id);
         if (empty($oldOrder)) {
-            Flash::error('Order not found');
+            Flash::error(__('lang.not_found', ['operator' => __('lang.order')]));
             return redirect(route('orders.index'));
         }
+        $oldStatus = $oldOrder->payment->status;
         $input = $request->all();
         $customFields = $this->customFieldRepository->findByField('custom_field_model', $this->orderRepository->model());
         try {
+
             $order = $this->orderRepository->update($input, $id);
 
             if (setting('enable_notifications', false)) {
@@ -217,8 +231,9 @@ class OrderController extends Controller
             $this->paymentRepository->update([
                 "status" => $input['status'],
             ], $order['payment_id']);
+            //dd($input['status']);
 
-            event(new OrderChangedEvent($order));
+            event(new OrderChangedEvent($oldStatus, $order));
 
             foreach (getCustomFieldsValues($customFields, $request) as $value) {
                 $order->customFieldsValues()
@@ -239,21 +254,28 @@ class OrderController extends Controller
      * @param int $id
      *
      * @return Response
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function destroy($id)
     {
-        $order = $this->orderRepository->findWithoutFail($id);
+        if (!env('APP_DEMO', false)) {
+            $this->orderRepository->pushCriteria(new OrdersOfUserCriteria(auth()->id()));
+            $order = $this->orderRepository->findWithoutFail($id);
 
-        if (empty($order)) {
-            Flash::error('Order not found');
+            if (empty($order)) {
+                Flash::error(__('lang.not_found', ['operator' => __('lang.order')]));
 
-            return redirect(route('orders.index'));
+                return redirect(route('orders.index'));
+            }
+
+            $this->orderRepository->delete($id);
+
+            Flash::success(__('lang.deleted_successfully', ['operator' => __('lang.order')]));
+
+
+        } else {
+            Flash::warning('This is only demo app you can\'t change this section ');
         }
-
-        $this->orderRepository->delete($id);
-
-        Flash::success(__('lang.deleted_successfully', ['operator' => __('lang.order')]));
-
         return redirect(route('orders.index'));
     }
 

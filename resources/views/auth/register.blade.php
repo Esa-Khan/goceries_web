@@ -72,8 +72,7 @@
             <div class="social-auth-links text-center mb-3">
                 <p style="text-transform: uppercase">- {{__('lang.or')}} -</p>
                 @if(setting('enable_facebook',false))
-                    <a href="{{url('login/facebook')}}" class="btn btn-block btn-facebook">
-                        <i class="fa fa-facebook mr-2"></i> {{__('auth.login_facebook')}}
+                    <a href="{{url('login/facebook')}}" class="btn btn-block btn-facebook"> <i class="fa fa-facebook mr-2"></i> {{__('auth.login_facebook')}}
                     </a>
                 @endif
                 @if(setting('enable_google',false))

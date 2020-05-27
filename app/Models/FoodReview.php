@@ -48,7 +48,9 @@ class FoodReview extends Model
      */
     public static $rules = [
         'user_id' => 'required|exists:users,id',
-        'food_id' => 'required|exists:foods,id'
+        'food_id' => 'required|exists:foods,id',
+        'review' => 'required',
+        'rate' => 'required',
     ];
 
     /**

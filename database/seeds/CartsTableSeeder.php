@@ -15,8 +15,6 @@ class CartsTableSeeder extends Seeder
         
 
         \DB::table('carts')->delete();
-        
-        
-        
+
     }
 }

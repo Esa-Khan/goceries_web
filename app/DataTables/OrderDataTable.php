@@ -1,4 +1,11 @@
 <?php
+/**
+ * File name: OrderDataTable.php
+ * Last modified: 2020.04.30 at 08:21:08
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 namespace App\DataTables;
 
@@ -41,6 +48,9 @@ class OrderDataTable extends DataTable
             })
             ->editColumn('payment.status', function ($order) {
                 return getPayment($order->payment,'status');
+            })
+            ->editColumn('active', function ($food) {
+                return getBooleanColumn($food, 'active');
             })
             ->addColumn('action', 'orders.datatables_actions')
             ->rawColumns(array_merge($columns, ['action']));
@@ -98,6 +108,11 @@ class OrderDataTable extends DataTable
 
             ],
             [
+                'data' => 'active',
+                'title' => trans('lang.order_active'),
+
+            ],
+            [
                 'data' => 'updated_at',
                 'title' => trans('lang.order_updated_at'),
                 'searchable' => false,
@@ -131,7 +146,7 @@ class OrderDataTable extends DataTable
     {
         if (auth()->user()->hasRole('admin')) {
             return $model->newQuery()->with("user")->with("orderStatus")->with('payment');
-        } else {
+        } else if (auth()->user()->hasRole('manager')) {
             return $model->newQuery()->with("user")->with("orderStatus")->with('payment')
                 ->join("food_orders", "orders.id", "=", "food_orders.order_id")
                 ->join("foods", "foods.id", "=", "food_orders.food_id")
@@ -139,7 +154,20 @@ class OrderDataTable extends DataTable
                 ->where('user_restaurants.user_id', auth()->id())
                 ->groupBy('orders.id')
                 ->select('orders.*');
+        } else if (auth()->user()->hasRole('client')) {
+            return $model->newQuery()->with("user")->with("orderStatus")->with('payment')
+                ->where('orders.user_id', auth()->id())
+                ->groupBy('orders.id')
+                ->select('orders.*');
+        } else if (auth()->user()->hasRole('driver')) {
+            return $model->newQuery()->with("user")->with("orderStatus")->with('payment')
+                ->where('orders.driver_id', auth()->id())
+                ->groupBy('orders.id')
+                ->select('orders.*');
+        } else {
+            return $model->newQuery()->with("user")->with("orderStatus")->with('payment');
         }
+
     }
 
     /**

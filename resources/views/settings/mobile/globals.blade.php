@@ -39,6 +39,20 @@
                     </div>
                 </div>
 
+                <!-- Theme Color Field -->
+                <div class="form-group row col-6">
+                    {!! Form::label('distance_unit', trans("lang.app_setting_distance_unit"),['class' => 'col-4 control-label text-right']) !!}
+                    <div class="col-8">
+                        {!! Form::select('distance_unit',
+                        [
+                        'km' => trans('lang.app_setting_km'),
+                        'mi' => trans('lang.app_setting_mi'),
+                        ]
+                        , setting('distance_unit','km'), ['class' => 'select2 form-control']) !!}
+                        <div class="form-text text-muted">{{ trans("lang.app_setting_distance_unit_help") }}</div>
+                    </div>
+                </div>
+
                 <h5 class="col-12 pb-4 custom-field-container"><i class="mr-3 fa fa-globe"></i>{!! trans('lang.app_setting_language') !!}</h5>
 
                 <!-- Lang Field -->

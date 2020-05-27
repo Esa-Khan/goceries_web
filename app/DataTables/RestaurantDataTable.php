@@ -1,12 +1,19 @@
 <?php
+/**
+ * File name: RestaurantDataTable.php
+ * Last modified: 2020.04.30 at 08:21:09
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 namespace App\DataTables;
 
-use App\Models\Restaurant;
 use App\Models\CustomField;
-use Yajra\DataTables\Services\DataTable;
-use Yajra\DataTables\EloquentDataTable;
+use App\Models\Restaurant;
 use Barryvdh\DomPDF\Facade as PDF;
+use Yajra\DataTables\EloquentDataTable;
+use Yajra\DataTables\Services\DataTable;
 
 class RestaurantDataTable extends DataTable
 {
@@ -33,6 +40,12 @@ class RestaurantDataTable extends DataTable
             ->editColumn('updated_at', function ($restaurant) {
                 return getDateColumn($restaurant, 'updated_at');
             })
+            ->editColumn('closed', function ($food) {
+                return getNotBooleanColumn($food, 'closed');
+            })
+            ->editColumn('available_for_delivery', function ($food) {
+                return getBooleanColumn($food, 'available_for_delivery');
+            })
             ->addColumn('action', 'restaurants.datatables_actions')
             ->rawColumns(array_merge($columns, ['action']));
 
@@ -49,10 +62,28 @@ class RestaurantDataTable extends DataTable
     {
         if (auth()->user()->hasRole('admin')) {
             return $model->newQuery();
-        } else {
+        } else if (auth()->user()->hasRole('manager')){
             return $model->newQuery()
                 ->join("user_restaurants", "restaurant_id", "=", "restaurants.id")
-                ->where('user_restaurants.user_id', auth()->id());
+                ->where('user_restaurants.user_id', auth()->id())
+                ->groupBy("restaurants.id")
+                ->select("restaurants.*");
+        }else if(auth()->user()->hasRole('driver')){
+            return $model->newQuery()
+                ->join("driver_restaurants", "restaurant_id", "=", "restaurants.id")
+                ->where('driver_restaurants.user_id', auth()->id())
+                ->groupBy("restaurants.id")
+                ->select("restaurants.*");
+        } else if (auth()->user()->hasRole('client')) {
+            return $model->newQuery()
+                ->join("foods", "foods.restaurant_id", "=", "restaurants.id")
+                ->join("food_orders", "foods.id", "=", "food_orders.food_id")
+                ->join("orders", "orders.id", "=", "food_orders.order_id")
+                ->where('orders.user_id', auth()->id())
+                ->groupBy("restaurants.id")
+                ->select("restaurants.*");
+        } else {
+            return $model->newQuery();
         }
     }
 
@@ -85,14 +116,14 @@ class RestaurantDataTable extends DataTable
     {
         $columns = [
             [
-                'data' => 'name',
-                'title' => trans('lang.restaurant_name'),
-
-            ],
-            [
                 'data' => 'image',
                 'title' => trans('lang.restaurant_image'),
                 'searchable' => false, 'orderable' => false, 'exportable' => false, 'printable' => false,
+            ],
+            [
+                'data' => 'name',
+                'title' => trans('lang.restaurant_name'),
+
             ],
             [
                 'data' => 'address',
@@ -107,6 +138,16 @@ class RestaurantDataTable extends DataTable
             [
                 'data' => 'mobile',
                 'title' => trans('lang.restaurant_mobile'),
+
+            ],
+            [
+                'data' => 'available_for_delivery',
+                'title' => trans('lang.restaurant_available_for_delivery'),
+
+            ],
+            [
+                'data' => 'closed',
+                'title' => trans('lang.restaurant_closed'),
 
             ],
             [

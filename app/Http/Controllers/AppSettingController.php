@@ -1,4 +1,11 @@
 <?php
+/**
+ * File name: AppSettingController.php
+ * Last modified: 2020.05.04 at 09:04:19
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 namespace App\Http\Controllers;
 
@@ -54,6 +61,20 @@ class AppSettingController extends Controller
                     unset($input['blocked_ips']);
                     setting()->forget('blocked_ips');
                 }
+            } else if (Str::endsWith(url()->previous(), "app/payment")) {
+                if (isset($input['default_currency'])) {
+                    $currency = $this->currencyRepository->findWithoutFail($input['default_currency']);
+                    if (!empty($currency)) {
+                        $input['default_currency_id'] = $input['default_currency'];
+                        $input['default_currency'] = $currency->symbol;
+                        $input['default_currency_code'] = $currency->code;
+                        $input['default_currency_decimal_digits'] = $currency->decimal_digits;
+                        $input['default_currency_rounding'] = $currency->rounding;
+                    }
+                }
+            }
+            if (empty($input['mail_password'])) {
+                unset($input['mail_password']);
             }
             $input = array_map(function ($value) { return is_null($value)? false : $value; }, $input);
 
@@ -161,8 +182,7 @@ class AppSettingController extends Controller
         }
         $executedMigrations = $this->getExecutedMigrations();
         $newMigrations = $this->getMigrations(config('installer.currentVersion', 'v100'));
-
-        $containsUpdate = !empty($newMigrations) && count(array_intersect($newMigrations, $executedMigrations->toArray())) == count($newMigrations);
+        $containsUpdate = !empty($newMigrations) && count(array_intersect($newMigrations, $executedMigrations->toArray())) != count($newMigrations);
 
         $langFiles = [];
         $languages = getAvailableLanguages();
@@ -187,7 +207,7 @@ class AppSettingController extends Controller
         }
         $upload = $this->uploadRepository->findByField('uuid', setting('app_logo'))->first();
 
-        $currencies = $this->currencyRepository->all()->pluck('name_symbol','symbol');
+        $currencies = $this->currencyRepository->all()->pluck('name_symbol', 'id');
 
         $customFieldModels = getModelsClasses(app_path('Models'));
 

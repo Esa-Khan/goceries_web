@@ -1,12 +1,8 @@
 <?php namespace App\Http\Middleware;
 
-use App\Notifications\Newvisit;
 use App\Repositories\UploadRepository;
 use Carbon\Carbon;
 use Closure;
-use Illuminate\Support\Facades\Config;
-use mysql_xdevapi\Exception;
-use Spatie\Permission\Exceptions\UnauthorizedException;
 
 class App
 {
@@ -16,15 +12,15 @@ class App
      *
      * @array $languages
      */
-    protected $languages = ['en','fr']; // en, fr
+    protected $languages = ['en', 'fr']; // en, fr
 
     protected $uploadRepository;
 
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure $next
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure $next
      * @return mixed
      */
     public function handle($request, Closure $next)
@@ -34,20 +30,20 @@ class App
         } else {
             app()->setLocale($request->getPreferredLanguage($this->languages));
         }
-        try{
+        try {
             Carbon::setLocale(app()->getLocale());
             // config(['app.timezone' => setting('timezone')]);
 
             $this->uploadRepository = new UploadRepository(app());
-            $upload = $this->uploadRepository->findByField('uuid', setting('app_logo',''))->first();
-            $appLogo = "";
+            $upload = $this->uploadRepository->findByField('uuid', setting('app_logo', ''))->first();
+            $appLogo = asset('images/logo_default.png');
             if ($upload && $upload->hasMedia('app_logo')) {
                 $appLogo = $upload->getFirstMediaUrl('app_logo');
             }
             view()->share('app_logo', $appLogo);
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             echo $exception->getMessage();
-    }
+        }
 
         return $next($request);
     }

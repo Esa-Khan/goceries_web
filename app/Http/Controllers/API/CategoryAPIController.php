@@ -1,48 +1,37 @@
 <?php
+/**
+ * File name: CategoryAPIController.php
+ * Last modified: 2020.05.04 at 09:04:18
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 namespace App\Http\Controllers\API;
 
 
-use App\Http\Requests\CreateCategoryRequest;
-use App\Http\Requests\UpdateCategoryRequest;
+use App\Criteria\Categories\CategoriesOfCuisinesCriteria;
+use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Repositories\CategoryRepository;
-use App\Repositories\CustomFieldRepository;
-use App\Repositories\UploadRepository;
+use Flash;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use InfyOm\Generator\Criteria\LimitOffsetCriteria;
 use Prettus\Repository\Criteria\RequestCriteria;
-use Illuminate\Support\Facades\Response;
 use Prettus\Repository\Exceptions\RepositoryException;
-use Prettus\Validator\Exceptions\ValidatorException;
 
 /**
  * Class CategoryController
  * @package App\Http\Controllers\API
  */
-
 class CategoryAPIController extends Controller
 {
     /** @var  CategoryRepository */
     private $categoryRepository;
 
-    /**
-     * @var CustomFieldRepository
-     */
-    private $customFieldRepository;
-
-    /**
-     * @var UploadRepository
-     */
-    private $uploadRepository;
-
-    public function __construct(CategoryRepository $categoryRepo, CustomFieldRepository $customFieldRepo, UploadRepository $uploadRepo)
+    public function __construct(CategoryRepository $categoryRepo)
     {
-        parent::__construct();
         $this->categoryRepository = $categoryRepo;
-        $this->customFieldRepository = $customFieldRepo;
-        $this->uploadRepository = $uploadRepo;
     }
 
     /**
@@ -57,6 +46,7 @@ class CategoryAPIController extends Controller
         try{
             $this->categoryRepository->pushCriteria(new RequestCriteria($request));
             $this->categoryRepository->pushCriteria(new LimitOffsetCriteria($request));
+            $this->categoryRepository->pushCriteria(new CategoriesOfCuisinesCriteria($request));
         } catch (RepositoryException $e) {
             Flash::error($e->getMessage());
         }

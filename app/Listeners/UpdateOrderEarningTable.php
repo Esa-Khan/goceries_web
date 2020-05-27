@@ -1,4 +1,11 @@
 <?php
+/**
+ * File name: UpdateOrderEarningTable.php
+ * Last modified: 2020.05.05 at 17:03:49
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 namespace App\Listeners;
 
@@ -25,33 +32,43 @@ class UpdateOrderEarningTable
 
     /**
      * Handle the event.
-     *
+     *oldOrder
+     * updatedOrder
      * @param object $event
      * @return void
      */
     public function handle($event)
     {
-        if ($event->order->payment->status == 'Paid') {
-            $this->earningRepository->pushCriteria(new EarningOfRestaurantCriteria($event->order->foodOrders[0]->food->restaurant->id));
-
+        if ($event->oldStatus != $event->updatedOrder->payment->status) {
+            $this->earningRepository->pushCriteria(new EarningOfRestaurantCriteria($event->updatedOrder->foodOrders[0]->food->restaurant->id));
             $restaurant = $this->earningRepository->first();
-            // test if order delivered to client
+//            dd($restaurant);
             $amount = 0;
-            if (empty($restaurant)) {
-                Flash::error('Restaurants not found');
-            } else {
-                foreach ($event->order->foodOrders as $foodOrder) {
+
+            // test if order delivered to client
+            if (!empty($restaurant)) {
+                foreach ($event->updatedOrder->foodOrders as $foodOrder) {
                     $amount += $foodOrder['price'] * $foodOrder['quantity'];
                 }
-                $restaurant->total_orders++;
-                $restaurant->restaurant->admin_commission;
-                $restaurant->total_earning += $amount;
-                $restaurant->admin_earning += ($restaurant->restaurant->admin_commission / 100) * $amount;
-                $restaurant->restaurant_earning += ($amount - $restaurant->admin_earning);
-                $restaurant->delivery_fee += $event->order->delivery_fee;
-                $restaurant->tax += ($amount+$event->order->delivery_fee) * $event->order->tax / 100;
-                $restaurant->save();
+                if ($event->updatedOrder->payment->status == 'Paid') {
+                    $restaurant->total_orders++;
+                    $restaurant->total_earning += $amount;
+                    $restaurant->admin_earning += ($restaurant->restaurant->admin_commission / 100) * $amount;
+                    $restaurant->restaurant_earning += ($amount - $restaurant->admin_earning);
+                    $restaurant->delivery_fee += $event->updatedOrder->delivery_fee;
+                    $restaurant->tax += $amount * $event->updatedOrder->tax / 100;
+                    $restaurant->save();
+                } elseif ($event->oldStatus == 'Paid') {
+                    $restaurant->total_orders--;
+                    $restaurant->total_earning -= $amount;
+                    $restaurant->admin_earning -= ($restaurant->restaurant->admin_commission / 100) * $amount;
+                    $restaurant->restaurant_earning -= $amount - (($restaurant->restaurant->admin_commission / 100) * $amount);
+                    $restaurant->delivery_fee -= $event->updatedOrder->delivery_fee;
+                    $restaurant->tax -= $amount * $event->updatedOrder->tax / 100;
+                    $restaurant->save();
+                }
             }
+
         }
     }
 }

@@ -1,9 +1,16 @@
 <?php
+/**
+ * File name: CreateRestaurantRequest.php
+ * Last modified: 2020.04.30 at 08:21:08
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use App\Models\Restaurant;
+use Illuminate\Foundation\Http\FormRequest;
 
 class CreateRestaurantRequest extends FormRequest
 {
@@ -25,9 +32,9 @@ class CreateRestaurantRequest extends FormRequest
      */
     public function rules()
     {
-        if (auth()->user()->hasRole('admin')){
+        if (auth()->user()->hasRole('admin')) {
             return Restaurant::$adminRules;
-        }elseif (auth()->user()->hasRole('manager')){
+        } elseif (auth()->user()->hasRole('manager')) {
             return Restaurant::$managerRules;
         }
     }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Criteria\Foods\FoodsOfUserCriteria;
+use App\Criteria\Nutrition\NutritionOfUserCriteria;
 use App\DataTables\NutritionDataTable;
 use App\Http\Requests;
 use App\Http\Requests\CreateNutritionRequest;
@@ -53,14 +55,12 @@ class NutritionController extends Controller
      * Show the form for creating a new Nutrition.
      *
      * @return Response
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function create()
     {
-        if (auth()->user()->hasRole('admin')){
-            $food = $this->foodRepository->pluck('name', 'id');
-        }else{
-            $food = $this->foodRepository->myFoods()->pluck('name', 'id');
-        }
+        $this->foodRepository->pushCriteria(new FoodsOfUserCriteria(auth()->id()));
+        $food = $this->foodRepository->groupedByRestaurants();
         $hasCustomField = in_array($this->nutritionRepository->model(), setting('custom_field_models', []));
         if ($hasCustomField) {
             $customFields = $this->customFieldRepository->findByField('custom_field_model', $this->nutritionRepository->model());
@@ -99,9 +99,11 @@ class NutritionController extends Controller
      * @param int $id
      *
      * @return Response
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function show($id)
     {
+        $this->nutritionRepository->pushCriteria(new NutritionOfUserCriteria(auth()->id()));
         $nutrition = $this->nutritionRepository->findWithoutFail($id);
 
         if (empty($nutrition)) {
@@ -119,9 +121,11 @@ class NutritionController extends Controller
      * @param int $id
      *
      * @return Response
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function edit($id)
     {
+        $this->nutritionRepository->pushCriteria(new NutritionOfUserCriteria(auth()->id()));
         $nutrition = $this->nutritionRepository->findWithoutFail($id);
         if (empty($nutrition)) {
             Flash::error(__('lang.not_found', ['operator' => __('lang.nutrition')]));
@@ -129,11 +133,8 @@ class NutritionController extends Controller
             return redirect(route('nutrition.index'));
         }
 
-        if (auth()->user()->hasRole('admin')){
-            $food = $this->foodRepository->pluck('name', 'id');
-        }else{
-            $food = $this->foodRepository->myFoods()->pluck('name', 'id');
-        }
+        $this->foodRepository->pushCriteria(new FoodsOfUserCriteria(auth()->id()));
+        $food = $this->foodRepository->groupedByRestaurants();
         $customFieldsValues = $nutrition->customFieldsValues()->with('customField')->get();
         $customFields = $this->customFieldRepository->findByField('custom_field_model', $this->nutritionRepository->model());
         $hasCustomField = in_array($this->nutritionRepository->model(), setting('custom_field_models', []));
@@ -151,9 +152,11 @@ class NutritionController extends Controller
      * @param UpdateNutritionRequest $request
      *
      * @return Response
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function update($id, UpdateNutritionRequest $request)
     {
+        $this->nutritionRepository->pushCriteria(new NutritionOfUserCriteria(auth()->id()));
         $nutrition = $this->nutritionRepository->findWithoutFail($id);
 
         if (empty($nutrition)) {
@@ -185,9 +188,11 @@ class NutritionController extends Controller
      * @param int $id
      *
      * @return Response
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function destroy($id)
     {
+        $this->nutritionRepository->pushCriteria(new NutritionOfUserCriteria(auth()->id()));
         $nutrition = $this->nutritionRepository->findWithoutFail($id);
 
         if (empty($nutrition)) {

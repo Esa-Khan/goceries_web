@@ -1,15 +1,22 @@
 <?php
+/**
+ * File name: GalleryController.php
+ * Last modified: 2020.04.30 at 08:21:08
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 namespace App\Http\Controllers;
 
+use App\Criteria\Galleries\GalleriesOfUserCriteria;
 use App\DataTables\GalleryDataTable;
-use App\Http\Requests;
 use App\Http\Requests\CreateGalleryRequest;
 use App\Http\Requests\UpdateGalleryRequest;
-use App\Repositories\GalleryRepository;
 use App\Repositories\CustomFieldRepository;
-use App\Repositories\UploadRepository;
+use App\Repositories\GalleryRepository;
 use App\Repositories\RestaurantRepository;
+use App\Repositories\UploadRepository;
 use Flash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -131,13 +138,14 @@ class GalleryController extends Controller
      * @param int $id
      *
      * @return Response
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function edit($id)
     {
+        $this->galleryRepository->pushCriteria(new GalleriesOfUserCriteria(auth()->id()));
         $gallery = $this->galleryRepository->findWithoutFail($id);
         if (empty($gallery)) {
             Flash::error(__('lang.not_found', ['operator' => __('lang.gallery')]));
-
             return redirect(route('galleries.index'));
         }
         if (auth()->user()->hasRole('admin')){
@@ -162,9 +170,11 @@ class GalleryController extends Controller
      * @param UpdateGalleryRequest $request
      *
      * @return Response
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function update($id, UpdateGalleryRequest $request)
     {
+        $this->galleryRepository->pushCriteria(new GalleriesOfUserCriteria(auth()->id()));
         $gallery = $this->galleryRepository->findWithoutFail($id);
 
         if (empty($gallery)) {
@@ -200,9 +210,11 @@ class GalleryController extends Controller
      * @param int $id
      *
      * @return Response
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function destroy($id)
     {
+        $this->galleryRepository->pushCriteria(new GalleriesOfUserCriteria(auth()->id()));
         $gallery = $this->galleryRepository->findWithoutFail($id);
 
         if (empty($gallery)) {

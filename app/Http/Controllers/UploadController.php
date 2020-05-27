@@ -1,4 +1,11 @@
 <?php
+/**
+ * File name: UploadController.php
+ * Last modified: 2020.05.04 at 09:04:19
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 namespace App\Http\Controllers;
 
@@ -48,6 +55,14 @@ class UploadController extends Controller
     public function all(UploadRequest $request, $collection = null)
     {
         $allMedias = $this->uploadRepository->allMedia($collection);
+        if (!auth()->user()->hasRole('admin')) {
+            $allMedias = $allMedias->filter(function ($element) {
+                if (isset($element['custom_properties']['user_id'])) {
+                    return $element['custom_properties']['user_id'] == auth()->id();
+                }
+                return false;
+            });
+        }
         return $allMedias->toJson();
     }
 
@@ -66,7 +81,7 @@ class UploadController extends Controller
         try {
             $upload = $this->uploadRepository->create($input);
             $upload->addMedia($input['file'])
-                ->withCustomProperties(['uuid' => $input['uuid']])
+                ->withCustomProperties(['uuid' => $input['uuid'], 'user_id' => auth()->id()])
                 ->toMediaCollection($input['field']);
         } catch (ValidatorException $e) {
             Flash::error($e->getMessage());

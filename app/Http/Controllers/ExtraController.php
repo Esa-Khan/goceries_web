@@ -1,15 +1,24 @@
 <?php
+/**
+ * File name: ExtraController.php
+ * Last modified: 2020.04.30 at 08:21:09
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 namespace App\Http\Controllers;
 
+use App\Criteria\Extras\ExtrasOfUserCriteria;
+use App\Criteria\Foods\FoodsOfUserCriteria;
 use App\DataTables\ExtraDataTable;
-use App\Http\Requests;
 use App\Http\Requests\CreateExtraRequest;
 use App\Http\Requests\UpdateExtraRequest;
-use App\Repositories\ExtraRepository;
 use App\Repositories\CustomFieldRepository;
-use App\Repositories\UploadRepository;
+use App\Repositories\ExtraGroupRepository;
+use App\Repositories\ExtraRepository;
 use App\Repositories\FoodRepository;
+use App\Repositories\UploadRepository;
 use Flash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -34,15 +43,21 @@ class ExtraController extends Controller
      * @var FoodRepository
      */
     private $foodRepository;
+    /**
+     * @var ExtraGroupRepository
+     */
+    private $extraGroupRepository;
 
     public function __construct(ExtraRepository $extraRepo, CustomFieldRepository $customFieldRepo, UploadRepository $uploadRepo
-        , FoodRepository $foodRepo)
+        , FoodRepository $foodRepo
+        , ExtraGroupRepository $extraGroupRepo)
     {
         parent::__construct();
         $this->extraRepository = $extraRepo;
         $this->customFieldRepository = $customFieldRepo;
         $this->uploadRepository = $uploadRepo;
         $this->foodRepository = $foodRepo;
+        $this->extraGroupRepository = $extraGroupRepo;
     }
 
     /**
@@ -60,21 +75,20 @@ class ExtraController extends Controller
      * Show the form for creating a new Extra.
      *
      * @return Response
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function create()
     {
-        if (auth()->user()->hasRole('admin')){
-            $food = $this->foodRepository->pluck('name', 'id');
-        }else{
-            $food = $this->foodRepository->myFoods()->pluck('name', 'id');
-        }
+        $this->foodRepository->pushCriteria(new FoodsOfUserCriteria(auth()->id()));
+        $food = $this->foodRepository->groupedByRestaurants();
+        $extraGroup = $this->extraGroupRepository->pluck('name', 'id');
 
         $hasCustomField = in_array($this->extraRepository->model(), setting('custom_field_models', []));
         if ($hasCustomField) {
             $customFields = $this->customFieldRepository->findByField('custom_field_model', $this->extraRepository->model());
             $html = generateCustomField($customFields);
         }
-        return view('extras.create')->with("customFields", isset($html) ? $html : false)->with("food", $food);
+        return view('extras.create')->with("customFields", isset($html) ? $html : false)->with("food", $food)->with("extraGroup", $extraGroup);
     }
 
     /**
@@ -111,9 +125,12 @@ class ExtraController extends Controller
      * @param int $id
      *
      * @return Response
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function show($id)
     {
+        $this->extraRepository->pushCriteria(new ExtrasOfUserCriteria(auth()->id()));
+
         $extra = $this->extraRepository->findWithoutFail($id);
 
         if (empty($extra)) {
@@ -131,21 +148,21 @@ class ExtraController extends Controller
      * @param int $id
      *
      * @return Response
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function edit($id)
     {
+        $this->extraRepository->pushCriteria(new ExtrasOfUserCriteria(auth()->id()));
         $extra = $this->extraRepository->findWithoutFail($id);
-
         if (empty($extra)) {
             Flash::error(__('lang.not_found', ['operator' => __('lang.extra')]));
-
             return redirect(route('extras.index'));
         }
-        if (auth()->user()->hasRole('admin')){
-            $food = $this->foodRepository->pluck('name', 'id');
-        }else{
-            $food = $this->foodRepository->myFoods()->pluck('name', 'id');
-        }
+        $this->foodRepository->pushCriteria(new FoodsOfUserCriteria(auth()->id()));
+        $food = $this->foodRepository->groupedByRestaurants();
+        $extraGroup = $this->extraGroupRepository->pluck('name', 'id');
+
+
         $customFieldsValues = $extra->customFieldsValues()->with('customField')->get();
         $customFields = $this->customFieldRepository->findByField('custom_field_model', $this->extraRepository->model());
         $hasCustomField = in_array($this->extraRepository->model(), setting('custom_field_models', []));
@@ -153,7 +170,7 @@ class ExtraController extends Controller
             $html = generateCustomField($customFields, $customFieldsValues);
         }
 
-        return view('extras.edit')->with('extra', $extra)->with("customFields", isset($html) ? $html : false)->with("food", $food);
+        return view('extras.edit')->with('extra', $extra)->with("customFields", isset($html) ? $html : false)->with("food", $food)->with("extraGroup", $extraGroup);
     }
 
     /**
@@ -163,9 +180,12 @@ class ExtraController extends Controller
      * @param UpdateExtraRequest $request
      *
      * @return Response
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function update($id, UpdateExtraRequest $request)
     {
+        $this->extraRepository->pushCriteria(new extrasOfUserCriteria(auth()->id()));
+
         $extra = $this->extraRepository->findWithoutFail($id);
 
         if (empty($extra)) {
@@ -201,9 +221,11 @@ class ExtraController extends Controller
      * @param int $id
      *
      * @return Response
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function destroy($id)
     {
+        $this->extraRepository->pushCriteria(new extrasOfUserCriteria(auth()->id()));
         $extra = $this->extraRepository->findWithoutFail($id);
 
         if (empty($extra)) {
@@ -220,7 +242,7 @@ class ExtraController extends Controller
     }
 
     /**
-     * Remove Media of Extra
+     * Remove Media of extra
      * @param Request $request
      */
     public function removeMedia(Request $request)

@@ -1,4 +1,11 @@
 <?php
+/**
+ * File name: api.php
+ * Last modified: 2020.04.30 at 08:21:08
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 /*
 |--------------------------------------------------------------------------
@@ -27,14 +34,18 @@ Route::post('send_reset_link_email', 'API\UserAPIController@sendResetLinkEmail')
 Route::get('user', 'API\UserAPIController@user');
 Route::get('logout', 'API\UserAPIController@logout');
 Route::get('settings', 'API\UserAPIController@settings');
-Route::resource('restaurants', 'API\RestaurantAPIController');
+
+Route::resource('cuisines', 'API\CuisineAPIController');
 Route::resource('categories', 'API\CategoryAPIController');
+Route::resource('restaurants', 'API\RestaurantAPIController');
+
 Route::resource('faq_categories', 'API\FaqCategoryAPIController');
 Route::resource('foods', 'API\FoodAPIController');
 Route::resource('galleries', 'API\GalleryAPIController');
 Route::resource('food_reviews', 'API\FoodReviewAPIController');
 Route::resource('nutrition', 'API\NutritionAPIController');
 Route::resource('extras', 'API\ExtraAPIController');
+Route::resource('extra_groups', 'API\ExtraGroupAPIController');
 Route::resource('faqs', 'API\FaqAPIController');
 Route::resource('restaurant_reviews', 'API\RestaurantReviewAPIController');
 Route::resource('currencies', 'API\CurrencyAPIController');
@@ -81,8 +92,4 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('carts', 'API\CartAPIController');
 
     Route::resource('delivery_addresses', 'API\DeliveryAddressAPIController');
-
 });
-
-
-

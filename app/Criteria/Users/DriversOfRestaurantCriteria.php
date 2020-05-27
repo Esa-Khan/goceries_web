@@ -1,4 +1,10 @@
 <?php
+/**
+ * File name: DriversOfRestaurantCriteria.php
+ * Last modified: 2020.05.09 at 14:02:59
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ */
 
 namespace App\Criteria\Users;
 
@@ -12,6 +18,9 @@ use Prettus\Repository\Contracts\RepositoryInterface;
  */
 class DriversOfRestaurantCriteria implements CriteriaInterface
 {
+    /**
+     * @var int
+     */
     private $restaurantId;
 
     /**

@@ -26,12 +26,13 @@
                     <div class="inner">
                         <h3>{{$ordersCount}}</h3>
 
-                        <p>Total Orders</p>
+                        <p>{{trans('lang.dashboard_total_orders')}}</p>
                     </div>
                     <div class="icon">
                         <i class="fa fa-shopping-bag"></i>
                     </div>
-                    <a href="{!! route('orders.index') !!}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    <a href="{!! route('orders.index') !!}" class="small-box-footer">{{trans('lang.dashboard_more_info')}}
+                        <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
             <!-- ./col -->
@@ -45,12 +46,13 @@
                             <h3>{{setting('default_currency')}}{{$earning}}</h3>
                         @endif
 
-                        <p>Total Earnings <span style="font-size: 11px">(After Taxes)</span></p>
+                        <p>{{trans('lang.dashboard_total_earnings')}} <span style="font-size: 11px">({{trans('lang.dashboard_after taxes')}})</span></p>
                     </div>
                     <div class="icon">
                         <i class="fa fa-money"></i>
                     </div>
-                    <a href="{!! route('payments.index') !!}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    <a href="{!! route('payments.index') !!}" class="small-box-footer">{{trans('lang.dashboard_more_info')}}
+                        <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
             <!-- ./col -->
@@ -59,12 +61,12 @@
                 <div class="small-box bg-success">
                     <div class="inner">
                         <h3>{{$restaurantsCount}}</h3>
-                        <p>Restaurants</p>
+                        <p>{{trans('lang.restaurant_plural')}}</p>
                     </div>
                     <div class="icon">
                         <i class="fa fa-cutlery"></i>
                     </div>
-                    <a href="{!! route('restaurants.index') !!}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    <a href="{!! route('restaurants.index') !!}" class="small-box-footer">{{trans('lang.dashboard_more_info')}} <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
             <!-- ./col -->
@@ -74,12 +76,12 @@
                     <div class="inner">
                         <h3>{{$membersCount}}</h3>
 
-                        <p>Total Clients</p>
+                        <p>{{trans('lang.dashboard_total_clients')}}</p>
                     </div>
                     <div class="icon">
                         <i class="fa fa-group"></i>
                     </div>
-                    <a href="{!! route('users.index') !!}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    <a href="{!! route('users.index') !!}" class="small-box-footer">{{trans('lang.dashboard_more_info')}} <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
             <!-- ./col -->
@@ -93,7 +95,7 @@
                     <div class="card-header no-border">
                         <div class="d-flex justify-content-between">
                             <h3 class="card-title">Earnings</h3>
-                            <a href="{!! route('payments.index') !!}">View All Payments</a>
+                            <a href="{!! route('payments.index') !!}">{{trans('lang.dashboard_view_all_payments')}}</a>
                         </div>
                     </div>
                     <div class="card-body">
@@ -104,10 +106,11 @@
                                 @else
                                     <span class="text-bold text-lg">{{setting('default_currency')}}{{$earning}}</span>
                                 @endif
-                                <span>Earning Over Time</span>
+                                <span>{{trans('lang.dashboard_earning_over_time')}}</span>
                             </p>
                             <p class="ml-auto d-flex flex-column text-right">
-                                <span class="text-success"> {{$ordersCount}}</span></span> <span class="text-muted">Total Orders</span>
+                                <span class="text-success"> {{$ordersCount}}</span></span>
+                                <span class="text-muted">{{trans('lang.dashboard_total_orders')}}</span>
                             </p>
                         </div>
                         <!-- /.d-flex -->
@@ -117,7 +120,7 @@
                         </div>
 
                         <div class="d-flex flex-row justify-content-end">
-                            <span class="mr-2"> <i class="fa fa-square text-primary"></i> This year </span>
+                            <span class="mr-2"> <i class="fa fa-square text-primary"></i> {{trans('lang.dashboard_this_year')}} </span>
                         </div>
                     </div>
                 </div>
@@ -220,11 +223,12 @@
 
                                 // Include a dollar sign in the ticks
                                 callback: function (value, index, values) {
-                                    if (value >= 1000) {
-                                        value /= 1000
-                                        value += 'k'
-                                    }
-                                    return '$' + value
+                                    @if(setting('currency_right', '0') == '0')
+                                        return "{{setting('default_currency')}} "+value;
+                                    @else
+                                        return value+" {{setting('default_currency')}}";
+                                        @endif
+
                                 }
                             }, ticksStyle)
                         }],

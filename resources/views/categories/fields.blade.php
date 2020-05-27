@@ -12,6 +12,16 @@
     </div>
   </div>
 </div>
+
+<!-- Description Field -->
+<div class="form-group row ">
+  {!! Form::label('description', trans("lang.category_description"), ['class' => 'col-3 control-label text-right']) !!}
+  <div class="col-9">
+    {!! Form::textarea('description', null, ['class' => 'form-control','placeholder'=>
+     trans("lang.category_description_placeholder")  ]) !!}
+    <div class="form-text text-muted">{{ trans("lang.category_description_help") }}</div>
+  </div>
+</div>
 </div>
 <div style="flex: 50%;max-width: 50%;padding: 0 4px;" class="column">
 
@@ -30,21 +40,21 @@
 </div>
 @prepend('scripts')
 <script type="text/javascript">
-    var var15671147051368295516ble = '';
+    var var15866134771240834480ble = '';
     @if(isset($category) && $category->hasMedia('image'))
-    var15671147051368295516ble = {
+    var15866134771240834480ble = {
         name: "{!! $category->getFirstMedia('image')->name !!}",
         size: "{!! $category->getFirstMedia('image')->size !!}",
         type: "{!! $category->getFirstMedia('image')->mime_type !!}",
         collection_name: "{!! $category->getFirstMedia('image')->collection_name !!}"};
     @endif
-    var dz_var15671147051368295516ble = $(".dropzone.image").dropzone({
+    var dz_var15866134771240834480ble = $(".dropzone.image").dropzone({
         url: "{!!url('uploads/store')!!}",
         addRemoveLinks: true,
         maxFiles: 1,
         init: function () {
         @if(isset($category) && $category->hasMedia('image'))
-            dzInit(this,var15671147051368295516ble,'{!! url($category->getFirstMediaUrl('image','thumb')) !!}')
+            dzInit(this,var15866134771240834480ble,'{!! url($category->getFirstMediaUrl('image','thumb')) !!}')
         @endif
         },
         accept: function(file, done) {
@@ -54,22 +64,22 @@
             dzSending(this,file,formData,'{!! csrf_token() !!}');
         },
         maxfilesexceeded: function (file) {
-            dz_var15671147051368295516ble[0].mockFile = '';
+            dz_var15866134771240834480ble[0].mockFile = '';
             dzMaxfile(this,file);
         },
         complete: function (file) {
-            dzComplete(this, file, var15671147051368295516ble, dz_var15671147051368295516ble[0].mockFile);
-            dz_var15671147051368295516ble[0].mockFile = file;
+            dzComplete(this, file, var15866134771240834480ble, dz_var15866134771240834480ble[0].mockFile);
+            dz_var15866134771240834480ble[0].mockFile = file;
         },
         removedfile: function (file) {
             dzRemoveFile(
-                file, var15671147051368295516ble, '{!! url("categories/remove-media") !!}',
+                file, var15866134771240834480ble, '{!! url("categories/remove-media") !!}',
                 'image', '{!! isset($category) ? $category->id : 0 !!}', '{!! url("uplaods/clear") !!}', '{!! csrf_token() !!}'
             );
         }
     });
-    dz_var15671147051368295516ble[0].mockFile = var15671147051368295516ble;
-    dropzoneFields['image'] = dz_var15671147051368295516ble;
+    dz_var15866134771240834480ble[0].mockFile = var15866134771240834480ble;
+    dropzoneFields['image'] = dz_var15866134771240834480ble;
 </script>
 @endprepend
 </div>

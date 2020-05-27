@@ -8,7 +8,7 @@ use InfyOm\Generator\Common\BaseRepository;
 /**
  * Class CategoryRepository
  * @package App\Repositories
- * @version August 29, 2019, 9:38 pm UTC
+ * @version April 11, 2020, 1:57 pm UTC
  *
  * @method Category findWithoutFail($id, $columns = ['*'])
  * @method Category find($id, $columns = ['*'])
@@ -20,7 +20,8 @@ class CategoryRepository extends BaseRepository
      * @var array
      */
     protected $fieldSearchable = [
-        'name'
+        'name',
+        'description'
     ];
 
     /**

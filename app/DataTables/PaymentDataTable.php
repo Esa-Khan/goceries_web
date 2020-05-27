@@ -1,13 +1,19 @@
 <?php
+/**
+ * File name: PaymentDataTable.php
+ * Last modified: 2020.05.04 at 09:04:19
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 namespace App\DataTables;
 
-use App\Models\Payment;
 use App\Models\CustomField;
-use Illuminate\Support\Facades\Log;
-use Yajra\DataTables\Services\DataTable;
-use Yajra\DataTables\EloquentDataTable;
+use App\Models\Payment;
 use Barryvdh\DomPDF\Facade as PDF;
+use Yajra\DataTables\EloquentDataTable;
+use Yajra\DataTables\Services\DataTable;
 
 class PaymentDataTable extends DataTable
 {
@@ -48,15 +54,7 @@ class PaymentDataTable extends DataTable
      */
     public function query(Payment $model)
     {
-//            Log::info($model->newQuery()->with("user")
-//                ->join("orders", "payments.id", "=", "orders.payment_id")
-//                ->join("food_orders", "orders.id", "=", "food_orders.order_id")
-//                ->join("foods", "foods.id", "=", "food_orders.food_id")
-//                ->join("user_restaurants", "user_restaurants.restaurant_id", "=", "foods.restaurant_id")
-//                ->where('user_restaurants.user_id', auth()->id())
-//                ->groupBy('payments.id')
-//                ->orderBy('payments.id', 'desc')
-//                ->select('payments.*')->get());
+
         if (auth()->user()->hasRole('admin')) {
             return $model->newQuery()->with("user")->select('payments.*')->orderBy('id', 'desc');
         } else if(auth()->user()->hasRole('manager')){
@@ -69,9 +67,7 @@ class PaymentDataTable extends DataTable
                 ->groupBy('payments.id')
                 ->orderBy('payments.id', 'desc')
                 ->select('payments.*');
-
-
-        }else{
+        } else if (auth()->user()->hasRole('client')) {
             return $model->newQuery()->with("user")
                 ->where('payments.user_id', auth()->id())
                 ->select('payments.*')->orderBy('id', 'desc');

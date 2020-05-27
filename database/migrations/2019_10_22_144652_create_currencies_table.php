@@ -18,8 +18,8 @@ class CreateCurrenciesTable extends Migration
             $table->string('name', 127);
             $table->string('symbol', 63);
             $table->string('code', 5);
-            $table->unsignedTinyInteger('decimal_digits');
-            $table->unsignedTinyInteger('rounding');
+            $table->unsignedTinyInteger('decimal_digits')->nullable();
+            $table->unsignedTinyInteger('rounding')->nullable();
             $table->timestamps();
         });
     }

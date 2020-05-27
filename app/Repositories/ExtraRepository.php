@@ -8,7 +8,7 @@ use InfyOm\Generator\Common\BaseRepository;
 /**
  * Class ExtraRepository
  * @package App\Repositories
- * @version August 29, 2019, 9:39 pm UTC
+ * @version April 6, 2020, 10:56 am UTC
  *
  * @method Extra findWithoutFail($id, $columns = ['*'])
  * @method Extra find($id, $columns = ['*'])
@@ -23,7 +23,8 @@ class ExtraRepository extends BaseRepository
         'name',
         'description',
         'price',
-        'food_id'
+        'food_id',
+        'extra_group_id'
     ];
 
     /**

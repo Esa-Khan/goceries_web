@@ -1,4 +1,11 @@
 <?php
+/**
+ * File name: DriversPayout.php
+ * Last modified: 2020.04.30 at 08:21:08
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 namespace App\Models;
 
@@ -53,7 +60,7 @@ class DriversPayout extends Model
         'user_id' => 'required|exists:users,id',
         'method' => 'required',
         'note' => 'required',
-        'amount' => 'required|min:1',
+        'amount' => 'required|min:0.01',
     ];
 
     /**

@@ -1,11 +1,18 @@
 <?php
+/**
+ * File name: PermissionDataTable.php
+ * Last modified: 2020.04.30 at 08:21:08
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 namespace App\DataTables;
 
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
+use Yajra\DataTables\Services\DataTable;
 
 class PermissionDataTable extends DataTable
 {
@@ -23,6 +30,9 @@ class PermissionDataTable extends DataTable
             ->editColumn('class',function ($permission){
                 return explode('.',$permission->name)[0];
             })
+            ->editColumn('roles', function ($permission) {
+                return json_encode(['permission' => $permission->name, 'roles' => $permission->roles->pluck('name')->toArray()]);
+            })
             ->addColumn('action', 'settings.permissions.datatables_actions');
     }
 
@@ -34,7 +44,8 @@ class PermissionDataTable extends DataTable
      */
     public function query(Permission $model)
     {
-        return $model->newQuery();
+        return $model->newQuery()->with('roles');
+
     }
 
     /**
@@ -57,7 +68,8 @@ class PermissionDataTable extends DataTable
                         'dataSrc' => 'class'
                     ],
                     'colReorder'=>false,
-                    "initComplete" => "function(settings){renderButtons( settings.sTableId); renderiCheck(settings.sTableId)}",
+                    "initComplete" => "function(settings){console.log('initComplete'); renderButtons( settings.sTableId); renderiCheck(settings.sTableId)}",
+                    "stateSaveParams" => "function(settings){renderiCheck(settings.sTableId);}"
                 ]
             ));
     }
@@ -87,18 +99,25 @@ class PermissionDataTable extends DataTable
                 'data' => 'guard_name',
                 'title' => trans('lang.permission_guard_name'),
                 'searchable' => false,
-            ]
+            ],
+            [
+                'data' => 'roles',
+                'title' => trans('lang.role_plural'),
+                'visible' => false,
+                'className' => "hide",
+                'searchable' => false
+            ],
         ];
 
 
         $roles = Role::select('id','name')->get();
         foreach ($roles as $role){
-            $newColumn['data'] = 'name';
+            $newColumn['data'] = 'roles';
             $newColumn['title'] = $role->name;
             $newColumn['searchable'] = 'false';
             $newColumn['exportable'] = 'false';
             $newColumn['printable'] = 'false';
-            $newColumn['render'] = 'function(){return "<div class=\'checkbox icheck\'><label><input  type=\'checkbox\' name=\'namehere\' class=\'permission\' data-role-id=\''.$role->id.'\' data-permission=\'"+data+"\'></label></div>"}';
+            $newColumn['render'] = 'function(){return "<div class=\'checkbox icheck\'><label><input  type=\'checkbox\' name=\'namehere\' class=\'permission\' data-role-name=\'' . $role->name . '\' data-role-id=\'' . $role->id . '\' data-permission=\'"+data+"\'></label></div>"}';
             $columns[] = $newColumn;
         }
         return $columns;

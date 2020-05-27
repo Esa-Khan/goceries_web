@@ -1,8 +1,15 @@
 <?php
+/**
+ * File name: helpers.php
+ * Last modified: 2020.05.06 at 10:12:55
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
-use InfyOm\Generator\Common\GeneratorField;
-use InfyOm\Generator\Utils\GeneratorFieldsInputUtil;
-use InfyOm\Generator\Utils\HTMLFieldGenerator;
+use InfyOm\Generator\Common\GeneratorCuisine;
+use InfyOm\Generator\Utils\GeneratorCuisinesInputUtil;
+use InfyOm\Generator\Utils\HTMLCuisineGenerator;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
 
 /**
@@ -25,10 +32,13 @@ function formatedSize($bytes, $precision = 1)
 
 function getMediaColumn($mediaModel, $mediaCollectionName = '', $extraClass = '', $mediaThumbnail = 'icon')
 {
+    $extraClass = $extraClass == '' ? ' rounded ' : $extraClass;
+
     if ($mediaModel->hasMedia($mediaCollectionName)) {
         return "<img class='" . $extraClass . "' style='width:50px' src='" . $mediaModel->getFirstMediaUrl($mediaCollectionName, $mediaThumbnail) . "' alt='" . $mediaModel->getFirstMedia($mediaCollectionName)->name . "'>";
+    }else{
+        return "<img class='" . $extraClass . "' style='width:50px' src='" . asset('images/image_default.png') . "' alt='image_default'>";
     }
-    return '';
 }
 
 /**
@@ -68,10 +78,10 @@ function getPriceColumn($modelObject, $attributeName = 'price')
 
 function getPrice($price = 0)
 {
-    if (setting('currency_right',false) != false) {
+    if (setting('currency_right', false) != false) {
         return number_format((float)$price, 2, '.', '') . "<span>" . setting('default_currency') . "</span>";
     } else {
-        return "<span>" . setting('default_currency') . "</span>" . number_format((float)$price, 2, '.', '');
+        return "<span>" . setting('default_currency') . "</span>" . number_format((float)$price, 2, '.', ' ');
     }
 }
 
@@ -87,6 +97,22 @@ function getBooleanColumn($column, $attributeName)
             return "<span class='badge badge-success'>" . trans('lang.yes') . "</span>";
         } else {
             return "<span class='badge badge-danger'>" . trans('lang.no') . "</span>";
+        }
+    }
+}
+
+/**
+ * generate not boolean column for datatable
+ * @param $column
+ * @return string
+ */
+function getNotBooleanColumn($column, $attributeName)
+{
+    if (isset($column)) {
+        if ($column[$attributeName]) {
+            return "<span class='badge badge-danger'>" . trans('lang.yes') . "</span>";
+        } else {
+            return "<span class='badge badge-success'>" . trans('lang.no') . "</span>";
         }
     }
 }
@@ -393,7 +419,7 @@ function generateCustomField($fields, $fieldsValues = null)
             '$INPUT_ARR_SELECTED$' => '[]',
 
         ];
-        $gf = new GeneratorField();
+        $gf = new \InfyOm\Generator\Common\GeneratorField();
         if ($fieldsValues) {
             foreach ($fieldsValues as $value) {
                 if ($field->id === $value->customField->id) {
@@ -412,7 +438,7 @@ function generateCustomField($fields, $fieldsValues = null)
             $gf->htmlType = 'select';
             $gf->dbInput = 'hidden,mtm';
         }
-        $fieldTemplate = HTMLFieldGenerator::generateCustomFieldHTML($gf, config('infyom.laravel_generator.templates', 'adminlte-templates'));
+        $fieldTemplate = \InfyOm\Generator\Utils\HTMLFieldGenerator::generateCustomFieldHTML($gf, config('infyom.laravel_generator.templates', 'adminlte-templates'));
 
 
         if (!empty($fieldTemplate)) {

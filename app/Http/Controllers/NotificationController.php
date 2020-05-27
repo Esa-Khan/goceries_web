@@ -3,17 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\NotificationDataTable;
-use App\Http\Requests;
 use App\Http\Requests\CreateNotificationRequest;
 use App\Http\Requests\UpdateNotificationRequest;
-use App\Repositories\NotificationRepository;
 use App\Repositories\CustomFieldRepository;
-use App\Repositories\NotificationTypeRepository;
-                use App\Repositories\UserRepository;
+use App\Repositories\NotificationRepository;
+use App\Repositories\UserRepository;
 use Carbon\Carbon;
 use Flash;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Prettus\Validator\Exceptions\ValidatorException;
@@ -28,22 +25,15 @@ class NotificationController extends Controller
      */
     private $customFieldRepository;
 
-    /**
-  * @var NotificationTypeRepository
-  */
-private $notificationTypeRepository;/**
-  * @var UserRepository
-  */
-private $userRepository;
+    private $userRepository;
 
-    public function __construct(NotificationRepository $notificationRepo, CustomFieldRepository $customFieldRepo , NotificationTypeRepository $notificationTypeRepo
-                , UserRepository $userRepo)
+    public function __construct(NotificationRepository $notificationRepo, CustomFieldRepository $customFieldRepo,
+        UserRepository $userRepo)
     {
         parent::__construct();
         $this->notificationRepository = $notificationRepo;
         $this->customFieldRepository = $customFieldRepo;
-        $this->notificationTypeRepository = $notificationTypeRepo;
-                $this->userRepository = $userRepo;
+        $this->userRepository = $userRepo;
     }
 
     /**
@@ -64,15 +54,14 @@ private $userRepository;
      */
     public function create()
     {
-        $notificationType = $this->notificationTypeRepository->pluck('type','id');
-                $user = $this->userRepository->pluck('name','id');
-        
-        $hasCustomField = in_array($this->notificationRepository->model(),setting('custom_field_models',[]));
-            if($hasCustomField){
-                $customFields = $this->customFieldRepository->findByField('custom_field_model', $this->notificationRepository->model());
-                $html = generateCustomField($customFields);
-            }
-        return view('notifications.create')->with("customFields", isset($html) ? $html : false)->with("notificationType",$notificationType)->with("user",$user);
+        $user = $this->userRepository->pluck('name', 'id');
+
+        $hasCustomField = in_array($this->notificationRepository->model(), setting('custom_field_models', []));
+        if ($hasCustomField) {
+            $customFields = $this->customFieldRepository->findByField('custom_field_model', $this->notificationRepository->model());
+            $html = generateCustomField($customFields);
+        }
+        return view('notifications.create')->with("customFields", isset($html) ? $html : false)->with("user", $user);
     }
 
     /**
@@ -88,13 +77,13 @@ private $userRepository;
         $customFields = $this->customFieldRepository->findByField('custom_field_model', $this->notificationRepository->model());
         try {
             $notification = $this->notificationRepository->create($input);
-            $notification->customFieldsValues()->createMany(getCustomFieldsValues($customFields,$request));
-            
+            $notification->customFieldsValues()->createMany(getCustomFieldsValues($customFields, $request));
+
         } catch (ValidatorException $e) {
             Flash::error($e->getMessage());
         }
 
-        Flash::success(__('lang.saved_successfully',['operator' => __('lang.notification')]));
+        Flash::success(__('lang.saved_successfully', ['operator' => __('lang.notification')]));
 
         return redirect(route('notifications.index'));
     }
@@ -102,7 +91,7 @@ private $userRepository;
     /**
      * Display the specified Notification.
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return Response
      */
@@ -117,7 +106,7 @@ private $userRepository;
         }
         try {
             //dd((new Carbon('now'))->format('Y-m-d H:i:s'));
-            $notification = $this->notificationRepository->update(['read_at'=>(new Carbon())], $id);
+            $notification = $this->notificationRepository->update(['read_at' => (new Carbon())], $id);
 
         } catch (ValidatorException $e) {
             Flash::error($e->getMessage());
@@ -131,36 +120,35 @@ private $userRepository;
     /**
      * Show the form for editing the specified Notification.
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return Response
      */
     public function edit($id)
     {
         $notification = $this->notificationRepository->findWithoutFail($id);
-        $notificationType = $this->notificationTypeRepository->pluck('type','id');
-                $user = $this->userRepository->pluck('name','id');
-        
+        $user = $this->userRepository->pluck('name', 'id');
+
 
         if (empty($notification)) {
-            Flash::error(__('lang.not_found',['operator' => __('lang.notification')]));
+            Flash::error(__('lang.not_found', ['operator' => __('lang.notification')]));
 
             return redirect(route('notifications.index'));
         }
         $customFieldsValues = $notification->customFieldsValues()->with('customField')->get();
-        $customFields =  $this->customFieldRepository->findByField('custom_field_model', $this->notificationRepository->model());
-        $hasCustomField = in_array($this->notificationRepository->model(),setting('custom_field_models',[]));
-        if($hasCustomField) {
+        $customFields = $this->customFieldRepository->findByField('custom_field_model', $this->notificationRepository->model());
+        $hasCustomField = in_array($this->notificationRepository->model(), setting('custom_field_models', []));
+        if ($hasCustomField) {
             $html = generateCustomField($customFields, $customFieldsValues);
         }
 
-        return view('notifications.edit')->with('notification', $notification)->with("customFields", isset($html) ? $html : false)->with("notificationType",$notificationType)->with("user",$user);
+        return view('notifications.edit')->with('notification', $notification)->with("customFields", isset($html) ? $html : false)->with("user", $user);
     }
 
     /**
      * Update the specified Notification in storage.
      *
-     * @param  int              $id
+     * @param int $id
      * @param UpdateNotificationRequest $request
      *
      * @return Response
@@ -177,17 +165,15 @@ private $userRepository;
         $customFields = $this->customFieldRepository->findByField('custom_field_model', $this->notificationRepository->model());
         try {
             $notification = $this->notificationRepository->update($input, $id);
-            
-            
-            foreach (getCustomFieldsValues($customFields, $request) as $value){
+            foreach (getCustomFieldsValues($customFields, $request) as $value) {
                 $notification->customFieldsValues()
-                    ->updateOrCreate(['custom_field_id'=>$value['custom_field_id']],$value);
+                    ->updateOrCreate(['custom_field_id' => $value['custom_field_id']], $value);
             }
         } catch (ValidatorException $e) {
             Flash::error($e->getMessage());
         }
 
-        Flash::success(__('lang.updated_successfully',['operator' => __('lang.notification')]));
+        Flash::success(__('lang.updated_successfully', ['operator' => __('lang.notification')]));
 
         return redirect(route('notifications.index'));
     }
@@ -195,7 +181,7 @@ private $userRepository;
     /**
      * Remove the specified Notification from storage.
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return Response
      */
@@ -211,12 +197,12 @@ private $userRepository;
 
         $this->notificationRepository->delete($id);
 
-        Flash::success(__('lang.deleted_successfully',['operator' => __('lang.notification')]));
+        Flash::success(__('lang.deleted_successfully', ['operator' => __('lang.notification')]));
 
         return redirect(route('notifications.index'));
     }
 
-        /**
+    /**
      * Remove Media of Notification
      * @param Request $request
      */
@@ -225,7 +211,7 @@ private $userRepository;
         $input = $request->all();
         $notification = $this->notificationRepository->findWithoutFail($input['id']);
         try {
-            if($notification->hasMedia($input['collection'])){
+            if ($notification->hasMedia($input['collection'])) {
                 $notification->getFirstMedia($input['collection'])->delete();
             }
         } catch (\Exception $e) {

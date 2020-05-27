@@ -1,4 +1,11 @@
 <?php
+/**
+ * File name: RestaurantsPayout.php
+ * Last modified: 2020.04.30 at 08:21:09
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 namespace App\Models;
 
@@ -53,7 +60,7 @@ class RestaurantsPayout extends Model
         'restaurant_id' => 'required|exists:restaurants,id',
         'method' => 'required',
         'note' => 'required',
-        'amount' => 'required|min:1',
+        'amount' => 'required|min:0.01',
     ];
 
     /**

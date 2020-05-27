@@ -16,7 +16,5 @@ class ModelHasPermissionsTableSeeder extends Seeder
 
         \DB::table('model_has_permissions')->delete();
         
-        
-        
     }
 }

@@ -8,10 +8,7 @@ use App\Models\DeliveryAddress;
 use App\Repositories\DeliveryAddressRepository;
 use Flash;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use InfyOm\Generator\Criteria\LimitOffsetCriteria;
-use Prettus\Repository\Contracts\CriteriaInterface;
-use Prettus\Repository\Contracts\RepositoryInterface;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Exceptions\ValidatorException;
@@ -81,9 +78,10 @@ class DeliveryAddressAPIController extends Controller
      */
     public function store(Request $request)
     {
-        $input = $request->all();
+        $uniqueInput = $request->only("address");
+        $otherInput = $request->except("address");
         try {
-            $deliveryAddress = $this->deliveryAddressRepository->create($input);
+            $deliveryAddress = $this->deliveryAddressRepository->updateOrCreate($uniqueInput, $otherInput);
 
         } catch (ValidatorException $e) {
             return $this->sendError($e->getMessage());

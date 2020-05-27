@@ -1,4 +1,11 @@
 <?php
+/**
+ * File name: UserController.php
+ * Last modified: 2020.05.04 at 12:15:13
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 namespace App\Http\Controllers;
 
@@ -183,6 +190,10 @@ class UserController extends Controller
      */
     public function edit($id)
     {
+        if (!auth()->user()->hasRole('admin') && $id != auth()->id()) {
+            Flash::error('Permission denied');
+            return redirect(route('users.index'));
+        }
         $user = $this->userRepository->findWithoutFail($id);
         unset($user->password);
         $html = false;
@@ -218,14 +229,19 @@ class UserController extends Controller
     {
         if (env('APP_DEMO', false)) {
             Flash::warning('This is only demo app you can\'t change this section ');
-            return redirect(route('users.index'));
+            return redirect(route('users.profile'));
+        }
+        if (!auth()->user()->hasRole('admin') && $id != auth()->id()) {
+            Flash::error('Permission denied');
+            return redirect(route('users.profile'));
         }
 
         $user = $this->userRepository->findWithoutFail($id);
 
+
         if (empty($user)) {
             Flash::error('User not found');
-            return redirect(route('users.index'));
+            return redirect(route('users.profile'));
         }
         $customFields = $this->customFieldRepository->findByField('custom_field_model', $this->userRepository->model());
 
@@ -240,7 +256,7 @@ class UserController extends Controller
             $user = $this->userRepository->update($input, $id);
             if (empty($user)) {
                 Flash::error('User not found');
-                return redirect(route('users.index'));
+                return redirect(route('users.profile'));
             }
             if (isset($input['avatar']) && $input['avatar']) {
                 $cacheUpload = $this->uploadRepository->getByUuid($input['avatar']);

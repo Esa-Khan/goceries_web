@@ -1,26 +1,29 @@
 <?php
+/**
+ * File name: NotificationAPIController.php
+ * Last modified: 2020.05.07 at 10:41:01
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 namespace App\Http\Controllers\API;
 
 
+use App\Http\Controllers\Controller;
 use App\Models\Notification;
 use App\Repositories\NotificationRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Log;
 use InfyOm\Generator\Criteria\LimitOffsetCriteria;
 use Prettus\Repository\Criteria\RequestCriteria;
-use Illuminate\Support\Facades\Response;
 use Prettus\Repository\Exceptions\RepositoryException;
-use Flash;
 use Prettus\Validator\Exceptions\ValidatorException;
 
 /**
  * Class NotificationController
  * @package App\Http\Controllers\API
  */
-
 class NotificationAPIController extends Controller
 {
     /** @var  NotificationRepository */
@@ -40,7 +43,7 @@ class NotificationAPIController extends Controller
      */
     public function index(Request $request)
     {
-        try{
+        try {
             $this->notificationRepository->pushCriteria(new RequestCriteria($request));
             $this->notificationRepository->pushCriteria(new LimitOffsetCriteria($request));
         } catch (RepositoryException $e) {
@@ -55,7 +58,7 @@ class NotificationAPIController extends Controller
      * Display the specified Notification.
      * GET|HEAD /notifications/{id}
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -72,6 +75,7 @@ class NotificationAPIController extends Controller
 
         return $this->sendResponse($notification->toArray(), 'Notification retrieved successfully');
     }
+
     /**
      * Update the specified Notification in storage.
      *
@@ -89,10 +93,10 @@ class NotificationAPIController extends Controller
         }
         $input = $request->all();
 
-        if(isset($input['read_at'])){
-            if($input['read_at'] == true){
+        if (isset($input['read_at'])) {
+            if ($input['read_at'] == true) {
                 $input['read_at'] = Carbon::now();
-            }else{
+            } else {
                 unset($input['read_at']);
             }
         }
@@ -103,7 +107,7 @@ class NotificationAPIController extends Controller
             return $this->sendError($e->getMessage());
         }
 
-        return $this->sendResponse($notification->toArray(), __('lang.saved_successfully',['operator' => __('lang.notification')]));
+        return $this->sendResponse($notification->toArray(), __('lang.saved_successfully', ['operator' => __('lang.notification')]));
     }
 
     /**
@@ -123,7 +127,7 @@ class NotificationAPIController extends Controller
 
         $this->notificationRepository->delete($id);
 
-        return $this->sendResponse($notification, __('lang.deleted_successfully',['operator' => __('lang.notification')]));
+        return $this->sendResponse($notification, __('lang.deleted_successfully', ['operator' => __('lang.notification')]));
 
     }
 }

@@ -1,4 +1,10 @@
 <?php
+/**
+ * File name: installer.php
+ * Last modified: 2020.05.25 at 16:23:06
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ */
 
 use Illuminate\Validation\Rule;
 
@@ -64,7 +70,7 @@ return [
         'form' => [
             'rules' => [
                 'app_name'              => 'required|string|max:50',
-                'purchase_code'              => 'required|string|max:36|min:36',
+                'purchase_code'         => 'required|string|max:36|min:36',
                 'environment'           => 'required|string|max:50',
                 'environment_custom'    => 'required_if:environment,other|max:50',
                 'app_debug'             => [
@@ -74,24 +80,23 @@ return [
                 'app_log_level'         => 'required|string|max:50',
                 'app_url'               => 'required|url',
                 'database_connection'   => 'required|string|max:50',
-                'database_hostname'     => 'required|string|max:50',
+                'database_hostname'     => 'required|string',
                 'database_port'         => 'required|numeric',
-                'database_name'         => 'required|string|max:50',
-                'database_username'     => 'required|string|max:50',
-                //'database_password'     => '',
-                'broadcast_driver'      => 'required|string|max:50',
-                'cache_driver'          => 'required|string|max:50',
-                'session_driver'        => 'required|string|max:50',
-                'queue_driver'          => 'required|string|max:50',
-                'redis_hostname'        => 'required|string|max:50',
-                'redis_password'        => 'required|string|max:50',
-                'redis_port'            => 'required|numeric',
-                'mail_driver'           => 'required|string|max:50',
-                'mail_host'             => 'required|string|max:50',
-                'mail_port'             => 'required|string|max:50',
-                'mail_username'         => 'required|string|max:50',
-                'mail_password'         => 'required|string|max:50',
-                'mail_encryption'       => 'required|string|max:50',
+                'database_name'         => 'required|string',
+                'database_username'     => 'required|string',
+                'broadcast_driver'      => 'string|max:50',
+                'cache_driver'          => 'string|max:50',
+                'session_driver'        => 'string|max:50',
+                'queue_driver'          => 'string|max:50',
+                'redis_hostname'        => 'string|max:50',
+                'redis_password'        => 'string|max:50',
+                'redis_port'            => 'numeric',
+                'mail_driver'           => 'string|max:50',
+                'mail_host'             => 'string|max:50',
+                'mail_port'             => 'string|max:50',
+                'mail_username'         => 'string',
+                'mail_password'         => 'string|max:50',
+                'mail_encryption'       => 'string|max:50',
                 'pusher_app_id'         => 'max:50',
                 'pusher_app_key'        => 'max:50',
                 'pusher_app_secret'     => 'max:50',
@@ -144,5 +149,7 @@ return [
     |
     */
     'updaterEnabled' => 'true',
+
+    'currentVersion' => 'v211',
 
 ];

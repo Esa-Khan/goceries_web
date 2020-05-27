@@ -36,12 +36,8 @@ class PermissionController extends Controller
     }
 
     public function refreshPermissions(Request $request){
-//        dd('ff');
         Artisan::call('db:seed',['--class'=> 'DemoPermissionsPermissionsTableSeeder']);
         redirect()->back();
-        //Flash::success('Permission refreshed successfully.');
-
-        //return redirect(route('permissions.index'));
     }
 
     public function givePermissionToRole(Request $request){
@@ -145,10 +141,11 @@ class PermissionController extends Controller
     /**
      * Update the specified Permission in storage.
      *
-     * @param  int              $id
+     * @param int $id
      * @param UpdatePermissionRequest $request
      *
      * @return Response
+     * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
     public function update($id, UpdatePermissionRequest $request)
     {

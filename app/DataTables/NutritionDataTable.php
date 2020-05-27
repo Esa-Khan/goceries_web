@@ -30,6 +30,12 @@ class NutritionDataTable extends DataTable
             ->editColumn('updated_at', function ($nutrition) {
                 return getDateColumn($nutrition, 'updated_at');
             })
+            ->editColumn('food.name', function ($nutrition) {
+                return getLinksColumnByRouteName([$nutrition->food->toArray()], 'foods.edit','id','name');
+            })
+            ->editColumn('food.restaurant.name', function ($nutrition) {
+                return getLinksColumnByRouteName([$nutrition->food->restaurant->toArray()], 'restaurants.edit', 'id', 'name');
+            })
             ->addColumn('action', 'nutrition.datatables_actions')
             ->rawColumns(array_merge($columns, ['action']));
 
@@ -45,13 +51,15 @@ class NutritionDataTable extends DataTable
     public function query(Nutrition $model)
     {
         if (auth()->user()->hasRole('admin')) {
-            return $model->newQuery()->with("food")->select('nutrition.*');
-        } else {
-            return $model->newQuery()->with("food")
+            return $model->newQuery()->with("food")->with('food.restaurant')->select('nutrition.*');
+        } else if(auth()->user()->hasRole('manager')){
+            return $model->newQuery()->with("food")->with('food.restaurant')
                 ->join("foods","foods.id","=","nutrition.food_id")
                 ->join("user_restaurants", "user_restaurants.restaurant_id", "=", "foods.restaurant_id")
                 ->where('user_restaurants.user_id', auth()->id())
                 ->select('nutrition.*');
+        }else{
+            return $model->newQuery()->with("food")->with('food.restaurant')->select('nutrition.*');
         }
     }
 
@@ -96,6 +104,11 @@ class NutritionDataTable extends DataTable
             [
                 'data' => 'food.name',
                 'title' => trans('lang.nutrition_food_id'),
+
+            ],
+            [
+                'data' => 'food.restaurant.name',
+                'title' => trans('lang.restaurant'),
 
             ],
             [

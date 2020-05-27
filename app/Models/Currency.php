@@ -1,4 +1,11 @@
 <?php
+/**
+ * File name: Currency.php
+ * Last modified: 2020.04.30 at 08:21:08
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 namespace App\Models;
 
@@ -47,7 +54,9 @@ class Currency extends Model
      * @var array
      */
     public static $rules = [
-        
+        'name' => 'required',
+        'symbol' => 'required',
+        'code' => 'required',
     ];
 
     /**

@@ -6,7 +6,7 @@
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h1 class="m-0 text-dark">{{trans('lang.order_plural')}} <small>{{trans('lang.order_desc')}}</small></h1>
+        <h1 class="m-0 text-dark">{{trans('lang.order_plural')}}<small class="ml-3 mr-3">|</small><small>{{trans('lang.order_desc')}}</small></h1>
       </div><!-- /.col -->
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
@@ -51,12 +51,12 @@
               <td>{!! getPrice($subtotal) !!}</td>
             </tr>
             <tr>
-              <th class="text-right">{{trans('lang.order_tax')}} ({!!$order->tax!!}%) </th>
-              <td>{!! getPrice($subtotal * $order->tax/100)!!}</td>
-            </tr>
-            <tr>
               <th class="text-right">{{trans('lang.order_delivery_fee')}}</th>
               <td>{!! getPrice($order['delivery_fee'])!!}</td>
+            </tr>
+            <tr>
+              <th class="text-right">{{trans('lang.order_tax')}} ({!!$order->tax!!}%) </th>
+              <td>{!! getPrice($subtotal * $order->tax/100)!!}</td>
             </tr>
 
             <tr>

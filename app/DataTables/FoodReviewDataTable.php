@@ -1,12 +1,22 @@
 <?php
+/**
+ * File name: FoodReviewDataTable.php
+ * Last modified: 2020.05.04 at 09:04:19
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ *
+ */
 
 namespace App\DataTables;
 
-use App\Models\FoodReview;
+use App\Criteria\FoodReviews\OrderFoodReviewsOfUserCriteria;
+use App\Criteria\FoodReviews\FoodReviewsOfUserCriteria;
 use App\Models\CustomField;
-use Yajra\DataTables\Services\DataTable;
-use Yajra\DataTables\EloquentDataTable;
+use App\Models\FoodReview;
+use App\Repositories\FoodReviewRepository;
 use Barryvdh\DomPDF\Facade as PDF;
+use Yajra\DataTables\EloquentDataTable;
+use Yajra\DataTables\Services\DataTable;
 
 class FoodReviewDataTable extends DataTable
 {
@@ -15,12 +25,22 @@ class FoodReviewDataTable extends DataTable
      * @var array
      */
     public static $customFields = [];
+    private $foodReviewRepo;
+    private $myReviews;
+
+
+    public function __construct(FoodReviewRepository $foodReviewRepo)
+    {
+        $this->foodReviewRepo = $foodReviewRepo;
+        $this->myReviews = $this->foodReviewRepo->getByCriteria(new FoodReviewsOfUserCriteria(auth()->id()))->pluck('id')->toArray();
+    }
 
     /**
      * Build DataTable class.
      *
      * @param mixed $query Results from query() method.
      * @return \Yajra\DataTables\DataTableAbstract
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function dataTable($query)
     {
@@ -30,7 +50,9 @@ class FoodReviewDataTable extends DataTable
             ->editColumn('updated_at', function ($food_review) {
                 return getDateColumn($food_review, 'updated_at');
             })
-            ->addColumn('action', 'food_reviews.datatables_actions')
+            ->addColumn('action', function ($food_review) {
+                return view('food_reviews.datatables_actions', ['id' => $food_review->id, 'myReviews' => $this->myReviews])->render();
+            })
             ->rawColumns(array_merge($columns, ['action']));
 
         return $dataTable;
@@ -41,18 +63,13 @@ class FoodReviewDataTable extends DataTable
      *
      * @param \App\Models\Post $model
      * @return \Illuminate\Database\Eloquent\Builder
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function query(FoodReview $model)
     {
-        if (auth()->user()->hasRole('admin')) {
-            return $model->newQuery()->with("user")->with("food")->select('food_reviews.*');
-        } else {
-            return $model->newQuery()->with("user")->with("food")
-                ->join("foods","foods.id","=","food_reviews.food_id")
-                ->join("user_restaurants", "user_restaurants.restaurant_id", "=", "foods.restaurant_id")
-                ->where('user_restaurants.user_id', auth()->id())
-                ->select('food_reviews.*');
-        }
+        $this->foodReviewRepo->resetCriteria();
+        $this->foodReviewRepo->pushCriteria(new OrderFoodReviewsOfUserCriteria(auth()->id()));
+        return $this->foodReviewRepo->with("user")->with("food")->newQuery();
     }
 
     /**

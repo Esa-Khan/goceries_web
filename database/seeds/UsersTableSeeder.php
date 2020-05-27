@@ -37,7 +37,7 @@ class UsersTableSeeder extends Seeder
             ),
             1 => 
             array (
-                'id' => 18,
+                'id' => 2,
                 'name' => 'Barbara J. Glanz',
                 'email' => 'manager@demo.com',
                 'password' => '$2y$10$YOn/Xq6vfvi9oaixrtW8QuM2W0mawkLLqIxL.IoGqrsqOqbIsfBNu',
@@ -55,7 +55,7 @@ class UsersTableSeeder extends Seeder
             ),
             2 => 
             array (
-                'id' => 19,
+                'id' => 3,
                 'name' => 'Charles W. Abeyta',
                 'email' => 'client@demo.com',
                 'password' => '$2y$10$EBubVy3wDbqNbHvMQwkj3OTYVitL8QnHvh/zV0ICVOaSbALy5dD0K',
@@ -73,7 +73,7 @@ class UsersTableSeeder extends Seeder
             ),
             3 => 
             array (
-                'id' => 20,
+                'id' => 4,
                 'name' => 'Robert E. Brock',
                 'email' => 'client1@demo.com',
                 'password' => '$2y$10$pmdnepS1FhZUMqOaFIFnNO0spltJpziz3j13UqyEwShmLhokmuoei',
@@ -91,7 +91,7 @@ class UsersTableSeeder extends Seeder
             ),
             4 => 
             array (
-                'id' => 22,
+                'id' => 5,
                 'name' => 'Sanchez Roberto',
                 'email' => 'driver@demo.com',
                 'password' => '$2y$10$T/jwzYDJfC8c9CdD5PbpuOKvEXlpv4.RR1jMT0PgIMT.fzeGw67JO',
@@ -109,7 +109,7 @@ class UsersTableSeeder extends Seeder
             ),
             5 => 
             array (
-                'id' => 24,
+                'id' => 6,
                 'name' => 'John Doe',
                 'email' => 'driver1@demo.com',
                 'password' => '$2y$10$YF0jCx2WCQtfZOq99hR8kuXsAE0KSnu5OYSomRtI9iCVguXDoDqVm',

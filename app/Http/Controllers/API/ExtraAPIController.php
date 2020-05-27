@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers\API;
 
+
 use App\Models\Extra;
-use App\Repositories\CustomFieldRepository;
 use App\Repositories\ExtraRepository;
-use App\Repositories\FoodRepository;
-use App\Repositories\UploadRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use InfyOm\Generator\Criteria\LimitOffsetCriteria;
 use Prettus\Repository\Criteria\RequestCriteria;
+use Illuminate\Support\Facades\Response;
 use Prettus\Repository\Exceptions\RepositoryException;
-use Prettus\Validator\Exceptions\ValidatorException;
+use Flash;
 
 /**
  * Class ExtraController
@@ -24,28 +23,9 @@ class ExtraAPIController extends Controller
     /** @var  ExtraRepository */
     private $extraRepository;
 
-    /**
-     * @var CustomFieldRepository
-     */
-    private $customFieldRepository;
-
-    /**
-     * @var UploadRepository
-     */
-    private $uploadRepository;
-    /**
-     * @var FoodRepository
-     */
-    private $foodRepository;
-
-    public function __construct(ExtraRepository $extraRepo, CustomFieldRepository $customFieldRepo, UploadRepository $uploadRepo
-        , FoodRepository $foodRepo)
+    public function __construct(ExtraRepository $extraRepo)
     {
-        parent::__construct();
         $this->extraRepository = $extraRepo;
-        $this->customFieldRepository = $customFieldRepo;
-        $this->uploadRepository = $uploadRepo;
-        $this->foodRepository = $foodRepo;
     }
 
     /**
