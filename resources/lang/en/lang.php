@@ -771,7 +771,7 @@ return [
     'radio' => 'Radio',
     'refresh' => 'Refresh',
     'reset' => 'Reset',
-    'restaurant' => 'Restaurant',
+    'restaurant' => 'Store',
     'restaurant_address' => 'Address',
     'restaurant_address_help' => 'Insert Address',
     'restaurant_address_placeholder' => 'Insert Address',
