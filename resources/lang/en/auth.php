@@ -16,7 +16,7 @@ return [
     'password' => 'Password',
     'password_confirmation' => 'Confirm your password',
     'register' => 'Sign In',
-    'register_new_member' => 'Register a new membership',
+    'register_new_member' => 'Create an account',
     'remember_me' => 'Remember Me',
     'remember_password' => 'I remember my password return to login',
     'reset_password' => 'Reset',
