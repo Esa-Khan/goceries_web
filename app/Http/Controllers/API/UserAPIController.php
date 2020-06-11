@@ -195,13 +195,15 @@ class UserAPIController extends Controller
 
     function sendResetLinkEmail(Request $request)
     {
-        return $this->sendResponse(true, 'Test Response');
 
         $this->validate($request, ['email' => 'required|email']);
 
         $response = Password::broker()->sendResetLink(
             $request->only('email')
         );
+
+        return $this->sendResponse(true, 'Test Response');
+
 
         if ($response == Password::RESET_LINK_SENT) {
             return $this->sendResponse(true, 'Reset link was sent successfully');
