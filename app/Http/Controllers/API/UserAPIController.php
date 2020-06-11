@@ -201,15 +201,11 @@ class UserAPIController extends Controller
             $request->only('email')
         );
 
-
-        return $this->sendResponse(true, $response);
-
         if ($response == Password::RESET_LINK_SENT) {
             return $this->sendResponse(true, 'Reset link was sent successfully');
         } else {
             return $this->sendError('Reset link not sent', 401);
         }
-
 
     }
 }
