@@ -8,6 +8,30 @@
 
 ## CHANGELOG
 
+### v4.27.0 - 05-29-2020
+
+- Add renderRaw method to set render value as is.
+
+### v4.26.1 - 05-29-2020
+
+- Fix array listing and allow customer separator.
+
+### v4.26.0 - 05-29-2020
+
+- Add support for comma separated list from an array of objects.
+
+### v4.25.1 - 04-17-2020
+
+- Fix PR [#125].
+
+### v4.25.0 - 04-17-2020
+
+- HTML title for columns labels [#125], credits to @mgralikowski.
+
+### v4.24.0 - 04-02-2020
+
+- Add TextArea rows & cols fluent attribute setter.
+
 ### v4.23.1 - 03-04-2020
 
 - Improve addClass method. [#117], credits to @matteocostantini.
@@ -625,6 +649,7 @@ To `created_at` with title `Created At`
 [#122]: https://github.com/yajra/laravel-datatables-html/pull/122
 [#124]: https://github.com/yajra/laravel-datatables-html/pull/124
 [#117]: https://github.com/yajra/laravel-datatables-html/pull/117
+[#125]: https://github.com/yajra/laravel-datatables-html/pull/125
 
 [#3]: https://github.com/yajra/laravel-datatables-html/issues/3
 [#58]: https://github.com/yajra/laravel-datatables-html/issues/58

@@ -1,4 +1,4 @@
-<div class="card {{ Request::is('settings/users*') || Request::is('settings/permissions*') || Request::is('settings/roles*') ? '' : 'collapsed-card' }}">
+<div class="card {{ Request::is('users*') || Request::is('settings/permissions*') || Request::is('settings/roles*') ? '' : 'collapsed-card' }}">
     <div class="card-header">
         <h3 class="card-title">{{trans('lang.permission_menu')}}</h3>
 
@@ -21,7 +21,7 @@
             </li>
 
             <li class="nav-item">
-                <a href="{!! route('users.index') !!}" class="nav-link {{  Request::is('settings/users*') ? 'selected' : '' }}">
+                <a href="{!! route('users.index') !!}" class="nav-link {{  Request::is('users*') ? 'selected' : '' }}">
                     <i class="fa fa-users"></i> {{trans('lang.user_plural')}}
                 </a>
             </li>
@@ -31,14 +31,12 @@
 </div>
 
 <div class="card {{
-             Request::is('settings/app/globals*') ||
-             Request::is('settings/app/localisation*') ||
-             Request::is('settings/app/social*') ||
-             Request::is('settings/app/payment*') ||
-             Request::is('settings/app/notifications*') ||
+             Request::is('settings/app/*') ||
              Request::is('notificationTypes*') ||
              Request::is('settings/mail*') ||
              Request::is('settings/translation*') ||
+             Request::is('settings/payment*') ||
+             Request::is('settings/currencies*') ||
              Request::is('settings/customFields*')
  ? '' : 'collapsed-card' }}">
     <div class="card-header">
@@ -46,14 +44,11 @@
 
         <div class="card-tools">
             <button type="button" class="btn btn-tool" data-widget="collapse"><i class="fa {{
-             Request::is('settings/app/globals*') ||
-             Request::is('settings/app/localisation*') ||
-             Request::is('settings/app/social*') ||
-             Request::is('settings/app/payment*') ||
-             Request::is('settings/app/notifications*') ||
-             Request::is('notificationTypes*') ||
+             Request::is('settings/app/*') ||
              Request::is('settings/mail*') ||
              Request::is('settings/translation*') ||
+             Request::is('settings/payment*') ||
+             Request::is('settings/currencies*') ||
              Request::is('settings/customFields*')
              ? 'fa-minus' : 'fa-plus' }}"></i>
             </button>
@@ -80,10 +75,16 @@
             </li>
 
             <li class="nav-item">
-                <a href="{!! url('settings/app/payment') !!}" class="nav-link {{  Request::is('settings/app/payment*') ? 'selected' : '' }}">
+                <a href="{!! url('settings/payment/payment') !!}" class="nav-link {{  Request::is('settings/payment*') ? 'selected' : '' }}">
                     <i class="fa fa-credit-card"></i> {{trans('lang.app_setting_payment')}}
                 </a>
             </li>
+
+            @can('currencies.index')
+                <li class="nav-item">
+                    <a href="{!! route('currencies.index') !!}" class="nav-link {{ Request::is('settings/currencies*') ? 'selected' : '' }}" ><i class="nav-icon fa fa-dollar ml-1"></i> {{trans('lang.currency_plural')}}</a>
+                </li>
+            @endcan
 
             <li class="nav-item">
                 <a href="{!! url('settings/app/notifications') !!}" class="nav-link {{  Request::is('settings/app/notifications*') || Request::is('notificationTypes*') ? 'selected' : '' }}">

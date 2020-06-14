@@ -1,10 +1,9 @@
 <?php
 /**
  * File name: OrderController.php
- * Last modified: 2020.05.05 at 16:55:08
+ * Last modified: 2020.06.08 at 20:36:19
  * Author: SmarterVision - https://codecanyon.net/user/smartervision
  * Copyright (c) 2020
- *
  */
 
 namespace App\Http\Controllers;
@@ -145,14 +144,18 @@ class OrderController extends Controller
         $subtotal = 0;
 
         foreach ($order->foodOrders as $foodOrder) {
+            foreach ($foodOrder->extras as $extra) {
+                $foodOrder->price += $extra->price;
+            }
             $subtotal += $foodOrder->price * $foodOrder->quantity;
         }
 
         $total = $subtotal + $order['delivery_fee'];
-        $total += ($total * $order['tax'] / 100);
+        $taxAmount = $total * $order['tax'] / 100;
+        $total += $taxAmount;
         $foodOrderDataTable->id = $id;
 
-        return $foodOrderDataTable->render('orders.show', ["order" => $order, "total" => $total, "subtotal" => $subtotal]);
+        return $foodOrderDataTable->render('orders.show', ["order" => $order, "total" => $total, "subtotal" => $subtotal,"taxAmount" => $taxAmount]);
     }
 
     /**
@@ -216,7 +219,7 @@ class OrderController extends Controller
             $order = $this->orderRepository->update($input, $id);
 
             if (setting('enable_notifications', false)) {
-                if ($input['order_status_id'] != $oldOrder->order_status_id) {
+                if (isset($input['order_status_id']) && $input['order_status_id'] != $oldOrder->order_status_id) {
                     Notification::send([$order->user], new StatusChangedOrder($order));
                 }
 

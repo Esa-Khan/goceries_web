@@ -1,5 +1,13 @@
 <?php
 
+
+/**
+ * File name: services.php
+ * Last modified: 2020.06.11 at 16:03:23
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ */
+
 return [
 
     /*
@@ -58,6 +66,11 @@ return [
         'merchant_id' => env('BRAINTREE_MERCHANT_ID'),
         'public_key' => env('BRAINTREE_PUBLIC_KEY'),
         'private_key' => env('BRAINTREE_PRIVATE_KEY'),
+    ],
+
+    'razorpay' => [
+        'key' => 'rzp_test_yltsH9jI7Y5gFo',
+        'secret' => '9km0kMtOjh00nIHjlzaDK6Hc'
     ],
 
     'fcm' => [

@@ -1,5 +1,13 @@
 <?php
 
+
+/**
+ * File name: CurrencyDataTable.php
+ * Last modified: 2020.06.11 at 16:03:24
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ */
+
 namespace App\DataTables;
 
 use App\Models\Currency;
@@ -32,7 +40,7 @@ class CurrencyDataTable extends DataTable
 })
             
             
-            ->addColumn('action', 'currencies.datatables_actions')
+            ->addColumn('action', 'settings.currencies.datatables_actions')
             ->rawColumns(array_merge($columns, ['action']));
 
         return $dataTable;

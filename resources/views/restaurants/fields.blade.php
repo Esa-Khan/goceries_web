@@ -55,7 +55,7 @@
         </div>
     </div>
 
-    @endhasrole
+    @endhasanyrole
 
     <!-- Phone Field -->
     <div class="form-group row ">

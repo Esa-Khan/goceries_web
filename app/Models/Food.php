@@ -1,10 +1,9 @@
 <?php
 /**
  * File name: Food.php
- * Last modified: 2020.04.30 at 08:21:09
+ * Last modified: 2020.06.08 at 20:36:19
  * Author: SmarterVision - https://codecanyon.net/user/smartervision
  * Copyright (c) 2020
- *
  */
 
 namespace App\Models;
@@ -25,6 +24,7 @@ use Spatie\MediaLibrary\Models\Media;
  * @property \Illuminate\Database\Eloquent\Collection Extra
  * @property \Illuminate\Database\Eloquent\Collection Nutrition
  * @property \Illuminate\Database\Eloquent\Collection FoodsReview
+ * @property string id
  * @property string name
  * @property double price
  * @property double discount_price
@@ -208,7 +208,7 @@ class Food extends Model implements HasMedia
      */
     public function getRestaurantAttribute()
     {
-        return $this->restaurant()->first(['id', 'name', 'delivery_fee', 'address', 'phone']);
+        return $this->restaurant()->first(['id', 'name', 'delivery_fee', 'address', 'phone','default_tax']);
     }
 
     /**
@@ -217,6 +217,14 @@ class Food extends Model implements HasMedia
     public function restaurant()
     {
         return $this->belongsTo(\App\Models\Restaurant::class, 'restaurant_id', 'id');
+    }
+
+    /**
+     * @return float
+     */
+    public function getPrice(): float
+    {
+        return $this->discount_price > 0 ? $this->discount_price : $this->price;
     }
 
 

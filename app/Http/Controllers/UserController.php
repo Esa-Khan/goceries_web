@@ -1,10 +1,9 @@
 <?php
 /**
  * File name: UserController.php
- * Last modified: 2020.05.04 at 12:15:13
+ * Last modified: 2020.06.08 at 20:36:19
  * Author: SmarterVision - https://codecanyon.net/user/smartervision
  * Copyright (c) 2020
- *
  */
 
 namespace App\Http\Controllers;
@@ -246,7 +245,11 @@ class UserController extends Controller
         $customFields = $this->customFieldRepository->findByField('custom_field_model', $this->userRepository->model());
 
         $input = $request->all();
+        if (!auth()->user()->can('permissions.index')) {
+            unset($input['roles']);
+        } else {
         $input['roles'] = isset($input['roles']) ? $input['roles'] : [];
+        }
         if (empty($input['password'])) {
             unset($input['password']);
         } else {
@@ -263,7 +266,9 @@ class UserController extends Controller
                 $mediaItem = $cacheUpload->getMedia('avatar')->first();
                 $mediaItem->copy($user, 'avatar');
             }
+            if (auth()->user()->can('permissions.index')) {
             $user->syncRoles($input['roles']);
+            }
             foreach (getCustomFieldsValues($customFields, $request) as $value) {
                 $user->customFieldsValues()
                     ->updateOrCreate(['custom_field_id' => $value['custom_field_id']], $value);

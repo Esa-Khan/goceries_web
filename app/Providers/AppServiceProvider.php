@@ -1,10 +1,9 @@
 <?php
 /**
  * File name: AppServiceProvider.php
- * Last modified: 2020.05.04 at 09:04:19
+ * Last modified: 2020.06.10 at 18:56:11
  * Author: SmarterVision - https://codecanyon.net/user/smartervision
  * Copyright (c) 2020
- *
  */
 
 namespace App\Providers;
@@ -59,6 +58,9 @@ class AppServiceProvider extends ServiceProvider
             Stripe::setApiKey(setting('stripe_key'));
             Stripe::setClientId(setting('stripe_secret'));
             Cashier::useCurrency(Str::lower(setting('default_currency_code', 'USD')), setting('default_currency', '$'));
+
+            config(['services.razorpay.key' => setting('razorpay_key')]);
+            config(['services.razorpay.secret' => setting('razorpay_secret')]);
 
             config(['services.fcm.key' => setting('fcm_key', '')]);
 

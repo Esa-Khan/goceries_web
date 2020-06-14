@@ -15,14 +15,14 @@
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h1 class="m-0 text-dark">{{trans('lang.extra _group_plural')}}<small class="ml-3 mr-3">|</small><small>{{trans('lang.extra _group_desc')}}</small></h1>
+        <h1 class="m-0 text-dark">{{trans('lang.extra_group_plural')}}<small class="ml-3 mr-3">|</small><small>{{trans('lang.extra_group_desc')}}</small></h1>
       </div><!-- /.col -->
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
           <li class="breadcrumb-item"><a href="{{url('/dashboard')}}"><i class="fa fa-dashboard"></i> {{trans('lang.dashboard')}}</a></li>
-          <li class="breadcrumb-item"><a href="{!! route('extra Groups.index') !!}">{{trans('lang.extra _group_plural')}}</a>
+          <li class="breadcrumb-item"><a href="{!! route('extraGroups.index') !!}">{{trans('lang.extra_group_plural')}}</a>
           </li>
-          <li class="breadcrumb-item active">{{trans('lang.extra _group_edit')}}</li>
+          <li class="breadcrumb-item active">{{trans('lang.extra_group_edit')}}</li>
         </ol>
       </div><!-- /.col -->
     </div><!-- /.row -->
@@ -37,18 +37,18 @@
   <div class="card">
     <div class="card-header">
       <ul class="nav nav-tabs align-items-end card-header-tabs w-100">
-        @can('extra Groups.index')
+        @can('extraGroups.index')
         <li class="nav-item">
-          <a class="nav-link" href="{!! route('extraGroups.index') !!}"><i class="fa fa-list mr-2"></i>{{trans('lang.extra _group_table')}}</a>
+          <a class="nav-link" href="{!! route('extraGroups.index') !!}"><i class="fa fa-list mr-2"></i>{{trans('lang.extra_group_table')}}</a>
         </li>
         @endcan
-        @can('extra Groups.create')
+        @can('extraGroups.create')
         <li class="nav-item">
-          <a class="nav-link" href="{!! route('extraGroups.create') !!}"><i class="fa fa-plus mr-2"></i>{{trans('lang.extra _group_create')}}</a>
+          <a class="nav-link" href="{!! route('extraGroups.create') !!}"><i class="fa fa-plus mr-2"></i>{{trans('lang.extra_group_create')}}</a>
         </li>
         @endcan
         <li class="nav-item">
-          <a class="nav-link active" href="{!! url()->current() !!}"><i class="fa fa-pencil mr-2"></i>{{trans('lang.extra _group_edit')}}</a>
+          <a class="nav-link active" href="{!! url()->current() !!}"><i class="fa fa-pencil mr-2"></i>{{trans('lang.extra_group_edit')}}</a>
         </li>
       </ul>
     </div>

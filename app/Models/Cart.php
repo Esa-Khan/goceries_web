@@ -1,4 +1,10 @@
 <?php
+/**
+ * File name: Cart.php
+ * Last modified: 2020.06.08 at 20:36:19
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ */
 
 namespace App\Models;
 
@@ -11,7 +17,7 @@ use Eloquent as Model;
  *
  * @property \App\Models\Food food
  * @property \App\Models\User user
- * @property \Illuminate\Database\Eloquent\Collection extra
+ * @property \Illuminate\Database\Eloquent\Collection extras
  * @property integer food_id
  * @property integer user_id
  * @property integer quantity

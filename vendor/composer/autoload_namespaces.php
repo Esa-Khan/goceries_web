@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Sabberworm\\CSS' => array($vendorDir . '/sabberworm/php-css-parser/lib'),
+    'Requests' => array($vendorDir . '/rmccue/requests/library'),
     'Rap2hpoutre\\LaravelLogViewer\\' => array($vendorDir . '/rap2hpoutre/laravel-log-viewer/src'),
     'Parsedown' => array($vendorDir . '/erusev/parsedown'),
     'Orangehill\\Iseed' => array($vendorDir . '/orangehill/iseed/src'),

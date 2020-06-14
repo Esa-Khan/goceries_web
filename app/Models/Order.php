@@ -1,10 +1,9 @@
 <?php
 /**
  * File name: Order.php
- * Last modified: 2020.04.30 at 08:21:08
+ * Last modified: 2020.06.08 at 20:36:19
  * Author: SmarterVision - https://codecanyon.net/user/smartervision
  * Copyright (c) 2020
- *
  */
 
 namespace App\Models;
@@ -17,13 +16,17 @@ use Eloquent as Model;
  * @version August 31, 2019, 11:11 am UTC
  *
  * @property \App\Models\User user
+ * @property \App\Models\DeliveryAddress deliveryAddress
+ * @property \App\Models\Payment payment
  * @property \App\Models\OrderStatus orderStatus
  * @property \App\Models\FoodOrder[] foodOrders
  * @property integer user_id
  * @property integer order_status_id
+ * @property integer payment_id
  * @property double tax
  * @property double delivery_fee
  * @property string id
+ * @property int delivery_address_id
  * @property string hint
  */
 class Order extends Model
@@ -134,6 +137,14 @@ class Order extends Model
     public function foodOrders()
     {
         return $this->hasMany(\App\Models\FoodOrder::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     **/
+    public function foods()
+    {
+        return $this->belongsToMany(\App\Models\Food::class, 'food_orders');
     }
 
     /**

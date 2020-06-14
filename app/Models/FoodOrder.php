@@ -1,4 +1,10 @@
 <?php
+/**
+ * File name: FoodOrder.php
+ * Last modified: 2020.06.08 at 20:36:19
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ */
 
 namespace App\Models;
 
@@ -10,7 +16,7 @@ use Eloquent as Model;
  * @version August 31, 2019, 11:18 am UTC
  *
  * @property \App\Models\Food food
- * @property \Illuminate\Database\Eloquent\Collection extra
+ * @property \App\Models\Extra[] extras
  * @property \App\Models\Order order
  * @property double price
  * @property integer quantity
@@ -61,7 +67,6 @@ class FoodOrder extends Model
      */
     protected $appends = [
         'custom_fields',
-        'extras'
     ];
 
     public function customFieldsValues()
@@ -105,12 +110,5 @@ class FoodOrder extends Model
     public function order()
     {
         return $this->belongsTo(\App\Models\Order::class, 'order_id', 'id');
-    }
-        /**
-    * @return \Illuminate\Database\Eloquent\Collection
-    */
-    public function getExtrasAttribute()
-    {
-        return $this->extras()->get(['extras.id', 'extras.name']);
     }
 }

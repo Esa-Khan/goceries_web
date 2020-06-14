@@ -1,7 +1,7 @@
 <?php
 /**
  * File name: OrderAPIController.php
- * Last modified: 2020.05.13 at 19:32:10
+ * Last modified: 2020.06.08 at 20:36:19
  * Author: SmarterVision - https://codecanyon.net/user/smartervision
  * Copyright (c) 2020
  */
@@ -78,7 +78,6 @@ class OrderAPIController extends Controller
      */
     public function index(Request $request)
     {
-        Log::error("get orders");
         try {
             $this->orderRepository->pushCriteria(new RequestCriteria($request));
             $this->orderRepository->pushCriteria(new LimitOffsetCriteria($request));
@@ -165,11 +164,11 @@ class OrderAPIController extends Controller
             if ($stripeToken->created > 0) {
                 if (empty($input['delivery_address_id'])) {
                     $order = $this->orderRepository->create(
-                        $request->only('user_id', 'order_status_id', 'tax')
+                        $request->only('user_id', 'order_status_id', 'tax', 'hint')
                     );
                 } else {
                     $order = $this->orderRepository->create(
-                        $request->only('user_id', 'order_status_id', 'tax', 'delivery_address_id', 'delivery_fee')
+                        $request->only('user_id', 'order_status_id', 'tax', 'delivery_address_id', 'delivery_fee', 'hint')
                     );
                 }
                 foreach ($input['foods'] as $foodOrder) {
@@ -209,22 +208,16 @@ class OrderAPIController extends Controller
         $input = $request->all();
         $amount = 0;
         try {
-            if (empty($input['delivery_address_id'])) {
-                $order = $this->orderRepository->create(
-                    $request->only('user_id', 'order_status_id', 'tax')
-                );
-            } else {
-                $order = $this->orderRepository->create(
-                    $request->only('user_id', 'order_status_id', 'tax', 'delivery_address_id', 'delivery_fee')
-                );
-            }
+            $order = $this->orderRepository->create(
+                $request->only('user_id', 'order_status_id', 'tax', 'delivery_address_id', 'delivery_fee', 'hint')
+            );
             foreach ($input['foods'] as $foodOrder) {
                 $foodOrder['order_id'] = $order->id;
                 $amount += $foodOrder['price'] * $foodOrder['quantity'];
                 $this->foodOrderRepository->create($foodOrder);
             }
             $amount += $order->delivery_fee;
-            $amountWithTax = $amount  + ($amount * $order->tax / 100);
+            $amountWithTax = $amount + ($amount * $order->tax / 100);
             $payment = $this->paymentRepository->create([
                 "user_id" => $input['user_id'],
                 "description" => trans("lang.payment_order_waiting"),
@@ -265,11 +258,16 @@ class OrderAPIController extends Controller
 
         try {
             $order = $this->orderRepository->update($input, $id);
-            if ($input['order_status_id'] == 5 && !empty($order)) {
+            if (isset($input['order_status_id']) && $input['order_status_id'] == 5 && !empty($order)) {
                 $this->paymentRepository->update(['status' => 'Paid'], $order['payment_id']);
             }
             event(new OrderChangedEvent($oldStatus, $order));
+
+            if (setting('enable_notifications', false)) {
+                if (isset($input['order_status_id']) && $input['order_status_id'] != $oldOrder->order_status_id) {
             Notification::send([$order->user], new StatusChangedOrder($order));
+                }
+            }
 
         } catch (ValidatorException $e) {
             return $this->sendError($e->getMessage());

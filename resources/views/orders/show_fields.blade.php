@@ -51,7 +51,7 @@
 
     {!! Form::label('payment_status', trans('lang.payment_status'), ['class' => 'col-4 control-label']) !!}
     <div class="col-8">
-    <p>{!! isset($order->status) ? $order->payment->status : trans('lang.order_not_paid')  !!}</p>
+    <p>{!! isset($order->payment) ? $order->payment->status : trans('lang.order_not_paid')  !!}</p>
   </div>
     {!! Form::label('order_updated_date', trans('lang.order_updated_at'), ['class' => 'col-4 control-label']) !!}
     <div class="col-8">

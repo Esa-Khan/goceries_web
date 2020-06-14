@@ -253,6 +253,7 @@
             <div class="clearfix"></div>
         </div>
     </div>
+
     </div>
     @include('layouts.media_modal',['collection'=>'default'])
 @endsection

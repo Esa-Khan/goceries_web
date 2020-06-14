@@ -1,10 +1,9 @@
 <?php
 /**
  * File name: helpers.php
- * Last modified: 2020.05.06 at 10:12:55
+ * Last modified: 2020.05.27 at 18:31:49
  * Author: SmarterVision - https://codecanyon.net/user/smartervision
  * Copyright (c) 2020
- *
  */
 
 use InfyOm\Generator\Common\GeneratorCuisine;
@@ -140,7 +139,7 @@ function getPayment($column, $attributeName)
  */
 function getLinksColumn($array = [], $baseUrl, $idAttribute = 'id', $titleAttribute = 'title')
 {
-    $html = '<a href="${href}" class="">${title}</a>';
+    $html = '<a href="${href}" class="text-bold text-dark">${title}</a>';
     $result = [];
     foreach ($array as $link) {
         $replace = preg_replace('/\$\{href\}/', url($baseUrl, $link[$idAttribute]), $html);
@@ -159,7 +158,7 @@ function getLinksColumn($array = [], $baseUrl, $idAttribute = 'id', $titleAttrib
  */
 function getLinksColumnByRouteName($array = [], $routeName, $idAttribute = 'id', $titleAttribute = 'title')
 {
-    $html = '<a href="${href}" class="">${title}</a>';
+    $html = '<a href="${href}" class="text-bold text-dark">${title}</a>';
     $result = [];
     foreach ($array as $link) {
         $replace = preg_replace('/\$\{href\}/', route($routeName, $link[$idAttribute]), $html);

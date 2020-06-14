@@ -1,4 +1,10 @@
 <?php
+/**
+ * File name: Payment.php
+ * Last modified: 2020.06.08 at 20:36:19
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ */
 
 namespace App\Models;
 
@@ -12,6 +18,8 @@ use Eloquent as Model;
  * @property \App\Models\User user
  * @property double price
  * @property string description
+ * @property string status
+ * @property string method
  * @property integer user_id
  */
 class Payment extends Model

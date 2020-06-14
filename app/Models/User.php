@@ -1,4 +1,10 @@
 <?php
+/**
+ * File name: User.php
+ * Last modified: 2020.06.08 at 20:36:19
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ */
 
 namespace App\Models;
 
@@ -15,6 +21,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @package App\Models
  * @version July 10, 2018, 11:44 am UTC
  *
+ * @property \App\Models\Cart[] cart
  * @property string name
  * @property string email
  * @property string password
@@ -168,4 +175,13 @@ class User extends Authenticatable implements HasMedia
     {
         return $this->belongsToMany(\App\Models\Restaurant::class, 'user_restaurants');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     **/
+    public function cart()
+    {
+        return $this->hasMany(\App\Models\Cart::class, 'user_id');
+    }
+
 }

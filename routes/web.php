@@ -1,7 +1,7 @@
 <?php
 /**
  * File name: web.php
- * Last modified: 2020.05.25 at 14:19:41
+ * Last modified: 2020.06.11 at 15:08:31
  * Author: SmarterVision - https://codecanyon.net/user/smartervision
  * Copyright (c) 2020
  */
@@ -20,6 +20,11 @@
 Route::get('login/{service}', 'Auth\LoginController@redirectToProvider');
 Route::get('login/{service}/callback', 'Auth\LoginController@handleProviderCallback');
 Auth::routes();
+
+Route::get('payments/failed', 'PayPalController@index')->name('payments.failed');
+Route::get('payments/razorpay/checkout', 'RazorPayController@checkout');
+Route::post('payments/razorpay/pay-success/{userId}/{deliveryAddressId?}', 'RazorPayController@paySuccess');
+Route::get('payments/razorpay', 'RazorPayController@index');
 
 Route::get('payments/paypal/express-checkout', 'PayPalController@getExpressCheckout')->name('paypal.express-checkout');
 Route::get('payments/paypal/express-checkout-success', 'PayPalController@getExpressCheckoutSuccess');
@@ -61,6 +66,9 @@ Route::middleware('auth')->group(function () {
             Route::resource('permissions', 'PermissionController');
             Route::resource('roles', 'RoleController');
             Route::resource('customFields', 'CustomFieldController');
+            Route::resource('currencies', 'CurrencyController')->except([
+                'show'
+            ]);
             Route::get('users/login-as-user/{id}', 'UserController@loginAsUser')->name('users.login-as-user');
             Route::patch('update', 'AppSettingController@update');
             Route::patch('translate', 'AppSettingController@translate');
@@ -141,9 +149,6 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('carts', 'CartController')->except([
         'show', 'store', 'create'
-    ]);
-    Route::resource('currencies', 'CurrencyController')->except([
-        'show'
     ]);
     Route::resource('deliveryAddresses', 'DeliveryAddressController')->except([
         'show'

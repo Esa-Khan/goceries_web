@@ -250,14 +250,11 @@
     </li>
     <li class="nav-item has-treeview {{
     (Request::is('settings*') ||
-     Request::is('menu*') ||
-      Request::is('notificationTypes*') ||
-       Request::is('currencies*')) && !Request::is('settings/mobile*')
+     Request::is('users*')) && !Request::is('settings/mobile*')
         ? 'menu-open' : '' }}">
         <a href="#" class="nav-link {{
         (Request::is('settings*') ||
-         Request::is('currencies*') ||
-          Request::is('notificationTypes*')) && !Request::is('settings/mobile*')
+         Request::is('users*')) && !Request::is('settings/mobile*')
           ? 'active' : '' }}"> @if($icons)<i class="nav-icon fa fa-cogs"></i>@endif
             <p>{{trans('lang.app_setting')}} <i class="right fa fa-angle-left"></i>
             </p>
@@ -271,7 +268,7 @@
 
             @can('users.index')
                 <li class="nav-item">
-                    <a class="nav-link {{ Request::is('settings/users*') ? 'active' : '' }}" href="{!! route('users.index') !!}">@if($icons)
+                    <a class="nav-link {{ Request::is('users*') ? 'active' : '' }}" href="{!! route('users.index') !!}">@if($icons)
                             <i class="nav-icon fa fa-users"></i>@endif
                         <p>{{trans('lang.user_plural')}}</p></a>
                 </li>
@@ -335,13 +332,13 @@
             </li>
             @can('currencies.index')
                 <li class="nav-item">
-                    <a class="nav-link {{ Request::is('currencies*') ? 'active' : '' }}" href="{!! route('currencies.index') !!}">@if($icons)
+                    <a class="nav-link {{ Request::is('settings/currencies*') ? 'active' : '' }}" href="{!! route('currencies.index') !!}">@if($icons)
                             <i class="nav-icon fa fa-dollar"></i>@endif<p>{{trans('lang.currency_plural')}}</p></a>
                 </li>
             @endcan
 
             <li class="nav-item">
-                <a href="{!! url('settings/app/payment') !!}" class="nav-link {{  Request::is('settings/app/payment*') ? 'active' : '' }}">
+                <a href="{!! url('settings/payment/payment') !!}" class="nav-link {{  Request::is('settings/payment*') ? 'active' : '' }}">
                     @if($icons)<i class="nav-icon fa fa-credit-card"></i> @endif <p>{{trans('lang.app_setting_payment')}}</p>
                 </a>
             </li>

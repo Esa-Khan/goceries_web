@@ -1,10 +1,9 @@
 <?php
 /**
  * File name: AppSettingController.php
- * Last modified: 2020.05.04 at 09:04:19
+ * Last modified: 2020.06.11 at 12:54:51
  * Author: SmarterVision - https://codecanyon.net/user/smartervision
  * Copyright (c) 2020
- *
  */
 
 namespace App\Http\Controllers;
@@ -48,7 +47,7 @@ class AppSettingController extends Controller
 
     public function update(Request $request)
     {
-        if(!env('APP_DEMO',false)){
+        if(!env('APP_DEMO',false)){ 
             $input = $request->except(['_method', '_token']);
             if (Str::endsWith(url()->previous(), "app/globals")) {
                 if (empty($input['app_logo'])) {
@@ -61,7 +60,7 @@ class AppSettingController extends Controller
                     unset($input['blocked_ips']);
                     setting()->forget('blocked_ips');
                 }
-            } else if (Str::endsWith(url()->previous(), "app/payment")) {
+            } else if (Str::contains(url()->previous(), "payment")) {
                 if (isset($input['default_currency'])) {
                     $currency = $this->currencyRepository->findWithoutFail($input['default_currency']);
                     if (!empty($currency)) {
@@ -72,6 +71,12 @@ class AppSettingController extends Controller
                         $input['default_currency_rounding'] = $currency->rounding;
                     }
                 }
+//                if(isset($input['enable_stripe']) && $input['enable_stripe'] == 1){
+//                    $input['enable_razorpay'] = 0;
+//                }
+//                if(isset($input['enable_razorpay']) && $input['enable_razorpay'] == 1){
+//                    $input['enable_stripe'] = 0;
+//                }
             }
             if (empty($input['mail_password'])) {
                 unset($input['mail_password']);

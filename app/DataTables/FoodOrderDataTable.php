@@ -1,4 +1,10 @@
 <?php
+/**
+ * File name: FoodOrderDataTable.php
+ * Last modified: 2020.06.05 at 16:29:00
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ */
 
 namespace App\DataTables;
 
@@ -32,12 +38,14 @@ class FoodOrderDataTable extends DataTable
                 return getDateColumn($food_order, 'updated_at');
             })
             ->editColumn('extras', function ($foodOrder) {
-                return getLinksColumnByRouteName($foodOrder->extras, 'extras.edit', 'id', 'name');
+                return getArrayColumn($foodOrder->extras, 'name');
             })
             ->editColumn('price', function ($foodOrder) {
+                foreach ($foodOrder->extras as $extra) {
+                    $foodOrder['price'] += $extra->price;
+                }
                 return getPriceColumn($foodOrder);
             })
-//            ->addColumn('action', 'food_orders.datatables_actions')
             ->rawColumns(array_merge($columns));
 
         return $dataTable;

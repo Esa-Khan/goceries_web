@@ -1,5 +1,13 @@
 <?php
 
+
+/**
+ * File name: CurrencyController.php
+ * Last modified: 2020.06.11 at 16:03:24
+ * Author: SmarterVision - https://codecanyon.net/user/smartervision
+ * Copyright (c) 2020
+ */
+
 namespace App\Http\Controllers;
 
 use App\DataTables\CurrencyDataTable;
@@ -43,7 +51,7 @@ class CurrencyController extends Controller
      */
     public function index(CurrencyDataTable $currencyDataTable)
     {
-        return $currencyDataTable->render('currencies.index');
+        return $currencyDataTable->render('settings.currencies.index');
     }
 
     /**
@@ -60,7 +68,7 @@ class CurrencyController extends Controller
                 $customFields = $this->customFieldRepository->findByField('custom_field_model', $this->currencyRepository->model());
                 $html = generateCustomField($customFields);
             }
-        return view('currencies.create')->with("customFields", isset($html) ? $html : false);
+        return view('settings.currencies.create')->with("customFields", isset($html) ? $html : false);
     }
 
     /**
@@ -104,7 +112,7 @@ class CurrencyController extends Controller
             return redirect(route('currencies.index'));
         }
 
-        return view('currencies.show')->with('currency', $currency);
+        return view('settings.currencies.show')->with('currency', $currency);
     }
 
     /**
@@ -132,7 +140,7 @@ class CurrencyController extends Controller
             $html = generateCustomField($customFields, $customFieldsValues);
         }
 
-        return view('currencies.edit')->with('currency', $currency)->with("customFields", isset($html) ? $html : false);
+        return view('settings.currencies.edit')->with('currency', $currency)->with("customFields", isset($html) ? $html : false);
     }
 
     /**
