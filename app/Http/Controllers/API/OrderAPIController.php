@@ -161,16 +161,20 @@ class OrderAPIController extends Controller
                     "name" => $user->name,
                 )
             ));
+
             if ($stripeToken->created > 0) {
                 if (empty($input['delivery_address_id'])) {
+
                     $order = $this->orderRepository->create(
                         $request->only('user_id', 'order_status_id', 'tax', 'hint')
                     );
                 } else {
+
                     $order = $this->orderRepository->create(
                         $request->only('user_id', 'order_status_id', 'tax', 'delivery_address_id', 'delivery_fee', 'hint')
                     );
                 }
+
                 foreach ($input['foods'] as $foodOrder) {
                     $foodOrder['order_id'] = $order->id;
                     $amount += $foodOrder['price'] * $foodOrder['quantity'];
@@ -195,6 +199,7 @@ class OrderAPIController extends Controller
         } catch (ValidatorException $e) {
             return $this->sendError($e->getMessage());
         }
+	    return "Hello World";
 
         return $this->sendResponse($order->toArray(), __('lang.saved_successfully', ['operator' => __('lang.order')]));
     }
