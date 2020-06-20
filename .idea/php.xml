@@ -1,20 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="ChangeListManager">
-    <list default="true" id="234dd131-8b85-4f6b-9b51-0574357c69cc" name="Default Changelist" comment="" />
-    <option name="SHOW_DIALOG" value="false" />
-    <option name="HIGHLIGHT_CONFLICTS" value="true" />
-    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
-    <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="ComposerSettings" doNotAsk="true" synchronizationState="SYNCHRONIZE">
-    <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
-    <execution />
-  </component>
-  <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="PhpWorkspaceProjectConfiguration">
+  <component name="PhpIncludePathManager">
     <include_path>
       <path value="$PROJECT_DIR$/vendor/yajra/laravel-datatables-oracle" />
       <path value="$PROJECT_DIR$/vendor/yajra/laravel-datatables-editor" />
@@ -160,74 +146,10 @@
       <path value="$PROJECT_DIR$/vendor/swiftmailer/swiftmailer" />
     </include_path>
   </component>
-  <component name="ProjectId" id="1cdXvek8Z9YjfCUh3nbLV0WzCdH" />
-  <component name="ProjectViewState">
-    <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showLibraryContents" value="true" />
-  </component>
-  <component name="PropertiesComponent">
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
-    <property name="show.migrate.to.gradle.popup" value="false" />
-  </component>
-  <component name="RunManager">
-    <configuration name="phpunit.xml" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
-      <TestRunner scope="XML" />
-      <method v="2" />
-    </configuration>
-  </component>
-  <component name="SvnConfiguration">
-    <configuration />
-  </component>
-  <component name="TaskManager">
-    <task active="true" id="Default" summary="Default task">
-      <changelist id="234dd131-8b85-4f6b-9b51-0574357c69cc" name="Default Changelist" comment="" />
-      <created>1590859676014</created>
-      <option name="number" value="Default" />
-      <option name="presentableId" value="Default" />
-      <updated>1590859676014</updated>
-      <workItem from="1592624689817" duration="1107000" />
-      <workItem from="1592639468976" duration="251000" />
-    </task>
-    <servers />
-  </component>
-  <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="2" />
-  </component>
-  <component name="UnknownFeatures">
-    <option featureType="com.intellij.fileTypeFactory" implementationName="*.php" />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
-    <option name="oldMeFiltersMigrated" value="true" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="332" y="136" key="#CLI_Interpreters" timestamp="1592639627110">
-      <screen x="0" y="0" width="1500" height="960" />
-    </state>
-    <state x="332" y="136" key="#CLI_Interpreters/0.0.1500.960@0.0.1500.960" timestamp="1592639627110" />
-    <state x="620" y="343" key="#Notifications" timestamp="1592624946743">
-      <screen x="0" y="0" width="1500" height="960" />
-    </state>
-    <state x="620" y="343" key="#Notifications/0.0.1500.960@0.0.1500.960" timestamp="1592624946743" />
-    <state x="206" y="135" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1592639627957">
-      <screen x="0" y="0" width="1500" height="960" />
-    </state>
-    <state x="206" y="135" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1500.960@0.0.1500.960" timestamp="1592639627957" />
-    <state x="252" y="125" key="SettingsEditor" timestamp="1592639441952">
-      <screen x="0" y="0" width="1500" height="960" />
-    </state>
-    <state x="252" y="125" key="SettingsEditor/0.0.1500.960@0.0.1500.960" timestamp="1592639441952" />
+  <component name="PhpProjectSharedConfiguration" php_language_level="7.1" />
+  <component name="PhpUnit">
+    <phpunit_settings>
+      <PhpUnitSettings configuration_file_path="$PROJECT_DIR$/phpunit.xml" custom_loader_path="$PROJECT_DIR$/vendor/autoload.php" use_configuration_file="true" />
+    </phpunit_settings>
   </component>
 </project>

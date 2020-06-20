@@ -199,8 +199,6 @@ class OrderAPIController extends Controller
         } catch (ValidatorException $e) {
             return $this->sendError($e->getMessage());
         }
-	    return "Hello World";
-
         return $this->sendResponse($order->toArray(), __('lang.saved_successfully', ['operator' => __('lang.order')]));
     }
 
