@@ -12,6 +12,7 @@ namespace App\Http\Controllers\API;
 use App\Events\OrderChangedEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Notifications\AssignedOrder;
 use App\Notifications\NewOrder;
 use App\Notifications\StatusChangedOrder;
 use App\Repositories\CartRepository;
@@ -195,25 +196,11 @@ class OrderAPIController extends Controller
                 $this->cartRepository->deleteWhere(['user_id' => $order->user_id]);
 
                 Notification::send($order->foodOrders[0]->food->restaurant->users, new NewOrder($order));
-                $driver_id = 1;
-                return $driver_id;
-//                try {
-//
-//                    if (setting('enable_notifications', false)) {
-//                        if (isset($input['order_status_id'])) {
-//                            Notification::send([$order->user], new StatusChangedOrder($order));
-//                        }
-//
-//                        $driver_id = 1;
-//                        $driver = $this->userRepository->findWithoutFail($driver_id);
-//                        if (!empty($driver)) {
-//                            Notification::send([$driver], new AssignedOrder($order));
-//                        }
-//                    }
-//
-//                } catch (ValidatorException $e) {
-//                    Flash::error($e->getMessage());
-//                }
+                $driver_id = 7;
+                $driver = $this->userRepository->findWithoutFail($driver_id);
+                if (!empty($driver)) {
+                    Notification::send([$driver], new AssignedOrder($order));
+                }
 
             }
         } catch (ValidatorException $e) {
