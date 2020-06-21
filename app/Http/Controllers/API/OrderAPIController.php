@@ -195,7 +195,8 @@ class OrderAPIController extends Controller
                 $this->cartRepository->deleteWhere(['user_id' => $order->user_id]);
 
                 Notification::send($order->foodOrders[0]->food->restaurant->users, new NewOrder($order));
-
+                $driver_id = 1;
+                return $driver_id;
 //                try {
 //
 //                    if (setting('enable_notifications', false)) {
