@@ -196,23 +196,23 @@ class OrderAPIController extends Controller
 
                 Notification::send($order->foodOrders[0]->food->restaurant->users, new NewOrder($order));
 
-//                try {
-//
-//                    if (setting('enable_notifications', false)) {
-//                        if (isset($input['order_status_id'])) {
-//                            Notification::send([$order->user], new StatusChangedOrder($order));
-//                        }
-//
-//                        $driver_id = 1;
-//                        $driver = $this->userRepository->findWithoutFail($driver_id);
-//                        if (!empty($driver)) {
-//                            Notification::send([$driver], new AssignedOrder($order));
-//                        }
-//                    }
-//
-//                } catch (ValidatorException $e) {
-//                    Flash::error($e->getMessage());
-//                }
+                try {
+
+                    if (setting('enable_notifications', false)) {
+                        if (isset($input['order_status_id'])) {
+                            Notification::send([$order->user], new StatusChangedOrder($order));
+                        }
+
+                        $driver_id = 1;
+                        $driver = $this->userRepository->findWithoutFail($driver_id);
+                        if (!empty($driver)) {
+                            Notification::send([$driver], new AssignedOrder($order));
+                        }
+                    }
+
+                } catch (ValidatorException $e) {
+                    Flash::error($e->getMessage());
+                }
 
             }
         } catch (ValidatorException $e) {
