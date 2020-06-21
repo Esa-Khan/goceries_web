@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="234dd131-8b85-4f6b-9b51-0574357c69cc" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -14,7 +32,23 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="PhpWorkspaceProjectConfiguration">
+  <component name="PhpDebugGeneral" break_at_first_line="true" listening_started="true" />
+  <component name="PhpServers">
+    <servers>
+      <server host="localhost" id="01bdbdfd-2f1b-4249-b8dc-28ebc67086e4" name="Local Host" port="8000" use_path_mappings="true">
+        <path_mappings>
+          <mapping local-root="$PROJECT_DIR$" remote-root="C:/Users/esakh/OneDrive/Goceries/GIT/goceries_web" />
+        </path_mappings>
+      </server>
+      <server host="goceries.org" id="f8ec5d3d-7112-4485-bbeb-4751fc44f532" name="Goceries" use_path_mappings="true">
+        <path_mappings>
+          <mapping local-root="$PROJECT_DIR$" remote-root="C:/Users/esakh/OneDrive/Goceries/GIT/goceries_web" />
+        </path_mappings>
+      </server>
+    </servers>
+  </component>
+  <component name="PhpWebServerValidation" path_to_validation_script="C:\Users\esakh\OneDrive\Goceries\GIT\goceries_web" selected_validation_type="LOCAL" web_path_to_validation_script="http://localhost:8000" />
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP">
     <include_path>
       <path value="$PROJECT_DIR$/vendor/yajra/laravel-datatables-oracle" />
       <path value="$PROJECT_DIR$/vendor/yajra/laravel-datatables-editor" />
@@ -166,18 +200,52 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="DatabaseDriversLRU" value="mariadb" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Downloads/XAMPP/php/php.exe" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Laravel.Laravel Local Server">
+    <configuration name="Laravel Local Server" type="LaravelStorm_run_conf_serve" factoryName="Laravel" activateToolWindowBeforeRun="false">
+      <option name="host" value="localhost" />
+      <option name="port" value="8000" />
+      <option name="route" value="/" />
+      <option name="browser" value="" />
+      <option name="interpreterName" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="LaravelStorm_run_conf_serve" factoryName="Laravel" activateToolWindowBeforeRun="false">
+      <option name="host" value="localhost" />
+      <option name="port" value="8000" />
+      <option name="route" value="/public" />
+      <option name="browser" value="" />
+      <option name="interpreterName" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="phpunit.xml" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
       <TestRunner scope="XML" />
       <method v="2" />
     </configuration>
+    <configuration name="Local host" type="PhpWebAppRunConfigurationType" factoryName="PHP Web Application" server_name="Local Host" start_url="/public">
+      <method v="2">
+        <option name="RunConfigurationTask" enabled="true" run_configuration_name="Laravel Local Server" run_configuration_type="LaravelStorm_run_conf_serve" />
+      </method>
+    </configuration>
+    <configuration default="true" type="PhpWebAppRunConfigurationType" factoryName="PHP Web Application" server_name="Local Host" start_url="/public">
+      <method v="2">
+        <option name="RunConfigurationTask" enabled="true" run_configuration_name="Laravel Local Server" run_configuration_type="LaravelStorm_run_conf_serve" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Laravel.Laravel Local Server" />
+      <item itemvalue="PHP Web Page.Local host" />
+      <item itemvalue="PHPUnit.phpunit.xml" />
+    </list>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -191,6 +259,10 @@
       <updated>1590859676014</updated>
       <workItem from="1592624689817" duration="1107000" />
       <workItem from="1592639468976" duration="251000" />
+      <workItem from="1592646605384" duration="815000" />
+      <workItem from="1592647517682" duration="1830000" />
+      <workItem from="1592650735431" duration="7928000" />
+      <workItem from="1592710382652" duration="2172000" />
     </task>
     <servers />
   </component>
@@ -213,21 +285,77 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="332" y="136" key="#CLI_Interpreters" timestamp="1592639627110">
+    <state x="332" y="136" key="#CLI_Interpreters" timestamp="1592650651443">
       <screen x="0" y="0" width="1500" height="960" />
     </state>
-    <state x="332" y="136" key="#CLI_Interpreters/0.0.1500.960@0.0.1500.960" timestamp="1592639627110" />
+    <state x="332" y="136" key="#CLI_Interpreters/0.0.1500.960@0.0.1500.960" timestamp="1592650651443" />
     <state x="620" y="343" key="#Notifications" timestamp="1592624946743">
       <screen x="0" y="0" width="1500" height="960" />
     </state>
     <state x="620" y="343" key="#Notifications/0.0.1500.960@0.0.1500.960" timestamp="1592624946743" />
-    <state x="206" y="135" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1592639627957">
+    <state x="456" y="123" key="#PHP" timestamp="1592640632398">
       <screen x="0" y="0" width="1500" height="960" />
     </state>
-    <state x="206" y="135" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1500.960@0.0.1500.960" timestamp="1592639627957" />
-    <state x="252" y="125" key="SettingsEditor" timestamp="1592639441952">
+    <state x="456" y="123" key="#PHP/0.0.1500.960@0.0.1500.960" timestamp="1592640632398" />
+    <state x="191" y="123" key="#SSH_Configurations" timestamp="1592653581789">
       <screen x="0" y="0" width="1500" height="960" />
     </state>
-    <state x="252" y="125" key="SettingsEditor/0.0.1500.960@0.0.1500.960" timestamp="1592639441952" />
+    <state x="191" y="123" key="#SSH_Configurations/0.0.1500.960@0.0.1500.960" timestamp="1592653581789" />
+    <state x="332" y="136" key="#Servers" timestamp="1592655081830">
+      <screen x="0" y="0" width="1500" height="960" />
+    </state>
+    <state x="332" y="136" key="#Servers/0.0.1500.960@0.0.1500.960" timestamp="1592655081830" />
+    <state x="206" y="135" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1592657990996">
+      <screen x="0" y="0" width="1500" height="960" />
+    </state>
+    <state x="206" y="135" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1500.960@0.0.1500.960" timestamp="1592657990996" />
+    <state x="481" y="235" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog" timestamp="1592733051514">
+      <screen x="0" y="0" width="1500" height="960" />
+    </state>
+    <state x="481" y="235" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.0.1500.960@0.0.1500.960" timestamp="1592733051514" />
+    <state x="465" y="302" key="#com.jetbrains.php.debug.validation.PhpWebServerValidationDialog#" timestamp="1592657977782">
+      <screen x="0" y="0" width="1500" height="960" />
+    </state>
+    <state x="465" y="302" key="#com.jetbrains.php.debug.validation.PhpWebServerValidationDialog#/0.0.1500.960@0.0.1500.960" timestamp="1592657977782" />
+    <state x="432" y="111" key="#phpunit.xml" timestamp="1592640322969">
+      <screen x="0" y="0" width="1500" height="960" />
+    </state>
+    <state x="432" y="111" key="#phpunit.xml/0.0.1500.960@0.0.1500.960" timestamp="1592640322969" />
+    <state x="526" y="362" width="446" height="398" key="ComposerInitDialogKey" timestamp="1592650880649">
+      <screen x="0" y="0" width="1500" height="960" />
+    </state>
+    <state x="526" y="362" width="446" height="398" key="ComposerInitDialogKey/0.0.1500.960@0.0.1500.960" timestamp="1592650880649" />
+    <state x="532" y="304" key="FileChooserDialogImpl" timestamp="1592653469021">
+      <screen x="0" y="0" width="1500" height="960" />
+    </state>
+    <state x="532" y="304" key="FileChooserDialogImpl/0.0.1500.960@0.0.1500.960" timestamp="1592653469021" />
+    <state width="1458" height="301" key="GridCell.Tab.0.bottom" timestamp="1592732910882">
+      <screen x="0" y="0" width="1500" height="960" />
+    </state>
+    <state width="1458" height="301" key="GridCell.Tab.0.bottom/0.0.1500.960@0.0.1500.960" timestamp="1592732910882" />
+    <state width="1458" height="301" key="GridCell.Tab.0.center" timestamp="1592732910882">
+      <screen x="0" y="0" width="1500" height="960" />
+    </state>
+    <state width="1458" height="301" key="GridCell.Tab.0.center/0.0.1500.960@0.0.1500.960" timestamp="1592732910882" />
+    <state width="1458" height="301" key="GridCell.Tab.0.left" timestamp="1592732910882">
+      <screen x="0" y="0" width="1500" height="960" />
+    </state>
+    <state width="1458" height="301" key="GridCell.Tab.0.left/0.0.1500.960@0.0.1500.960" timestamp="1592732910882" />
+    <state width="1458" height="301" key="GridCell.Tab.0.right" timestamp="1592732910882">
+      <screen x="0" y="0" width="1500" height="960" />
+    </state>
+    <state width="1458" height="301" key="GridCell.Tab.0.right/0.0.1500.960@0.0.1500.960" timestamp="1592732910882" />
+    <state width="196" height="457" key="HiddenNamespacesPopup" timestamp="1592652584036">
+      <screen x="0" y="0" width="1500" height="960" />
+    </state>
+    <state width="196" height="457" key="HiddenNamespacesPopup/0.0.1500.960@0.0.1500.960" timestamp="1592652584036" />
+    <state x="252" y="125" key="SettingsEditor" timestamp="1592668763301">
+      <screen x="0" y="0" width="1500" height="960" />
+    </state>
+    <state x="252" y="125" key="SettingsEditor/0.0.1500.960@0.0.1500.960" timestamp="1592668763301" />
+    <state x="460" y="79" width="579" height="801" key="find.popup" timestamp="1592654606847">
+      <screen x="0" y="0" width="1500" height="960" />
+    </state>
+    <state x="460" y="79" width="579" height="801" key="find.popup/0.0.1500.960@0.0.1500.960" timestamp="1592654606847" />
   </component>
 </project>
