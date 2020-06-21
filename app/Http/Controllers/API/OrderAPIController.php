@@ -196,11 +196,10 @@ class OrderAPIController extends Controller
                 $this->cartRepository->deleteWhere(['user_id' => $order->user_id]);
 
                 Notification::send($order->foodOrders[0]->food->restaurant->users, new NewOrder($order));
-                $driver_id = 7;
+
+		$driver_id = 7;
                 $driver = $this->userRepository->findWithoutFail($driver_id);
-                if (!empty($driver)) {
-                    Notification::send([$driver], new AssignedOrder($order));
-                }
+		Notification::send([$driver], new AssignedOrder($order));
 
             }
         } catch (ValidatorException $e) {
