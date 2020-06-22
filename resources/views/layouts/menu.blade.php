@@ -15,12 +15,12 @@
 
 <li class="nav-header">{{trans('lang.app_management')}}</li>
 
-{{--@can('cuisines.index')--}}
-{{--    <li class="nav-item">--}}
-{{--        <a class="nav-link {{ Request::is('cuisines*') ? 'active' : '' }}" href="{!! route('cuisines.index') !!}">@if($icons)--}}
-{{--                <i class="nav-icon fa fa-globe"></i>@endif<p>{{trans('lang.cuisine_plural')}}</p></a>--}}
-{{--    </li>--}}
-{{--@endcan--}}
+@can('cuisines.index')
+    <li class="nav-item">
+        <a class="nav-link {{ Request::is('cuisines*') ? 'active' : '' }}" href="{!! route('cuisines.index') !!}">@if($icons)
+                <i class="nav-icon fa fa-globe"></i>@endif<p>{{trans('lang.cuisine_plural')}}</p></a>
+    </li>
+@endcan
 
 @can('restaurants.index')
     <li class="nav-item has-treeview {{ (Request::is('restaurants*') || Request::is('galleries*') || Request::is('restaurantReviews*')) && !Request::is('restaurantsPayouts*') ? 'menu-open' : '' }}">
@@ -74,12 +74,12 @@
                         <p>{{trans('lang.food_plural')}}</p></a>
                 </li>
             @endcan
-{{--            @can('extraGroups.index')--}}
-{{--                <li class="nav-item">--}}
-{{--                    <a class="nav-link {{ Request::is('extraGroups*') ? 'active' : '' }}" href="{!! route('extraGroups.index') !!}">@if($icons)--}}
-{{--                            <i class="nav-icon fa fa-plus-square"></i>@endif<p>{{trans('lang.extra_group_plural')}}</p></a>--}}
-{{--                </li>--}}
-{{--            @endcan--}}
+            @can('extraGroups.index')
+                <li class="nav-item">
+                    <a class="nav-link {{ Request::is('extraGroups*') ? 'active' : '' }}" href="{!! route('extraGroups.index') !!}">@if($icons)
+                            <i class="nav-icon fa fa-plus-square"></i>@endif<p>{{trans('lang.extra_group_plural')}}</p></a>
+                </li>
+            @endcan
             @can('extras.index')
                 <li class="nav-item">
                     <a class="nav-link {{ Request::is('extras*') ? 'active' : '' }}" href="{!! route('extras.index') !!}">@if($icons)

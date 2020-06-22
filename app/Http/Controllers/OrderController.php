@@ -170,7 +170,6 @@ class OrderController extends Controller
     {
         $this->orderRepository->pushCriteria(new OrdersOfUserCriteria(auth()->id()));
         $order = $this->orderRepository->findWithoutFail($id);
-        print "Hello World";
         if (empty($order)) {
             Flash::error(__('lang.not_found', ['operator' => __('lang.order')]));
 
@@ -216,7 +215,6 @@ class OrderController extends Controller
         $input = $request->all();
         $customFields = $this->customFieldRepository->findByField('custom_field_model', $this->orderRepository->model());
         try {
-
             $order = $this->orderRepository->update($input, $id);
 
             if (setting('enable_notifications', false)) {
