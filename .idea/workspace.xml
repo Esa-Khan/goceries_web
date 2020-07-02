@@ -191,6 +191,8 @@
       <updated>1590859676014</updated>
       <workItem from="1592624689817" duration="1107000" />
       <workItem from="1592639468976" duration="251000" />
+      <workItem from="1592910780426" duration="921000" />
+      <workItem from="1593278341740" duration="2307000" />
     </task>
     <servers />
   </component>
@@ -229,5 +231,9 @@
       <screen x="0" y="0" width="1500" height="960" />
     </state>
     <state x="252" y="125" key="SettingsEditor/0.0.1500.960@0.0.1500.960" timestamp="1592639441952" />
+    <state x="460" y="232" width="579" height="534" key="find.popup" timestamp="1593313434167">
+      <screen x="0" y="0" width="1500" height="1000" />
+    </state>
+    <state x="460" y="232" width="579" height="534" key="find.popup/0.0.1500.1000@0.0.1500.1000" timestamp="1593313434167" />
   </component>
 </project>
