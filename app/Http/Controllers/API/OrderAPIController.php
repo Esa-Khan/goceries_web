@@ -223,7 +223,7 @@ class OrderAPIController extends Controller
                 $temp_order['delivery_address_id'] = $order->delivery_address_id;
                 $temp_order['payment_id'] = $payment->id;
                 $temp_order['delivery_fee'] = $order->delivery_fee;
-                $temp_order['driver_id'] = 7;
+                $temp_order['driver_id'] = 1;
                 $this->orderRepository->update($temp_order, $order->id);
 
                 $drivers = $this->driverRepository->all();
@@ -231,7 +231,6 @@ class OrderAPIController extends Controller
                     $driver = $this->userRepository->findWithoutFail($currDriver->user_id);
                     Notification::send([$driver], new AssignedOrder($order));
                 }
-                $this->orderRepository->update(['drivers' => '0'], $order->id);
 
 
             }
@@ -274,6 +273,23 @@ class OrderAPIController extends Controller
             $this->cartRepository->deleteWhere(['user_id' => $order->user_id]);
 
             Notification::send($order->foodOrders[0]->food->restaurant->users, new NewOrder($order));
+
+            $temp_order['user_id'] = $order->user_id;
+            $temp_order['order_status_id'] = $order->order_status_id;
+            $temp_order['status'] = $payment->status;
+            $temp_order['tax'] = $order->tax;
+            $temp_order['hint'] = $order->hint;
+            $temp_order['delivery_address_id'] = $order->delivery_address_id;
+            $temp_order['payment_id'] = $payment->id;
+            $temp_order['delivery_fee'] = $order->delivery_fee;
+            $temp_order['driver_id'] = 1;
+            $this->orderRepository->update($temp_order, $order->id);
+
+            $drivers = $this->driverRepository->all();
+            foreach ($drivers as $currDriver) {
+                $driver = $this->userRepository->findWithoutFail($currDriver->user_id);
+                Notification::send([$driver], new AssignedOrder($order));
+            }
 
         } catch
         (ValidatorException $e) {
