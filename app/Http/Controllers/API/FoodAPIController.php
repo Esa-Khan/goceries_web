@@ -13,6 +13,7 @@ namespace App\Http\Controllers\API;
 use App\Criteria\Foods\NearCriteria;
 use App\Criteria\Foods\FoodsOfCuisinesCriteria;
 use App\Criteria\Foods\TrendingWeekCriteria;
+use App\Criteria\Foods\FoodsOfRestaurantCriteria;
 use App\Http\Controllers\Controller;
 use App\Models\Food;
 use App\Repositories\CustomFieldRepository;
@@ -64,7 +65,12 @@ class FoodAPIController extends Controller
             $this->foodRepository->pushCriteria(new RequestCriteria($request));
             $this->foodRepository->pushCriteria(new LimitOffsetCriteria($request));
             $this->foodRepository->pushCriteria(new FoodsOfCuisinesCriteria($request));
-            if ($request->get('trending', null) == 'week') {
+	    if (isset($request['restaurant_id'])) {
+                $this->foodRepository->pushCriteria(new FoodsOfRestaurantCriteria($request['restaurant_id']));
+            }
+
+
+	    if ($request->get('trending', null) == 'week') {
                 $this->foodRepository->pushCriteria(new TrendingWeekCriteria($request));
             } else {
                 $this->foodRepository->pushCriteria(new NearCriteria($request));
