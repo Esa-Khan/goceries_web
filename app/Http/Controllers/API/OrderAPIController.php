@@ -314,7 +314,7 @@ class OrderAPIController extends Controller
         $input = $request->all();
         try {
             $order = $this->orderRepository->update($input, $id);
-            if (isset($input['active']) && $input['active'] == 'false') {
+            if (isset($input['active'])) {
 		$this->orderRepository->update(['active' => 0], $order->id);
 		if ($order->driver_id != 1){
                     $driver = $this->userRepository->findWithoutFail($order->driver_id);
