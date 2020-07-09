@@ -14,6 +14,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Driver;
 use App\Models\Order;
 use App\Notifications\AssignedOrder;
+use App\Notifications\CancelledOrder;
 use App\Notifications\NewOrder;
 use App\Notifications\StatusChangedOrder;
 use App\Repositories\CartRepository;
@@ -212,9 +213,6 @@ class OrderAPIController extends Controller
 
                 Notification::send($order->foodOrders[0]->food->restaurant->users, new NewOrder($order));
 
-//                $driver_id = 7;
-//                $driver = $this->userRepository->findWithoutFail($driver_id);
-//                $temp_order['driver_id'] = $driver->id;
                 $temp_order['user_id'] = $order->user_id;
                 $temp_order['order_status_id'] = $order->order_status_id;
                 $temp_order['status'] = $payment->status;
@@ -316,6 +314,22 @@ class OrderAPIController extends Controller
         $input = $request->all();
         try {
             $order = $this->orderRepository->update($input, $id);
+            if (isset($input['active']) && $input['active'] == 'false') {
+		$this->orderRepository->update(['active' => 0], $order->id);
+		if ($order->driver_id != 1){
+                    $driver = $this->userRepository->findWithoutFail($order->driver_id);
+                    Notification::send([$driver], new CancelledOrder($order));
+                } else {
+                    $drivers = $this->driverRepository->all();
+                    foreach ($drivers as $currDriver) {
+                        $driver = $this->userRepository->findWithoutFail($currDriver->user_id);
+                        Notification::send([$driver], new CancelledOrder($order));
+                    }
+                }
+            }
+
+
+
             if (isset($input['order_status_id']) && $input['order_status_id'] == 5 && !empty($order)) {
                 $this->paymentRepository->update(['status' => 'Paid'], $order['payment_id']);
             }

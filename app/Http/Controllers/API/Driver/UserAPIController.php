@@ -147,6 +147,8 @@ class UserAPIController extends Controller
                 'app_version' => '',
                 'enable_version' => '',
                 'distance_unit' => '',
+                'delivery_fee_limit' => '',
+
             ]
         );
 
