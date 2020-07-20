@@ -139,15 +139,12 @@
 {{--    </div>--}}
 
     <!-- Weight Field -->
-{{--    <div class="form-group row ">--}}
-{{--        {!! Form::label('weight', trans("lang.food_weight"), ['class' => 'col-3 control-label text-right']) !!}--}}
-{{--        <div class="col-9">--}}
-{{--            {!! Form::number('weight', null,  ['class' => 'form-control','placeholder'=>  trans("lang.food_weight_placeholder"),'step'=>"0.01", 'min'=>"0"]) !!}--}}
-{{--            <div class="form-text text-muted">--}}
-{{--                {{ trans("lang.food_weight_help") }}--}}
-{{--            </div>--}}
-{{--        </div>--}}
-{{--    </div>--}}
+    <div class="form-group row ">
+        {!! Form::label('weight', trans("lang.food_weight"), ['class' => 'col-3 control-label text-right']) !!}
+        <div class="col-9">
+            {!! Form::number('weight', null,  ['class' => 'form-control','placeholder'=>  trans("lang.food_weight_placeholder"),'step'=>"0.01", 'min'=>"0"]) !!}
+        </div>
+    </div>
 
     <!-- 'Boolean Featured Field' -->
 {{--    <div class="form-group row ">--}}
