@@ -82,7 +82,7 @@ class Food extends Model implements HasMedia
         'discount_price' => 'double',
         'description' => 'string',
         'ingredients' => 'string',
-        'weight' => 'double',
+        'weight' => 'string',
         'package_items_count' => 'integer',
         'unit' => 'string',
         'featured' => 'boolean',

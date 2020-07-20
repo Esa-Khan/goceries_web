@@ -207,6 +207,8 @@ class OrderAPIController extends Controller
                     "method" => $input['payment']['method'],
                 ]);
 
+                $this->paymentRepository->update(['price' => $payment['price'] - $payment['price']*$order->foodOrders[0]->food->restaurant->default_tax], $payment->id);
+
                 $this->orderRepository->update(['payment_id' => $payment->id], $order->id);
 
                 $this->cartRepository->deleteWhere(['user_id' => $order->user_id]);
