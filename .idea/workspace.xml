@@ -170,6 +170,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="grid.search.filter.rows" value="true" />
     <property name="js.buildTools.grunt.grunt-cli.package" value="" />
     <property name="js.buildTools.gulp.gulp_package_dir" value="" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
@@ -265,22 +266,22 @@
     </state>
     <state x="206" y="141" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1500.1000@0.0.1500.1000" timestamp="1593846071921" />
     <state x="206" y="135" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1500.960@0.0.1500.960" timestamp="1592639627957" />
-    <state width="1458" height="315" key="GridCell.Tab.0.bottom" timestamp="1593879220465">
+    <state width="1458" height="315" key="GridCell.Tab.0.bottom" timestamp="1595266081726">
       <screen x="0" y="0" width="1500" height="1000" />
     </state>
-    <state width="1458" height="315" key="GridCell.Tab.0.bottom/0.0.1500.1000@0.0.1500.1000" timestamp="1593879220465" />
-    <state width="1458" height="315" key="GridCell.Tab.0.center" timestamp="1593879220464">
+    <state width="1458" height="315" key="GridCell.Tab.0.bottom/0.0.1500.1000@0.0.1500.1000" timestamp="1595266081726" />
+    <state width="1458" height="315" key="GridCell.Tab.0.center" timestamp="1595266081726">
       <screen x="0" y="0" width="1500" height="1000" />
     </state>
-    <state width="1458" height="315" key="GridCell.Tab.0.center/0.0.1500.1000@0.0.1500.1000" timestamp="1593879220464" />
-    <state width="1458" height="315" key="GridCell.Tab.0.left" timestamp="1593879220464">
+    <state width="1458" height="315" key="GridCell.Tab.0.center/0.0.1500.1000@0.0.1500.1000" timestamp="1595266081726" />
+    <state width="1458" height="315" key="GridCell.Tab.0.left" timestamp="1595266081726">
       <screen x="0" y="0" width="1500" height="1000" />
     </state>
-    <state width="1458" height="315" key="GridCell.Tab.0.left/0.0.1500.1000@0.0.1500.1000" timestamp="1593879220464" />
-    <state width="1458" height="315" key="GridCell.Tab.0.right" timestamp="1593879220465">
+    <state width="1458" height="315" key="GridCell.Tab.0.left/0.0.1500.1000@0.0.1500.1000" timestamp="1595266081726" />
+    <state width="1458" height="315" key="GridCell.Tab.0.right" timestamp="1595266081726">
       <screen x="0" y="0" width="1500" height="1000" />
     </state>
-    <state width="1458" height="315" key="GridCell.Tab.0.right/0.0.1500.1000@0.0.1500.1000" timestamp="1593879220465" />
+    <state width="1458" height="315" key="GridCell.Tab.0.right/0.0.1500.1000@0.0.1500.1000" timestamp="1595266081726" />
     <state x="252" y="125" key="SettingsEditor" timestamp="1592639441952">
       <screen x="0" y="0" width="1500" height="960" />
     </state>
