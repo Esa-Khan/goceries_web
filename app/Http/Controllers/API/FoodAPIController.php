@@ -70,15 +70,27 @@ class FoodAPIController extends Controller
             }
 
 
-	    if ($request->get('trending', null) == 'week') {
-                $this->foodRepository->pushCriteria(new TrendingWeekCriteria($request));
-            } else {
-                $this->foodRepository->pushCriteria(new NearCriteria($request));
-            }
 
 //            $this->foodRepository->orderBy('closed');
 //            $this->foodRepository->orderBy('area');
             $foods = $this->foodRepository->all();
+
+
+            if (isset($request['id'])){
+                $range = explode( '-', $request['id'], 2);
+
+                $itemsInRange = array();
+                foreach ($foods->toArray() as $currFood){
+
+                    if ((int)$currFood['id'] >= (int)$range[0] && (int)$currFood['id'] <= (int)$range[1]) {
+                        array_push($itemsInRange, $currFood);
+
+                    };
+                }
+                return $this->sendResponse($itemsInRange, 'Foods retrieved successfully');
+            }
+
+
 
         } catch (RepositoryException $e) {
             return $this->sendError($e->getMessage());
