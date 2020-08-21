@@ -76,17 +76,34 @@ class FoodAPIController extends Controller
             $foods = $this->foodRepository->all();
 
 
+//            if (isset($request['short'])){
+//                $itemsInRange = array();
+//                foreach ($foods->toArray() as $currFood){
+//                    unset($currFood['unit']);
+//                    unset($currFood['featured']);
+//                    unset($currFood['created_at']);
+//                    unset($currFood['updated_at']);
+//                    unset($currFood['restaurant']);
+//		    return $currFood;
+//                    array_push($itemsInRange, $currFood);
+//                }
+//                $foods = $itemsInRange;
+//            }
+
+
+
             if (isset($request['id'])){
                 $range = explode( '-', $request['id'], 2);
-
                 $itemsInRange = array();
-                foreach ($foods->toArray() as $currFood){
-
-                    if ((int)$currFood['id'] >= (int)$range[0] && (int)$currFood['id'] <= (int)$range[1]) {
+                foreach ($foods as $currFood){
+                    $currID = (int)$currFood['id'];
+                    if ($currID > (int)$range[1]) {
+                        break;
+                    } else if ($currID >= (int)$range[0] && $currID <= (int)$range[1]) {
                         array_push($itemsInRange, $currFood);
-
                     };
                 }
+//                $foods = $itemsInRange;
                 return $this->sendResponse($itemsInRange, 'Foods retrieved successfully');
             }
 
@@ -96,7 +113,7 @@ class FoodAPIController extends Controller
             return $this->sendError($e->getMessage());
         }
 
-        return $this->sendResponse($foods->toArray(), 'Foods retrieved successfully');
+        return $this->sendResponse($foods, 'Foods retrieved successfully');
     }
 
     /**
