@@ -148,6 +148,10 @@ class UserAPIController extends Controller
                 'enable_version' => '',
                 'distance_unit' => '',
                 'delivery_fee_limit' => '',
+                'whatsapp_number' => '',
+                'facebook_url' => '',
+                'instagram_url' => '',
+                'phone_number' => '',
             ]
         );
 
