@@ -94,7 +94,7 @@ class OrderAPIController extends Controller
     {
         try {
             $this->orderRepository->pushCriteria(new RequestCriteria($request));
-//            $this->orderRepository->pushCriteria(new LimitOffsetCriteria($request));
+            $this->orderRepository->pushCriteria(new LimitOffsetCriteria($request));
         } catch (RepositoryException $e) {
             Flash::error($e->getMessage());
         }

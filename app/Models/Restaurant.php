@@ -56,7 +56,8 @@ class Restaurant extends Model implements HasMedia
         'name',
         'description',
         'address',
-        'latitude',
+	'used_categories',
+	'latitude',
         'longitude',
         'phone',
         'mobile',
@@ -89,7 +90,8 @@ class Restaurant extends Model implements HasMedia
         'delivery_range'=>'double',
         'available_for_delivery'=>'boolean',
         'closed'=>'boolean',
-        'information' => 'string'
+        'information' => 'string',
+        'used_information' => 'string'
     ];
 
     /**
