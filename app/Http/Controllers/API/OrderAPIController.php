@@ -186,10 +186,9 @@ class OrderAPIController extends Controller
                 } else {
 
                     $order = $this->orderRepository->create(
-                        $request->only('user_id', 'order_status_id', 'tax', 'delivery_address_id', 'delivery_fee', 'hint')
+                        $request->only('user_id', 'order_status_id', 'tax', 'delivery_address_id', 'delivery_fee', 'hint', 'scheduled_time')
                     );
                 }
-
 
                 foreach ($input['foods'] as $foodOrder) {
                     $foodOrder['order_id'] = $order->id;
@@ -251,8 +250,9 @@ class OrderAPIController extends Controller
 
         try {
             $order = $this->orderRepository->create(
-                $request->only('user_id', 'order_status_id', 'tax', 'delivery_address_id', 'delivery_fee', 'hint')
-            );
+		$request->only('user_id', 'order_status_id', 'tax', 'delivery_address_id', 'delivery_fee', 'hint', 'scheduled_time')
+	);
+
             foreach ($input['foods'] as $foodOrder) {
                 $foodOrder['order_id'] = $order->id;
                 $amount += $foodOrder['price'] * $foodOrder['quantity'];

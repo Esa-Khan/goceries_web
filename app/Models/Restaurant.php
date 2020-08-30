@@ -91,7 +91,7 @@ class Restaurant extends Model implements HasMedia
         'available_for_delivery'=>'boolean',
         'closed'=>'boolean',
         'information' => 'string',
-        'used_information' => 'string'
+        'used_categories' => 'string'
     ];
 
     /**
