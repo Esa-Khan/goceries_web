@@ -76,19 +76,21 @@ class FoodAPIController extends Controller
             $foods = $this->foodRepository->all();
 
 
-//            if (isset($request['short'])){
-//                $itemsInRange = array();
-//                foreach ($foods->toArray() as $currFood){
-//                   unset($currFood['unit']);
-//                     unset($currFood['featured']);
-//                    unset($currFood['created_at']);
-//                    unset($currFood['updated_at']);
-//                    unset($currFood['restaurant']);
-//		    return $currFood;
-//                    array_push($itemsInRange, $currFood);
-//                }
-//                $foods = $itemsInRange;
-//            }
+            if (isset($request['short'])){
+                $itemsInRange = array();
+                foreach ($foods->toArray() as $currFood){
+                   unset($currFood['unit']);
+                    unset($currFood['created_at']);
+                    unset($currFood['updated_at']);
+                    unset($currFood['restaurant']);
+                    unset($currFood['custom_fields']);
+                    unset($currFood['package_items_count']);
+                    unset($currFood['custom_fields']);
+		    return $currFood;
+                    array_push($itemsInRange, $currFood);
+                }
+                $foods = $itemsInRange;
+            }
 
 
 
