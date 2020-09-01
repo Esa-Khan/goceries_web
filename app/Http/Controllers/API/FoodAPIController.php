@@ -22,6 +22,7 @@ use App\Repositories\UploadRepository;
 use Flash;
 use Illuminate\Http\Request;
 use InfyOm\Generator\Criteria\LimitOffsetCriteria;
+use PhpOffice\PhpSpreadsheet\Exception;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Exceptions\ValidatorException;
@@ -77,10 +78,33 @@ class FoodAPIController extends Controller
 
             if (isset($request['short'])){
 
-                $foods = $this->foodRepository->all(['id', 'name', 'price', 'discount_price', 'description', 'ingredients', 'weight',
-                    'featured']);
-                echo "-----------Got all foods-----------";
-                return $foods;
+                try {
+                    $foods = $this->foodRepository->all(['id', 'name', 'price', 'discount_price', 'description', 'ingredients', 'weight',
+                        'featured', 'deliverable', 'restaurant_id', 'category_id', 'image_url', 'commission',
+                        'has_media', 'media']);
+
+                } catch (Exception $message) {
+                    echo "-----------1-----------";
+
+                }
+
+                try {
+                    $foods = $this->foodRepository->all(['id', 'name', 'price', 'discount_price', 'description', 'ingredients', 'weight',
+                        'featured']);
+
+                } catch (Exception $message) {
+                    echo "-----------2-----------";
+
+                }
+
+                try {
+                    $foods = $this->foodRepository->all(['id', 'name', 'price', 'discount_price', 'description', 'ingredients']);
+
+                } catch (Exception $message) {
+                    echo "-----------3-----------";
+
+                }
+//                return $foods;
 
 //                $itemsInRange = array();
 //                foreach ($foods->toArray() as $currFood){
