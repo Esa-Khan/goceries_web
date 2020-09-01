@@ -82,11 +82,11 @@ class FoodAPIController extends Controller
 //                    'has_media', 'media']);
                 $foods = $this->foodRepository->all();
                 echo "Got all foods";
-                $collection = collect($foods);
+                $collection = collect($foods->toArray());
                 $filtered = $collection->only(['id', 'name', 'price', 'discount_price', 'description', 'ingredients', 'weight',
                     'featured', 'deliverable', 'restaurant_id', 'category_id', 'image_url', 'commission',
                     'has_media', 'media']);
-                return $filtered->toArray();
+                return $this->sendResponse($filtered, 'Foods retrieved successfully');
 
 //                $itemsInRange = array();
 //                foreach ($foods->toArray() as $currFood){
