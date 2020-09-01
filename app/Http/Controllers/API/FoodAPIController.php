@@ -79,7 +79,9 @@ class FoodAPIController extends Controller
             if (isset($request['short'])){
 
                 try {
-                    $foods = $this->foodRepository->all(['id']);
+                    $foods = $this->foodRepository->all(['id', 'name', 'price', 'discount_price', 'description', 'ingredients', 'weight',
+                        'featured', 'deliverable', 'restaurant_id']);
+                    echo "-----------GOOD-----------";
 
                 } catch (Exception $message) {
                     echo "-----------1-----------";
@@ -89,6 +91,7 @@ class FoodAPIController extends Controller
                 try {
                     $foods = $this->foodRepository->all(['id', 'name', 'price', 'discount_price', 'description', 'ingredients', 'weight',
                         'featured']);
+                    echo "-----------GOOD-----------";
 
                 } catch (Exception $message) {
                     echo "-----------2-----------";
@@ -97,6 +100,7 @@ class FoodAPIController extends Controller
 
                 try {
                     $foods = $this->foodRepository->all(['id', 'name', 'price', 'discount_price', 'description', 'ingredients']);
+                    echo "-----------GOOD-----------";
 
                 } catch (Exception $message) {
                     echo "-----------3-----------";
