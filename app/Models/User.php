@@ -56,6 +56,7 @@ class User extends Authenticatable implements HasMedia
     public $fillable = [
         'name',
         'email',
+        'number',
         'password',
         'api_token',
         'device_token',
@@ -68,6 +69,7 @@ class User extends Authenticatable implements HasMedia
     protected $casts = [
         'name' => 'string',
         'email' => 'string',
+        'number' => 'string',
         'password' => 'string',
         'api_token' => 'string',
         'device_token' => 'string',

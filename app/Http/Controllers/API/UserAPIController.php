@@ -183,7 +183,10 @@ class UserAPIController extends Controller
         try {
             if ($request->has('device_token')) {
                 $user = $this->userRepository->update($request->only('device_token'), $id);
-            } else {
+                $user = $this->userRepository->update($input, $id);
+		
+
+	    } else {
                 $customFields = $this->customFieldRepository->findByField('custom_field_model', $this->userRepository->model());
                 $user = $this->userRepository->update($input, $id);
 
