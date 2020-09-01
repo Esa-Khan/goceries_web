@@ -80,31 +80,11 @@ class FoodAPIController extends Controller
 
                 try {
                     $foods = $this->foodRepository->all(['id', 'name', 'price', 'discount_price', 'description', 'ingredients', 'weight',
-                        'featured', 'deliverable', 'restaurant_id']);
+                        'featured', 'deliverable', 'restaurant_id', 'category_id', 'image_url', 'commission']);
                     echo "-----------GOOD-----------";
 
                 } catch (Exception $message) {
                     echo "-----------1-----------";
-
-                }
-
-                try {
-                    $foods = $this->foodRepository->all(['id', 'name', 'price', 'discount_price', 'description', 'ingredients', 'weight',
-                        'featured']);
-                    echo "-----------GOOD-----------";
-
-                } catch (Exception $message) {
-                    echo "-----------2-----------";
-
-                }
-
-                try {
-                    $foods = $this->foodRepository->all(['id', 'name', 'price', 'discount_price', 'description', 'ingredients']);
-                    echo "-----------GOOD-----------";
-
-                } catch (Exception $message) {
-                    echo "-----------3-----------";
-
                 }
 //                return $foods;
 
