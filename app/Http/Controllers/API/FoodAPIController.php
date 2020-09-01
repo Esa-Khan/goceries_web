@@ -80,7 +80,6 @@ class FoodAPIController extends Controller
 
                 $foods = $this->foodRepository->all(['id', 'name', 'price', 'discount_price', 'description', 'ingredients', 'weight',
                     'featured', 'deliverable', 'category_id', 'image_url', 'commission']);
-                echo "-----------GOOD-----------";
 
 //                $itemsInRange = array();
 //                foreach ($foods->toArray() as $currFood){
