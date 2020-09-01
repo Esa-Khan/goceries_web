@@ -80,7 +80,7 @@ class FoodAPIController extends Controller
 
                 try {
                     $foods = $this->foodRepository->all(['id', 'name', 'price', 'discount_price', 'description', 'ingredients', 'weight',
-                        'featured', 'deliverable', 'restaurant_id', 'category_id', 'image_url', 'commission']);
+                        'featured', 'deliverable']);
                     echo "-----------GOOD-----------";
 
                 } catch (Exception $message) {
