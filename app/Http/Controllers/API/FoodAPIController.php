@@ -91,7 +91,7 @@ class FoodAPIController extends Controller
                     'featured', 'deliverable', 'restaurant_id', 'category_id', 'image_url', 'commission',
                     'has_media', 'media']);
 
-                return $this->sendResponse($filtered, 'Foods retrieved successfully');
+                return $filtered;
 
 //                $itemsInRange = array();
 //                foreach ($foods->toArray() as $currFood){
