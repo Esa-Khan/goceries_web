@@ -83,8 +83,10 @@ class FoodAPIController extends Controller
                 $foods = $this->foodRepository->all();
                 echo "Got all foods";
                 $collection = collect($foods);
-                $filtered = $collection->only(['id']);
-                return $filtered;
+                $filtered = $collection->only(['id', 'name', 'price', 'discount_price', 'description', 'ingredients', 'weight',
+                    'featured', 'deliverable', 'restaurant_id', 'category_id', 'image_url', 'commission',
+                    'has_media', 'media']);
+                return $filtered->toArray();
 
 //                $itemsInRange = array();
 //                foreach ($foods->toArray() as $currFood){
