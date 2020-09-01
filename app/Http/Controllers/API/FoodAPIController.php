@@ -84,7 +84,7 @@ class FoodAPIController extends Controller
 //                    'featured', 'deliverable', 'restaurant_id', 'category_id', 'image_url', 'commission',
 //                    'has_media', 'media');
 
-                $foods = $this->foodRepository->only('id');
+                $foods = $this->foodRepository->pluck('id');
 
 //                $itemsInRange = array();
 //                foreach ($foods->toArray() as $currFood){
