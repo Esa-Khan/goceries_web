@@ -81,8 +81,9 @@ class FoodAPIController extends Controller
 //                    'featured', 'deliverable', 'restaurant_id', 'category_id', 'image_url', 'commission',
 //                    'has_media', 'media']);
                 echo "Hello1";
-                $foods = $this->foodRepository->except(['package_items_count']);
-                return "Hello2";
+                $filtered = $this->foodRepository->except(['package_items_count']);
+                return $filtered->all();
+                
 //                $itemsInRange = array();
 //                foreach ($foods->toArray() as $currFood){
 //                   unset($currFood['unit']);
