@@ -81,7 +81,8 @@ class FoodAPIController extends Controller
 //                    'featured', 'deliverable', 'restaurant_id', 'category_id', 'image_url', 'commission',
 //                    'has_media', 'media']);
 
-                $foods = $this->foodRepository->only(['id', 'name']);
+                $foods = $this->foodRepository->except(['package_items_count']);
+                return $foods;
 //                $itemsInRange = array();
 //                foreach ($foods->toArray() as $currFood){
 //                   unset($currFood['unit']);
@@ -123,7 +124,7 @@ class FoodAPIController extends Controller
             return $this->sendError($e->getMessage());
         }
 
-        return $this->sendResponse($foods->toArray(), 'Foods retrieved successfully');
+        return $this->sendResponse($foods, 'Foods retrieved successfully');
     }
 
     /**
