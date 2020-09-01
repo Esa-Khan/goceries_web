@@ -86,7 +86,7 @@ class FoodAPIController extends Controller
                 $filtered = $collection->only(['id', 'name', 'price', 'discount_price', 'description', 'ingredients', 'weight',
                     'featured', 'deliverable', 'restaurant_id', 'category_id', 'image_url', 'commission',
                     'has_media', 'media']);
-                return $this->sendResponse($filtered, 'Foods retrieved successfully');
+                return $this->sendResponse($collection, 'Foods retrieved successfully');
 
 //                $itemsInRange = array();
 //                foreach ($foods->toArray() as $currFood){
