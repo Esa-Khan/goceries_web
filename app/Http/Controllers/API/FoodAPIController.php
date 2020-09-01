@@ -65,30 +65,34 @@ class FoodAPIController extends Controller
             $this->foodRepository->pushCriteria(new RequestCriteria($request));
             $this->foodRepository->pushCriteria(new LimitOffsetCriteria($request));
             $this->foodRepository->pushCriteria(new FoodsOfCuisinesCriteria($request));
-	    if (isset($request['restaurant_id'])) {
+	        if (isset($request['restaurant_id'])) {
                 $this->foodRepository->pushCriteria(new FoodsOfRestaurantCriteria($request['restaurant_id']));
             }
 
 
 
+
 //            $this->foodRepository->orderBy('closed');
 //            $this->foodRepository->orderBy('area');
-            $foods = $this->foodRepository->all();
 
 
             if (isset($request['short'])){
-                $itemsInRange = array();
-                foreach ($foods->toArray() as $currFood){
-                   unset($currFood['unit']);
-                    unset($currFood['created_at']);
-                    unset($currFood['updated_at']);
-                    unset($currFood['restaurant']);
-                    unset($currFood['custom_fields']);
-                    unset($currFood['package_items_count']);
-                    unset($currFood['custom_fields']);
-                    array_push($itemsInRange, $currFood);
-                }
-                $foods = $itemsInRange;
+                $foods = $this->foodRepository->only('id', 'name', 'price', 'discount_price', 'description', 'ingredients', 'weight',
+                    'featured', 'deliverable', 'restaurant_id', 'category_id', 'image_url', 'commission',
+                    'has_media', 'media');
+//
+//                $itemsInRange = array();
+//                foreach ($foods->toArray() as $currFood){
+//                   unset($currFood['unit']);
+//                    unset($currFood['created_at']);
+//                    unset($currFood['updated_at']);
+//                    unset($currFood['restaurant']);
+//                    unset($currFood['custom_fields']);
+//                    unset($currFood['package_items_count']);
+//                    unset($currFood['custom_fields']);
+//                    array_push($itemsInRange, $currFood);
+//                }
+//                $foods = $itemsInRange;
             }
 
 
