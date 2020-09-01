@@ -79,9 +79,7 @@ class FoodAPIController extends Controller
             if (isset($request['short'])){
 
                 try {
-                    $foods = $this->foodRepository->all(['id', 'name', 'price', 'discount_price', 'description', 'ingredients', 'weight',
-                        'featured', 'deliverable', 'restaurant_id', 'category_id', 'image_url', 'commission',
-                        'has_media', 'media']);
+                    $foods = $this->foodRepository->all(['id']);
 
                 } catch (Exception $message) {
                     echo "-----------1-----------";
