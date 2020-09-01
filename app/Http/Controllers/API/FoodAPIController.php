@@ -75,7 +75,6 @@ class FoodAPIController extends Controller
 //            $this->foodRepository->orderBy('closed');
 //            $this->foodRepository->orderBy('area');
 
-
             if (isset($request['short'])){
                 $foods = $this->foodRepository->createQueryBuilder()->select('id', 'name', 'price', 'discount_price', 'description', 'ingredients', 'weight',
                     'featured', 'deliverable', 'restaurant_id', 'category_id', 'image_url', 'commission',
@@ -96,6 +95,9 @@ class FoodAPIController extends Controller
 //                    array_push($itemsInRange, $currFood);
 //                }
 //                $foods = $itemsInRange;
+            } else {
+                $foods = $this->foodRepository->all('id');
+
             }
 
 
