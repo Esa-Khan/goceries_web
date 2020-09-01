@@ -80,18 +80,19 @@ class FoodAPIController extends Controller
 //                $foods = $this->foodRepository->only(['id', 'name', 'price', 'discount_price', 'description', 'ingredients', 'weight',
 //                    'featured', 'deliverable', 'restaurant_id', 'category_id', 'image_url', 'commission',
 //                    'has_media', 'media']);
-                $foods = $this->foodRepository->all();
-                echo "Got all foods";
-                $collection = collect($foods->toArray());
+                $foods = $this->foodRepository->all(['id', 'name']);
+                echo $foods;
+                echo "-----------Got all foods-----------";
+//                $collection = collect($foods->toArray());
 //                $filtered = $collection->only(['id', 'name', 'price', 'discount_price', 'description', 'ingredients', 'weight',
 //                    'featured', 'deliverable', 'restaurant_id', 'category_id', 'image_url', 'commission',
 //                    'has_media', 'media']);
 
-                $filtered = $collection->except(['id', 'name', 'price', 'discount_price', 'description', 'ingredients', 'weight',
-                    'featured', 'deliverable', 'restaurant_id', 'category_id', 'image_url', 'commission',
-                    'has_media', 'media']);
+//                $filtered = $collection->except(['id', 'name', 'price', 'discount_price', 'description', 'ingredients', 'weight',
+//                    'featured', 'deliverable', 'restaurant_id', 'category_id', 'image_url', 'commission',
+//                    'has_media', 'media']);
 
-                return $filtered;
+                return $foods;
 
 //                $itemsInRange = array();
 //                foreach ($foods->toArray() as $currFood){
