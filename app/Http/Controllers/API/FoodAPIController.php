@@ -86,7 +86,6 @@ class FoodAPIController extends Controller
                     unset($currFood['custom_fields']);
                     unset($currFood['package_items_count']);
                     unset($currFood['custom_fields']);
-		    return $currFood;
                     array_push($itemsInRange, $currFood);
                 }
                 $foods = $itemsInRange;
