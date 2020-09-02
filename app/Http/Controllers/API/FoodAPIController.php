@@ -101,8 +101,7 @@ class FoodAPIController extends Controller
 
 
             if (isset($request['id'])){
-		return $request['id'];
-		$range = explode( '-', $request['id'], 2);
+                $range = explode( '-', $request['id'], 2);
                 $itemsInRange = array();
                 foreach ($foods as $currFood){
                     $currID = (int)$currFood['id'];
