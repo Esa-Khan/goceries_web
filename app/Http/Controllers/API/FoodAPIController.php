@@ -100,22 +100,21 @@ class FoodAPIController extends Controller
 
 
 
-//            if (isset($request['id'])){
-//		return $request['id'];   
-//		$range = explode( '-', $request['id'], 2);
-//                $itemsInRange = array();
-//                foreach ($foods as $currFood){
-//                    $currID = (int)$currFood['id'];
-//                    if ($currID > (int)$range[1]) {
-//                        break;
-//                    } else if ($currID >= (int)$range[0] && $currID <= (int)$range[1]) {
-/*                        array_push($itemsInRange, $currFood);
+            if (isset($request['id'])){
+		return $request['id'];
+		$range = explode( '-', $request['id'], 2);
+                $itemsInRange = array();
+                foreach ($foods as $currFood){
+                    $currID = (int)$currFood['id'];
+                    if ($currID > (int)$range[1]) {
+                        break;
+                    } else if ($currID >= (int)$range[0] && $currID <= (int)$range[1]) {
+                        array_push($itemsInRange, $currFood);
                     };
                 }
-//                $foods = $itemsInRange;
-                return $this->sendResponse($itemsInRange, 'Foods retrieved successfully');
+                $foods = $itemsInRange;
+//                return $this->sendResponse($itemsInRange, 'Foods retrieved successfully');
              }
- */
 
 
         } catch (RepositoryException $e) {
