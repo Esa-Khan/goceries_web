@@ -23,7 +23,6 @@ use Prettus\Validator\Exceptions\ValidatorException;
 class UserAPIController extends Controller
 {
     private $userRepository;
-    private $driverRepository;
     private $uploadRepository;
     private $roleRepository;
     private $customFieldRepository;
@@ -33,10 +32,9 @@ class UserAPIController extends Controller
      *
      * @return void
      */
-    public function __construct(UserRepository $userRepository, UserRepository $driverRepo, UploadRepository $uploadRepository, RoleRepository $roleRepository, CustomFieldRepository $customFieldRepo)
+    public function __construct(UserRepository $userRepository, UploadRepository $uploadRepository, RoleRepository $roleRepository, CustomFieldRepository $customFieldRepo)
     {
         $this->userRepository = $userRepository;
-        $this->driverRepository = $driverRepo;
         $this->uploadRepository = $uploadRepository;
         $this->roleRepository = $roleRepository;
         $this->customFieldRepository = $customFieldRepo;
@@ -44,7 +42,6 @@ class UserAPIController extends Controller
 
     function login(Request $request)
     {
-        return "hello";
         try {
             $this->validate($request, [
                 'email' => 'required|email',
@@ -55,10 +52,6 @@ class UserAPIController extends Controller
                 $user = auth()->user();
                 $user->device_token = $request->input('device_token', '');
                 $user->save();
-                if ($user->isDriver) {
-                    $driver = $this->driverRepository->find($user->id);
-                    return $driver;
-                }
                 return $this->sendResponse($user, 'User retrieved successfully');
             }
         } catch (\Exception $e) {

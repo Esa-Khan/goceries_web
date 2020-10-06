@@ -43,7 +43,7 @@ class UserAPIController extends Controller
 
     function login(Request $request)
     {
-    	    try {
+        try {
             $this->validate($request, [
                 'email' => 'required|email',
                 'password' => 'required',
@@ -52,11 +52,14 @@ class UserAPIController extends Controller
                 // Authentication passed...
                 $user = auth()->user();
                 if (!$user->hasRole('driver')) {
-			return $this->sendError('User not driver', 401);
-		}
+                    return $this->sendError('User not driver', 401);
+                }
                 $user->device_token = $request->input('device_token', '');
                 $user->save();
-                return $this->sendResponse($user, 'User retrieved successfully');
+                if ($user->isDriver) {
+                    return $this->driverRepository->find($user->id);
+                }
+                return $this->sendResponse($user, 'Driver User retrieved successfully');
             }
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), 401);
