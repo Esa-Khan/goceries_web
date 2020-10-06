@@ -62,10 +62,10 @@ class Driver extends Model
      *
      * @var array
      */
-    protected $appends = [
-        'custom_fields',
-        
-    ];
+//    protected $appends = [
+//        'custom_fields',
+//
+//    ];
 
     public function customFieldsValues()
     {
