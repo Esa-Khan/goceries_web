@@ -36,8 +36,9 @@ class Category extends Model implements HasMedia
 
     public $fillable = [
         'name',
-        'description'
-    ];
+        'description',
+	'isGeneralCat'
+];
 
     /**
      * The attributes that should be casted to native types.
@@ -47,7 +48,8 @@ class Category extends Model implements HasMedia
     protected $casts = [
         'name' => 'string',
         'description' => 'string',
-        'image' => 'string'
+        'image' => 'string',
+        'isGeneralCat' => 'boolean'
     ];
 
     /**
