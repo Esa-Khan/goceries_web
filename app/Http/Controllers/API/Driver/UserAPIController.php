@@ -58,6 +58,7 @@ class UserAPIController extends Controller
                 }
                 $user->device_token = $request->input('device_token', '');
                 $user->save();
+                return $user;
                 if ($user->isDriver) {
                     return $this->driverRepository->find($user->id);
                 }
