@@ -62,6 +62,7 @@ class UserAPIController extends Controller
                 $user->device_token = $request->input('device_token', '');
                 $user->save();
                 if ($user->isDriver) {
+                    $work_hours = Driver::select('work_hours')->where('user_id', $user->id)->get();
                     $user['work_hours'] = Driver::select('work_hours')->where('user_id', $user->id)->get();
                 }
                 return $this->sendResponse($user, 'Driver User retrieved successfully');
