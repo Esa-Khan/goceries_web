@@ -24,6 +24,7 @@ use Prettus\Validator\Exceptions\ValidatorException;
 class UserAPIController extends Controller
 {
     private $userRepository;
+    private $driverRepository;
     private $uploadRepository;
     private $roleRepository;
     private $customFieldRepository;
@@ -33,9 +34,10 @@ class UserAPIController extends Controller
      *
      * @return void
      */
-    public function __construct(UserRepository $userRepository, UploadRepository $uploadRepository, RoleRepository $roleRepository, CustomFieldRepository $customFieldRepo)
+    public function __construct(UserRepository $userRepository, UserRepository $driverRepo, UploadRepository $uploadRepository, RoleRepository $roleRepository, CustomFieldRepository $customFieldRepo)
     {
         $this->userRepository = $userRepository;
+        $this->driverRepository = $driverRepo;
         $this->uploadRepository = $uploadRepository;
         $this->roleRepository = $roleRepository;
         $this->customFieldRepository = $customFieldRepo;
