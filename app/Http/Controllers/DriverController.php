@@ -62,6 +62,7 @@ private $userRepository;
         foreach ($drivers as $driver){
             if(!empty($driver)){
                 $this->driverRepository->firstOrCreate(['user_id'=>$driver->id]);
+                UserRepository::where('id', $driver->id)->update(array('isDriver' => '1'));
             }
         }
         return redirect(route('drivers.index'));

@@ -308,23 +308,25 @@
       <screen x="0" y="0" width="1500" height="1000" />
     </state>
     <state x="617" y="377" width="312" height="245" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1/0.0.1500.1000@0.0.1500.1000" timestamp="1593878207188" />
-    <state x="756" y="340" width="408" height="356" key="com.intellij.database.psi.DbRenamePsiElementProcessor.DbRenameDialog" timestamp="1601957584613">
+    <state x="756" y="340" width="408" height="356" key="com.intellij.database.psi.DbRenamePsiElementProcessor.DbRenameDialog" timestamp="1601960487519">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="756" y="340" width="408" height="356" key="com.intellij.database.psi.DbRenamePsiElementProcessor.DbRenameDialog/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1601957584613" />
-    <state x="498" y="212" width="539" height="727" key="com.intellij.database.view.ui.AbstractDbRefactoringDialog" timestamp="1598754806488">
+    <state x="756" y="340" width="408" height="356" key="com.intellij.database.psi.DbRenamePsiElementProcessor.DbRenameDialog/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1601960487519" />
+    <state x="498" y="212" width="539" height="727" key="com.intellij.database.view.ui.AbstractDbRefactoringDialog" timestamp="1601960407679">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="498" y="212" key="com.intellij.database.view.ui.AbstractDbRefactoringDialog/-1920.92.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1598754806488" />
     <state x="389" y="204" width="539" height="727" key="com.intellij.database.view.ui.AbstractDbRefactoringDialog/0.0.1500.1000@0.0.1500.1000" timestamp="1593868320769" />
+    <state x="498" y="212" key="com.intellij.database.view.ui.AbstractDbRefactoringDialog/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1601960407679" />
     <state x="777" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1598841580495">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="777" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/-1920.92.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1598841580495" />
-    <state x="589" y="241" width="742" height="556" key="find.popup" timestamp="1599002782105">
+    <state x="589" y="241" width="742" height="556" key="find.popup" timestamp="1601960194451">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="589" y="241" width="742" height="556" key="find.popup/-1920.92.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1599002782105" />
     <state x="460" y="232" width="579" height="534" key="find.popup/0.0.1500.1000@0.0.1500.1000" timestamp="1593854747849" />
+    <state x="589" y="241" width="742" height="556" key="find.popup/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1601960194451" />
   </component>
 </project>
