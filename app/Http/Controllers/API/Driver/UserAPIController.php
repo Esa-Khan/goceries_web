@@ -13,6 +13,7 @@ use App\Events\UserRoleChangedEvent;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Repositories\CustomFieldRepository;
+use App\Repositories\DriverRepository;
 use App\Repositories\RoleRepository;
 use App\Repositories\UploadRepository;
 use App\Repositories\UserRepository;
@@ -58,7 +59,6 @@ class UserAPIController extends Controller
                 }
                 $user->device_token = $request->input('device_token', '');
                 $user->save();
-                return $user;
                 if ($user->isDriver) {
                     return $this->driverRepository->find($user->id);
                 }
