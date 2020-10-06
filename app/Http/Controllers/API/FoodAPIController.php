@@ -81,18 +81,6 @@ class FoodAPIController extends Controller
                 $foods = $this->foodRepository->all(['id', 'name', 'price', 'discount_price', 'description', 'ingredients', 'weight',
                     'featured', 'deliverable', 'category_id', 'image_url', 'commission']);
 
-//                $itemsInRange = array();
-//                foreach ($foods->toArray() as $currFood){
-//                   unset($currFood['unit']);
-//                    unset($currFood['created_at']);
-//                    unset($currFood['updated_at']);
-//                    unset($currFood['restaurant']);
-//                    unset($currFood['custom_fields']);
-//                    unset($currFood['package_items_count']);
-//                    unset($currFood['custom_fields']);
-//                    array_push($itemsInRange, $currFood);
-//                }
-//                $foods = $itemsInRange;
             } else {
                 $foods = $this->foodRepository->all();
 
