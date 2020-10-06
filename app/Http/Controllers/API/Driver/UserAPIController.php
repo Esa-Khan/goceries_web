@@ -11,6 +11,7 @@ namespace App\Http\Controllers\API\Driver;
 
 use App\Events\UserRoleChangedEvent;
 use App\Http\Controllers\Controller;
+use App\Models\Driver;
 use App\Models\User;
 use App\Repositories\CustomFieldRepository;
 use App\Repositories\DriverRepository;
@@ -60,7 +61,7 @@ class UserAPIController extends Controller
                 $user->device_token = $request->input('device_token', '');
                 $user->save();
                 if ($user->isDriver) {
-                    return $this->driverRepository->find($user->id);
+                    return Driver::select('work_hours')->where('user_id', $user->id)->get();
                 }
                 return $this->sendResponse($user, 'Driver User retrieved successfully');
             }
