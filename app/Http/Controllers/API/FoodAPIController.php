@@ -22,6 +22,7 @@ use App\Repositories\UploadRepository;
 use Flash;
 use Illuminate\Http\Request;
 use InfyOm\Generator\Criteria\LimitOffsetCriteria;
+use PhpOffice\PhpSpreadsheet\Exception;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Exceptions\ValidatorException;
@@ -65,26 +66,61 @@ class FoodAPIController extends Controller
             $this->foodRepository->pushCriteria(new RequestCriteria($request));
             $this->foodRepository->pushCriteria(new LimitOffsetCriteria($request));
             $this->foodRepository->pushCriteria(new FoodsOfCuisinesCriteria($request));
-	    if (isset($request['restaurant_id'])) {
+	        if (isset($request['restaurant_id'])) {
                 $this->foodRepository->pushCriteria(new FoodsOfRestaurantCriteria($request['restaurant_id']));
             }
 
 
-	    if ($request->get('trending', null) == 'week') {
-                $this->foodRepository->pushCriteria(new TrendingWeekCriteria($request));
-            } else {
-                $this->foodRepository->pushCriteria(new NearCriteria($request));
-            }
+
 
 //            $this->foodRepository->orderBy('closed');
 //            $this->foodRepository->orderBy('area');
-            $foods = $this->foodRepository->all();
+
+            if (isset($request['short'])){
+
+                $foods = $this->foodRepository->all(['id', 'name', 'price', 'discount_price', 'description', 'ingredients', 'weight',
+                    'featured', 'deliverable', 'category_id', 'image_url', 'commission']);
+
+//                $itemsInRange = array();
+//                foreach ($foods->toArray() as $currFood){
+//                   unset($currFood['unit']);
+//                    unset($currFood['created_at']);
+//                    unset($currFood['updated_at']);
+//                    unset($currFood['restaurant']);
+//                    unset($currFood['custom_fields']);
+//                    unset($currFood['package_items_count']);
+//                    unset($currFood['custom_fields']);
+//                    array_push($itemsInRange, $currFood);
+//                }
+//                $foods = $itemsInRange;
+            } else {
+                $foods = $this->foodRepository->all();
+
+            }
+
+
+
+            if (isset($request['id'])){
+                $range = explode( '-', $request['id'], 2);
+                $itemsInRange = array();
+                foreach ($foods as $currFood){
+                    $currID = (int)$currFood['id'];
+                    if ($currID > (int)$range[1]) {
+                        break;
+                    } else if ($currID >= (int)$range[0] && $currID <= (int)$range[1]) {
+                        array_push($itemsInRange, $currFood);
+                    };
+                }
+                $foods = $itemsInRange;
+//                return $this->sendResponse($itemsInRange, 'Foods retrieved successfully');
+             }
+
 
         } catch (RepositoryException $e) {
             return $this->sendError($e->getMessage());
         }
 
-        return $this->sendResponse($foods->toArray(), 'Foods retrieved successfully');
+        return $this->sendResponse($foods, 'Foods retrieved successfully');
     }
 
     /**

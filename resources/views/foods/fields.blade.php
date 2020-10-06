@@ -95,26 +95,26 @@
 {{--    </div>--}}
 
     <!-- Description Field -->
-{{--    <div class="form-group row ">--}}
-{{--        {!! Form::label('description', trans("lang.food_description"), ['class' => 'col-3 control-label text-right']) !!}--}}
-{{--        <div class="col-9">--}}
-{{--            {!! Form::textarea('description', null, ['class' => 'form-control','placeholder'=>--}}
-{{--             trans("lang.food_description_placeholder")  ]) !!}--}}
-{{--            <div class="form-text text-muted">{{ trans("lang.food_description_help") }}</div>--}}
-{{--        </div>--}}
-{{--    </div>--}}
+    <div class="form-group row ">
+        {!! Form::label('description', trans("lang.food_description"), ['class' => 'col-3 control-label text-right']) !!}
+        <div class="col-9">
+            {!! Form::textarea('description', null, ['class' => 'form-control','placeholder'=>
+             trans("lang.food_description_placeholder")  ]) !!}
+            <div class="form-text text-muted">{{ trans("lang.food_description_help") }}</div>
+        </div>
+    </div>
 </div>
 <div style="flex: 50%;max-width: 50%;padding: 0 4px;" class="column">
 
     <!-- Ingredients Field -->
-{{--    <div class="form-group row ">--}}
-{{--        {!! Form::label('ingredients', trans("lang.food_ingredients"), ['class' => 'col-3 control-label text-right']) !!}--}}
-{{--        <div class="col-9">--}}
-{{--            {!! Form::textarea('ingredients', null, ['class' => 'form-control','placeholder'=>--}}
-{{--             trans("lang.food_ingredients_placeholder")  ]) !!}--}}
-{{--            <div class="form-text text-muted">{{ trans("lang.food_ingredients_help") }}</div>--}}
-{{--        </div>--}}
-{{--    </div>--}}
+    <div class="form-group row ">
+        {!! Form::label('ingredients', trans("lang.food_ingredients"), ['class' => 'col-3 control-label text-right']) !!}
+        <div class="col-9">
+            {!! Form::textarea('ingredients', null, ['class' => 'form-control','placeholder'=>
+             trans("lang.food_ingredients_placeholder")  ]) !!}
+            <div class="form-text text-muted">{{ trans("lang.food_ingredients_help") }}</div>
+        </div>
+    </div>
 
     <!-- unit Field -->
 {{--    <div class="form-group row ">--}}
@@ -139,15 +139,12 @@
 {{--    </div>--}}
 
     <!-- Weight Field -->
-{{--    <div class="form-group row ">--}}
-{{--        {!! Form::label('weight', trans("lang.food_weight"), ['class' => 'col-3 control-label text-right']) !!}--}}
-{{--        <div class="col-9">--}}
-{{--            {!! Form::number('weight', null,  ['class' => 'form-control','placeholder'=>  trans("lang.food_weight_placeholder"),'step'=>"0.01", 'min'=>"0"]) !!}--}}
-{{--            <div class="form-text text-muted">--}}
-{{--                {{ trans("lang.food_weight_help") }}--}}
-{{--            </div>--}}
-{{--        </div>--}}
-{{--    </div>--}}
+    <div class="form-group row ">
+        {!! Form::label('weight', trans("lang.food_weight"), ['class' => 'col-3 control-label text-right']) !!}
+        <div class="col-9">
+            {!! Form::text('weight', null,  ['class' => 'form-control','placeholder'=>  trans("lang.food_weight_placeholder"),'step'=>"0.01", 'min'=>"0"]) !!}
+        </div>
+    </div>
 
     <!-- 'Boolean Featured Field' -->
 {{--    <div class="form-group row ">--}}
