@@ -63,6 +63,7 @@ class UserAPIController extends Controller
                 $user->save();
                 if ($user->isDriver) {
                     $work_hours = Driver::select('work_hours')->where('user_id', $user->id)->get();
+                    echo $work_hours;
                     $user['work_hours'] = Driver::select('work_hours')->where('user_id', $user->id)->get();
                 }
                 return $this->sendResponse($user, 'Driver User retrieved successfully');
