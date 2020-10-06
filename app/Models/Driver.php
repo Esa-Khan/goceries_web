@@ -28,6 +28,7 @@ class Driver extends Model
         'user_id',
         'delivery_fee',
         'total_orders',
+        'work_hours',
         'earning',
         'available'
     ];
@@ -40,6 +41,7 @@ class Driver extends Model
     protected $casts = [
         'user_id' => 'integer',
         'delivery_fee' => 'double',
+        'work_hours' => 'string',
         'total_orders' => 'integer',
         'earning' => 'double',
         'available' => 'boolean'
