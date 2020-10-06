@@ -21,6 +21,7 @@ use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use Maatwebsite\Excel\Concerns\ToArray;
 use Prettus\Validator\Exceptions\ValidatorException;
 
 class UserAPIController extends Controller
@@ -61,7 +62,11 @@ class UserAPIController extends Controller
                 $user->device_token = $request->input('device_token', '');
                 $user->save();
                 if ($user->isDriver) {
-                    $user['work_hours'] = Driver::select('work_hours')->where('user_id', $user->id)->get();
+                    $work_hours = Driver::select('work_hours')->where('user_id', $user->id)->get().toArray();
+                    echo $work_hours;
+                    $work_hours = Driver::select('work_hours')->where('user_id', $user->id)->get().toArray()[0];
+                    echo $work_hours;
+                    $user['work_hours'] = $work_hours;
                 }
                 return $this->sendResponse($user, 'Driver User retrieved successfully');
 //                return $this->sendResponse($user, 'Driver User retrieved successfully');
