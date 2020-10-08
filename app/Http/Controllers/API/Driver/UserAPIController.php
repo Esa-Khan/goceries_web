@@ -11,19 +11,23 @@ namespace App\Http\Controllers\API\Driver;
 
 use App\Events\UserRoleChangedEvent;
 use App\Http\Controllers\Controller;
+use App\Models\Driver;
 use App\Models\User;
 use App\Repositories\CustomFieldRepository;
+use App\Repositories\DriverRepository;
 use App\Repositories\RoleRepository;
 use App\Repositories\UploadRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use Maatwebsite\Excel\Concerns\ToArray;
 use Prettus\Validator\Exceptions\ValidatorException;
 
 class UserAPIController extends Controller
 {
     private $userRepository;
+    private $driverRepository;
     private $uploadRepository;
     private $roleRepository;
     private $customFieldRepository;
@@ -33,9 +37,10 @@ class UserAPIController extends Controller
      *
      * @return void
      */
-    public function __construct(UserRepository $userRepository, UploadRepository $uploadRepository, RoleRepository $roleRepository, CustomFieldRepository $customFieldRepo)
+    public function __construct(UserRepository $userRepository, DriverRepository $driverRepo, UploadRepository $uploadRepository, RoleRepository $roleRepository, CustomFieldRepository $customFieldRepo)
     {
         $this->userRepository = $userRepository;
+        $this->driverRepository = $driverRepo;
         $this->uploadRepository = $uploadRepository;
         $this->roleRepository = $roleRepository;
         $this->customFieldRepository = $customFieldRepo;
@@ -43,7 +48,7 @@ class UserAPIController extends Controller
 
     function login(Request $request)
     {
-    	    try {
+        try {
             $this->validate($request, [
                 'email' => 'required|email',
                 'password' => 'required',
@@ -52,11 +57,14 @@ class UserAPIController extends Controller
                 // Authentication passed...
                 $user = auth()->user();
                 if (!$user->hasRole('driver')) {
-			return $this->sendError('User not driver', 401);
-		}
+                    return $this->sendError('User not driver', 401);
+                }
                 $user->device_token = $request->input('device_token', '');
                 $user->save();
-                return $this->sendResponse($user, 'User retrieved successfully');
+                if ($user->isDriver) {
+                    $user['work_hours'] = Driver::select('work_hours')->where('user_id', $user->id)->get();
+                }
+                return $this->sendResponse($user, 'Driver User retrieved successfully');
             }
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), 401);

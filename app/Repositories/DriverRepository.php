@@ -24,7 +24,8 @@ class DriverRepository extends BaseRepository
         'delivery_fee',
         'total_orders',
         'earning',
-        'available'
+        'available',
+        'work_hours'
     ];
 
     /**

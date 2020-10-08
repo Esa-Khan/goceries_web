@@ -275,20 +275,11 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="332" y="136" key="#CLI_Interpreters" timestamp="1592639627110">
-      <screen x="0" y="0" width="1500" height="960" />
-    </state>
-    <state x="332" y="136" key="#CLI_Interpreters/0.0.1500.960@0.0.1500.960" timestamp="1592639627110" />
-    <state x="620" y="343" key="#Notifications" timestamp="1592624946743">
-      <screen x="0" y="0" width="1500" height="960" />
-    </state>
-    <state x="620" y="343" key="#Notifications/0.0.1500.960@0.0.1500.960" timestamp="1592624946743" />
     <state x="264" y="147" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1598890038099">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="264" y="147" key="#com.intellij.execution.impl.EditConfigurationsDialog/-1920.92.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1598890038099" />
     <state x="206" y="141" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1500.1000@0.0.1500.1000" timestamp="1593846071921" />
-    <state x="206" y="135" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1500.960@0.0.1500.960" timestamp="1592639627957" />
     <state x="690" y="274" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog" timestamp="1599004052616">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -313,27 +304,29 @@
       <screen x="0" y="0" width="1500" height="1000" />
     </state>
     <state width="1458" height="315" key="GridCell.Tab.0.right/0.0.1500.1000@0.0.1500.1000" timestamp="1595266081726" />
-    <state x="252" y="125" key="SettingsEditor" timestamp="1592639441952">
-      <screen x="0" y="0" width="1500" height="960" />
-    </state>
-    <state x="252" y="125" key="SettingsEditor/0.0.1500.960@0.0.1500.960" timestamp="1592639441952" />
     <state x="617" y="377" width="312" height="245" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1" timestamp="1593878207188">
       <screen x="0" y="0" width="1500" height="1000" />
     </state>
     <state x="617" y="377" width="312" height="245" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1/0.0.1500.1000@0.0.1500.1000" timestamp="1593878207188" />
-    <state x="498" y="212" width="539" height="727" key="com.intellij.database.view.ui.AbstractDbRefactoringDialog" timestamp="1598754806488">
+    <state x="756" y="340" width="408" height="356" key="com.intellij.database.psi.DbRenamePsiElementProcessor.DbRenameDialog" timestamp="1601960487519">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="756" y="340" width="408" height="356" key="com.intellij.database.psi.DbRenamePsiElementProcessor.DbRenameDialog/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1601960487519" />
+    <state x="498" y="212" width="539" height="727" key="com.intellij.database.view.ui.AbstractDbRefactoringDialog" timestamp="1601960407679">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="498" y="212" key="com.intellij.database.view.ui.AbstractDbRefactoringDialog/-1920.92.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1598754806488" />
     <state x="389" y="204" width="539" height="727" key="com.intellij.database.view.ui.AbstractDbRefactoringDialog/0.0.1500.1000@0.0.1500.1000" timestamp="1593868320769" />
+    <state x="498" y="212" key="com.intellij.database.view.ui.AbstractDbRefactoringDialog/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1601960407679" />
     <state x="777" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1598841580495">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="777" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/-1920.92.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1598841580495" />
-    <state x="589" y="241" width="742" height="556" key="find.popup" timestamp="1599002782105">
+    <state x="589" y="241" width="742" height="556" key="find.popup" timestamp="1601962944188">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="589" y="241" width="742" height="556" key="find.popup/-1920.92.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1599002782105" />
     <state x="460" y="232" width="579" height="534" key="find.popup/0.0.1500.1000@0.0.1500.1000" timestamp="1593854747849" />
+    <state x="589" y="241" width="742" height="556" key="find.popup/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1601962944188" />
   </component>
 </project>
