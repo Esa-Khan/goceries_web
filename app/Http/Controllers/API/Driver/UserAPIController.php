@@ -65,7 +65,6 @@ class UserAPIController extends Controller
                     $user['work_hours'] = Driver::select('work_hours')->where('user_id', $user->id)->get();
                 }
                 return $this->sendResponse($user, 'Driver User retrieved successfully');
-//                return $this->sendResponse($user, 'Driver User retrieved successfully');
             }
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), 401);
