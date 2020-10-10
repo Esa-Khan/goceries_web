@@ -109,6 +109,7 @@ class UserAPIController extends Controller
 
     function logout(Request $request)
     {
+        return "Hello";
         $user = $this->userRepository->findByField('api_token', $request->input('api_token'))->first();
         return Driver::where('user_id', '=', $user['id'])->update(['available' => 0]);
         if (!$user) {
