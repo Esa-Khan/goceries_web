@@ -23,7 +23,7 @@ Route::prefix('driver')->group(function () {
     Route::post('register', 'API\Driver\UserAPIController@register');
     Route::post('send_reset_link_email', 'API\UserAPIController@sendResetLinkEmail');
     Route::get('user', 'API\Driver\UserAPIController@user');
-    Route::get('logout', 'API\Driver\UserAPIController@logout');
+    Route::post('logout', 'API\Driver\UserAPIController@logout');
     Route::get('settings', 'API\Driver\UserAPIController@settings');
 });
 
