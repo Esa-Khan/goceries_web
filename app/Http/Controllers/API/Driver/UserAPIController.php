@@ -60,9 +60,9 @@ class UserAPIController extends Controller
                 echo "----------------------------";
                 echo $user;
                 echo "----------------------------";
-                echo $user[id];
+                echo $user['id'];
                 echo "----------------------------";
-                $this->driverRepository->update(['available' => true], $user[id]);
+                $this->driverRepository->update(['available' => true], $user['id']);
                 echo "----------------------------";
                 App/Model/Driver::where('user_id', $user['id'])->update(['available' => 1]);
                 echo App\Models\Flight::where('user_id', $user['id'])->first();
