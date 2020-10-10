@@ -114,8 +114,8 @@ class UserAPIController extends Controller
             return $this->sendError('User not found', 401);
         }
         try {
-            auth()->logout();
             Driver::where('user_id', '=', $user['id'])->update(['available' => 0]);
+            auth()->logout();
         } catch (\Exception $e) {
             $this->sendError($e->getMessage(), 401);
         }
