@@ -57,11 +57,17 @@ class UserAPIController extends Controller
             if (auth()->attempt(['email' => $request->input('email'), 'password' => $request->input('password')])) {
                 // Authentication passed...
                 $user = auth()->user();
+                echo "----------------------------";
                 echo $user;
+                echo "----------------------------";
                 echo $user[id];
+                echo "----------------------------";
                 $this->driverRepository->update(['available' => true], $user[id]);
-                App/Model/Driver::where('user_id', $user[id])
-                    ->update(['available' => 1]);
+                echo "----------------------------";
+                App/Model/Driver::where('user_id', $user['id'])->update(['available' => 1]);
+                echo App\Models\Flight::where('user_id', $user['id'])->first();
+                echo "----------------------------";
+
                 if (!$user->hasRole('driver')) {
                     return $this->sendError('User not driver', 401);
                 }
