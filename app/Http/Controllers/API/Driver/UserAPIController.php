@@ -57,8 +57,7 @@ class UserAPIController extends Controller
             if (auth()->attempt(['email' => $request->input('email'), 'password' => $request->input('password')])) {
                 // Authentication passed...
                 $user = auth()->user();
-                echo Driver::where('user_id', '=', $user['id'])->update(['available' => 1]);
-
+                Driver::where('user_id', '=', $user['id'])->update(['available' => 1]);
                 if (!$user->hasRole('driver')) {
                     return $this->sendError('User not driver', 401);
                 }
@@ -116,7 +115,7 @@ class UserAPIController extends Controller
         }
         try {
             auth()->logout();
-            echo Driver::where('user_id', '=', $user['id'])->update(['available' => 0]);
+            Driver::where('user_id', '=', $user['id'])->update(['available' => 0]);
         } catch (\Exception $e) {
             $this->sendError($e->getMessage(), 401);
         }
