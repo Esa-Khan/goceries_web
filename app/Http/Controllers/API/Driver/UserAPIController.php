@@ -64,6 +64,7 @@ class UserAPIController extends Controller
                 if ($user->isDriver) {
                     $user['work_hours'] = Driver::select('work_hours')->where('user_id', $user->id)->get();
                 }
+                $user['available'] = true;
                 return $this->sendResponse($user, 'Driver User retrieved successfully');
             }
         } catch (\Exception $e) {
@@ -116,6 +117,7 @@ class UserAPIController extends Controller
         } catch (\Exception $e) {
             $this->sendError($e->getMessage(), 401);
         }
+        $user['available'] = true;
         return $this->sendResponse($user['name'], 'User logout successfully');
 
     }
