@@ -58,7 +58,7 @@ class UserAPIController extends Controller
                 // Authentication passed...
                 $user = auth()->user();
                 echo "----------------------------";
-                echo $this->driverRepository->findByField(user_id,7);
+                echo $this->driverRepository->findByField('user_id',7, ['delivery_fee', 'id', 'user_id', 'available']);
                 echo "----------------------------";
                 echo $user['id'];
                 echo "----------------------------";
