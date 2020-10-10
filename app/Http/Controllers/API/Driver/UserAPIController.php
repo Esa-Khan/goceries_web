@@ -57,14 +57,13 @@ class UserAPIController extends Controller
             if (auth()->attempt(['email' => $request->input('email'), 'password' => $request->input('password')])) {
                 // Authentication passed...
                 $user = auth()->user();
-                echo "----------------------------";
+                echo "----------------------------\n";
                 echo $this->driverRepository->findByField('user_id',7, ['delivery_fee', 'id', 'user_id', 'available']);
-                echo "----------------------------";
+                echo "----------------------------\n";
                 echo $user['id'];
-                echo "----------------------------";
-                echo $this->driverRepository->update(['available' => true], $user['id']);
-                echo "----------------------------";
-                echo "----------------------------";
+                echo "----------------------------\n";
+                echo Driver::where('user_id', '=', $user['id'])->update(['available' => 1]);
+                echo "----------------------------\n";
 
                 if (!$user->hasRole('driver')) {
                     return $this->sendError('User not driver', 401);
