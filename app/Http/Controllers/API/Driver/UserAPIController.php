@@ -18,6 +18,7 @@ use App\Repositories\DriverRepository;
 use App\Repositories\RoleRepository;
 use App\Repositories\UploadRepository;
 use App\Repositories\UserRepository;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
@@ -56,7 +57,11 @@ class UserAPIController extends Controller
             if (auth()->attempt(['email' => $request->input('email'), 'password' => $request->input('password')])) {
                 // Authentication passed...
                 $user = auth()->user();
+                echo $user;
+                echo $user[id];
                 $this->driverRepository->update(['available' => true], $user[id]);
+                App/Model/Driver::where('user_id', $user[id])
+                    ->update(['available' => 1]);
                 if (!$user->hasRole('driver')) {
                     return $this->sendError('User not driver', 401);
                 }
