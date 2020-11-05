@@ -11,11 +11,15 @@ namespace App\Http\Controllers\API;
 
 
 use App\Criteria\Categories\CategoriesOfCuisinesCriteria;
+use App\Criteria\Categories\MainCategoriesCriteria;
+use App\Criteria\Categories\UsedCategoriesCriteria;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Food;
 use App\Repositories\CategoryRepository;
 use Flash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use InfyOm\Generator\Criteria\LimitOffsetCriteria;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Prettus\Repository\Exceptions\RepositoryException;
@@ -43,14 +47,20 @@ class CategoryAPIController extends Controller
      */
     public function index(Request $request)
     {
-        try{
+        try {
             $this->categoryRepository->pushCriteria(new RequestCriteria($request));
             $this->categoryRepository->pushCriteria(new LimitOffsetCriteria($request));
             $this->categoryRepository->pushCriteria(new CategoriesOfCuisinesCriteria($request));
+            if ($request->has('storeID')) {
+                $this->categoryRepository->pushCriteria(new UsedCategoriesCriteria($request));
+            }
+
         } catch (RepositoryException $e) {
             Flash::error($e->getMessage());
         }
         $categories = $this->categoryRepository->all();
+
+
 
         return $this->sendResponse($categories->toArray(), 'Categories retrieved successfully');
     }

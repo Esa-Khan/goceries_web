@@ -225,12 +225,7 @@ class OrderAPIController extends Controller
                 $temp_order['driver_id'] = 1;
                 $this->orderRepository->update($temp_order, $order->id);
 
-                $drivers = $this->driverRepository->all();
-                foreach ($drivers as $currDriver) {
-                    $driver = $this->userRepository->findWithoutFail($currDriver->user_id);
-                    Notification::send([$driver], new AssignedOrder($order));
-                }
-
+                sendNotification($order);
 
             }
         } catch (ValidatorException $e) {
@@ -285,17 +280,24 @@ class OrderAPIController extends Controller
             $temp_order['driver_id'] = 1;
             $this->orderRepository->update($temp_order, $order->id);
 
-            $drivers = $this->driverRepository->all();
-            foreach ($drivers as $currDriver) {
-                $driver = $this->userRepository->findWithoutFail($currDriver->user_id);
-                Notification::send([$driver], new AssignedOrder($order));
-            }
+            sendNotification($order);
+
 
         } catch
         (ValidatorException $e) {
             return $this->sendError($e->getMessage());
         }
         return $this->sendResponse($order->toArray(), __('lang.saved_successfully', ['operator' => __('lang.order')]));
+    }
+
+    private function sendNotification($order) {
+        return $order;
+        $drivers = $this->driverRepository->all();
+        foreach ($drivers as $currDriver) {
+            $driver = $this->userRepository->findWithoutFail($currDriver->user_id);
+            Notification::send([$driver], new AssignedOrder($order));
+        }
+
     }
 
     /**
