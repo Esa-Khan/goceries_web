@@ -37,6 +37,7 @@ Route::get('settings', 'API\UserAPIController@settings');
 
 Route::resource('cuisines', 'API\CuisineAPIController');
 Route::resource('categories', 'API\CategoryAPIController');
+Route::resource('subcategories', 'API\SubCategoryAPIController');
 Route::resource('restaurants', 'API\RestaurantAPIController');
 
 Route::resource('faq_categories', 'API\FaqCategoryAPIController');

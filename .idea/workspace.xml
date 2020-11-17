@@ -20,7 +20,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="234dd131-8b85-4f6b-9b51-0574357c69cc" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/Driver/UserAPIController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/Driver/UserAPIController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Criteria/Categories/MainCategoriesCriteria.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/DataTables/SubCategoryDataTable.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Http/Controllers/API/SubCategoryAPIController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Http/Controllers/SubCategoryController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Http/Requests/CreateSubCategoryRequest.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Models/SubCategory.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Repositories/SubCategoryRepository.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2020_04_11_135804_create_categories_sub_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,7 +48,7 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="PhpWorkspaceProjectConfiguration">
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP">
     <include_path>
       <path value="$PROJECT_DIR$/vendor/yajra/laravel-datatables-oracle" />
       <path value="$PROJECT_DIR$/vendor/yajra/laravel-datatables-editor" />
@@ -181,6 +195,9 @@
     </include_path>
   </component>
   <component name="ProjectId" id="1cdXvek8Z9YjfCUh3nbLV0WzCdH" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -194,17 +211,26 @@
     <property name="grid.search.filter.rows" value="true" />
     <property name="js.buildTools.grunt.grunt-cli.package" value="" />
     <property name="js.buildTools.gulp.gulp_package_dir" value="" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../Database/Database_Backup" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/Http/Controllers" />
     <property name="nodejs.jest.jest_package" value="" />
     <property name="nodejs.mocha.mocha_node_package_dir" value="" />
     <property name="nodejs.protractor.protractor_package" value="" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="restartRequiresConfirmation" value="false" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="settings.editor.selected.configurable" value="reference.webide.settings.project.settings.php" />
     <property name="show.migrate.to.gradle.popup" value="false" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
-  <component name="RunManager" selected="PHPUnit.phpunit.xml">
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\esakh\OneDrive\Goceries\GIT\goceries_web\app\Http\Controllers" />
+      <recent name="C:\Users\esakh\OneDrive\Goceries\GIT\goceries_web\database\migrations" />
+      <recent name="C:\Users\esakh\OneDrive\Goceries\GIT\goceries_web\app\Criteria\Categories" />
+      <recent name="C:\Users\esakh\OneDrive\Goceries\GIT\goceries_web\app\DataTables" />
+      <recent name="C:\Users\esakh\OneDrive\Goceries\GIT\goceries_web\app\Http\Requests" />
+    </key>
+  </component>
+  <component name="RunManager" selected="PHP Built-in Web Server.PHP Server">
     <configuration name="Laravel Local Server" type="LaravelStorm_run_conf_serve" factoryName="Laravel">
       <option name="host" value="localhost" />
       <option name="port" value="8000" />
@@ -213,8 +239,12 @@
       <option name="interpreterName" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="phpunit.xml" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
-      <TestRunner scope="XML" />
+    <configuration name="PHP Server" type="PhpBuiltInWebServerConfigurationType" factoryName="PHP Built-in Web Server" activateToolWindowBeforeRun="false" document_root="$PROJECT_DIR$/public" router_script="$PROJECT_DIR$/server.php" use_router_script="true">
+      <CommandLine workingDirectory="$PROJECT_DIR$/public" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="PhpBuiltInWebServerConfigurationType" factoryName="PHP Built-in Web Server" activateToolWindowBeforeRun="false" document_root="$PROJECT_DIR$/public" router_script="$PROJECT_DIR$/server.php" use_router_script="true">
+      <CommandLine workingDirectory="$PROJECT_DIR$/public" />
       <method v="2" />
     </configuration>
     <configuration default="true" type="js.build_tools.grunt">
@@ -232,7 +262,8 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="PHPUnit.phpunit.xml" />
+      <item itemvalue="Laravel.Laravel Local Server" />
+      <item itemvalue="PHP Built-in Web Server.PHP Server" />
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -255,6 +286,19 @@
       <workItem from="1593929096715" duration="11529000" />
       <workItem from="1598763079808" duration="32053000" />
       <workItem from="1602286744506" duration="7184000" />
+      <workItem from="1602376295352" duration="4193000" />
+      <workItem from="1603035177821" duration="8413000" />
+      <workItem from="1603165867512" duration="1508000" />
+      <workItem from="1603343550852" duration="1269000" />
+      <workItem from="1604098700926" duration="480000" />
+      <workItem from="1604157466512" duration="14950000" />
+      <workItem from="1604274333110" duration="34592000" />
+      <workItem from="1604497925056" duration="17441000" />
+      <workItem from="1604714587134" duration="1910000" />
+      <workItem from="1605015825446" duration="904000" />
+      <workItem from="1605137464066" duration="642000" />
+      <workItem from="1605154775254" duration="620000" />
+      <workItem from="1605188178517" duration="5432000" />
     </task>
     <servers />
   </component>
@@ -277,58 +321,90 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="264" y="147" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1598890038099">
+    <state x="540" y="174" key="#CLI_Interpreters" timestamp="1602376648148">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="540" y="174" key="#CLI_Interpreters/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1602376648148" />
+    <state x="461" y="174" key="#PHP" timestamp="1602376589033">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="461" y="174" key="#PHP/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1602376589033" />
+    <state x="336" y="361" key="#SQL_Dialects" timestamp="1604390357768">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="336" y="361" key="#SQL_Dialects/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1604390357768" />
+    <state x="264" y="147" width="1092" height="815" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1602380220570">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="264" y="147" key="#com.intellij.execution.impl.EditConfigurationsDialog/-1920.92.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1598890038099" />
-    <state x="206" y="141" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1500.1000@0.0.1500.1000" timestamp="1593846071921" />
-    <state x="690" y="274" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog" timestamp="1599004052616">
+    <state x="264" y="147" width="1092" height="815" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1602380220570" />
+    <state x="690" y="274" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog" timestamp="1604544978803">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="690" y="274" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/-1920.92.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1599004052616" />
-    <state x="740" y="274" key="FileChooserDialogImpl" timestamp="1598890057636">
+    <state x="690" y="274" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1604544978803" />
+    <state x="740" y="274" key="FileChooserDialogImpl" timestamp="1602376646804">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="740" y="274" key="FileChooserDialogImpl/-1920.92.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1598890057636" />
-    <state width="1458" height="315" key="GridCell.Tab.0.bottom" timestamp="1595266081726">
-      <screen x="0" y="0" width="1500" height="1000" />
-    </state>
-    <state width="1458" height="315" key="GridCell.Tab.0.bottom/0.0.1500.1000@0.0.1500.1000" timestamp="1595266081726" />
-    <state width="1458" height="315" key="GridCell.Tab.0.center" timestamp="1595266081726">
-      <screen x="0" y="0" width="1500" height="1000" />
-    </state>
-    <state width="1458" height="315" key="GridCell.Tab.0.center/0.0.1500.1000@0.0.1500.1000" timestamp="1595266081726" />
-    <state width="1458" height="315" key="GridCell.Tab.0.left" timestamp="1595266081726">
-      <screen x="0" y="0" width="1500" height="1000" />
-    </state>
-    <state width="1458" height="315" key="GridCell.Tab.0.left/0.0.1500.1000@0.0.1500.1000" timestamp="1595266081726" />
-    <state width="1458" height="315" key="GridCell.Tab.0.right" timestamp="1595266081726">
-      <screen x="0" y="0" width="1500" height="1000" />
-    </state>
-    <state width="1458" height="315" key="GridCell.Tab.0.right/0.0.1500.1000@0.0.1500.1000" timestamp="1595266081726" />
-    <state x="617" y="377" width="312" height="245" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1" timestamp="1593878207188">
-      <screen x="0" y="0" width="1500" height="1000" />
-    </state>
-    <state x="617" y="377" width="312" height="245" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1/0.0.1500.1000@0.0.1500.1000" timestamp="1593878207188" />
-    <state x="756" y="340" width="408" height="356" key="com.intellij.database.psi.DbRenamePsiElementProcessor.DbRenameDialog" timestamp="1601960487519">
+    <state x="740" y="274" key="FileChooserDialogImpl/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1602376646804" />
+    <state width="1877" height="282" key="GridCell.Tab.0.bottom" timestamp="1602459522859">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="756" y="340" width="408" height="356" key="com.intellij.database.psi.DbRenamePsiElementProcessor.DbRenameDialog/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1601960487519" />
-    <state x="498" y="212" width="539" height="727" key="com.intellij.database.view.ui.AbstractDbRefactoringDialog" timestamp="1601960407679">
+    <state width="1877" height="282" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1602459522859" />
+    <state width="1877" height="282" key="GridCell.Tab.0.center" timestamp="1602459522859">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="282" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1602459522859" />
+    <state width="1877" height="282" key="GridCell.Tab.0.left" timestamp="1602459522859">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="282" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1602459522859" />
+    <state width="1877" height="282" key="GridCell.Tab.0.right" timestamp="1602459522859">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="282" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1602459522859" />
+    <state x="461" y="164" key="SettingsEditor" timestamp="1602376649299">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="461" y="164" key="SettingsEditor/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1602376649299" />
+    <state x="810" y="396" width="316" height="247" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1" timestamp="1604460997585">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="810" y="396" width="316" height="247" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1604460997585" />
+    <state x="756" y="340" width="408" height="356" key="com.intellij.database.psi.DbRenamePsiElementProcessor.DbRenameDialog" timestamp="1604391438866">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="756" y="340" width="408" height="356" key="com.intellij.database.psi.DbRenamePsiElementProcessor.DbRenameDialog/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1604391438866" />
+    <state x="498" y="212" width="919" height="665" key="com.intellij.database.view.ui.AbstractDbRefactoringDialog" timestamp="1604534963645">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="498" y="212" key="com.intellij.database.view.ui.AbstractDbRefactoringDialog/-1920.92.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1598754806488" />
-    <state x="389" y="204" width="539" height="727" key="com.intellij.database.view.ui.AbstractDbRefactoringDialog/0.0.1500.1000@0.0.1500.1000" timestamp="1593868320769" />
-    <state x="498" y="212" key="com.intellij.database.view.ui.AbstractDbRefactoringDialog/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1601960407679" />
+    <state x="498" y="212" width="919" height="665" key="com.intellij.database.view.ui.AbstractDbRefactoringDialog/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1604534963645" />
     <state x="777" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1598841580495">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="777" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/-1920.92.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1598841580495" />
-    <state x="589" y="241" width="742" height="556" key="find.popup" timestamp="1602353832289">
+    <state x="377" y="0" width="1559" height="1028" key="dock-window-1" timestamp="1604534848080">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="377" y="0" width="1559" height="1028" key="dock-window-1/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1604534848080" />
+    <state x="-967" y="0" width="974" height="1047" key="dock-window-2" timestamp="1604535994666">
+      <screen x="-1920" y="0" width="1920" height="1040" />
+    </state>
+    <state x="-967" y="0" width="974" height="1047" key="dock-window-2/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1604535994666" />
+    <state x="589" y="241" width="742" height="558" key="find.popup" timestamp="1604537316372">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="589" y="241" width="742" height="556" key="find.popup/-1920.92.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1599002782105" />
-    <state x="460" y="232" width="579" height="534" key="find.popup/0.0.1500.1000@0.0.1500.1000" timestamp="1593854747849" />
-    <state x="589" y="241" width="742" height="556" key="find.popup/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1602353832289" />
+    <state x="589" y="241" width="742" height="558" key="find.popup/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1604537316372" />
+    <state x="616" y="240" key="run.anything.popup" timestamp="1604286675506">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="616" y="240" key="run.anything.popup/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1604286675506" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1604262691928">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1604262691928" />
   </component>
 </project>
