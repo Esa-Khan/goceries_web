@@ -70,23 +70,15 @@ class FoodAPIController extends Controller
                 $this->foodRepository->pushCriteria(new FoodsOfRestaurantCriteria($request['restaurant_id']));
             }
 
-
-
-
 //            $this->foodRepository->orderBy('closed');
 //            $this->foodRepository->orderBy('area');
 
             if (isset($request['short'])){
-
                 $foods = $this->foodRepository->all(['id', 'name', 'price', 'discount_price', 'description', 'ingredients', 'weight',
                     'featured', 'deliverable', 'category_id', 'image_url', 'commission']);
-
             } else {
                 $foods = $this->foodRepository->all();
-
             }
-
-
 
             if (isset($request['id'])){
                 $range = explode( '-', $request['id'], 2);
@@ -107,7 +99,6 @@ class FoodAPIController extends Controller
         } catch (RepositoryException $e) {
             return $this->sendError($e->getMessage());
         }
-
         return $this->sendResponse($foods, 'Foods retrieved successfully');
     }
 

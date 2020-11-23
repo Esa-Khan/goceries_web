@@ -107,7 +107,6 @@ class UserAPIController extends Controller
             $this->sendError($e->getMessage(), 401);
         }
         return $this->sendResponse($user['name'], 'User logout successfully');
-
     }
 
     function user(Request $request)
@@ -152,6 +151,7 @@ class UserAPIController extends Controller
                 'facebook_url' => '',
                 'instagram_url' => '',
                 'phone_number' => '',
+                'promo' => ''
             ]
         );
 

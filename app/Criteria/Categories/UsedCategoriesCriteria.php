@@ -9,9 +9,6 @@
 
 namespace App\Criteria\Categories;
 
-use App\Models\Category;
-use App\Models\Food;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Prettus\Repository\Contracts\CriteriaInterface;
