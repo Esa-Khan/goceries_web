@@ -11,6 +11,7 @@ namespace App\Http\Controllers\API;
 
 
 use App\Criteria\Restaurants\RestaurantsOfCuisinesCriteria;
+use App\Criteria\Restaurants\RestaurantsOrStoreCriteria;
 use App\Criteria\Restaurants\NearCriteria;
 use App\Criteria\Restaurants\PopularCriteria;
 use App\Http\Controllers\Controller;
@@ -66,6 +67,10 @@ class RestaurantAPIController extends Controller
             $this->restaurantRepository->pushCriteria(new RequestCriteria($request));
             $this->restaurantRepository->pushCriteria(new LimitOffsetCriteria($request));
             $this->restaurantRepository->pushCriteria(new RestaurantsOfCuisinesCriteria($request));
+
+            if ($request->has('isStore'))
+                $this->restaurantRepository->pushCriteria(new RestaurantsOrStoreCriteria($request));
+
             if ($request->has('popular')) {
                 $this->restaurantRepository->pushCriteria(new PopularCriteria($request));
             } else {
@@ -76,8 +81,11 @@ class RestaurantAPIController extends Controller
         } catch (RepositoryException $e) {
             return $this->sendError($e->getMessage());
         }
-
-        return $this->sendResponse($restaurants->toArray(), 'Restaurants retrieved successfully');
+        if ($request->get('isStore')){
+            return $this->sendResponse($restaurants->toArray(), 'Stores returned successfully');
+        } else {
+            return $this->sendResponse($restaurants->toArray(), 'Restaurants returned successfully');
+        }
     }
 
     /**

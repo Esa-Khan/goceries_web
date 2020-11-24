@@ -23,7 +23,7 @@ Route::prefix('driver')->group(function () {
     Route::post('register', 'API\Driver\UserAPIController@register');
     Route::post('send_reset_link_email', 'API\UserAPIController@sendResetLinkEmail');
     Route::get('user', 'API\Driver\UserAPIController@user');
-    Route::get('logout', 'API\Driver\UserAPIController@logout');
+    Route::post('logout', 'API\Driver\UserAPIController@logout');
     Route::get('settings', 'API\Driver\UserAPIController@settings');
 });
 
@@ -37,6 +37,7 @@ Route::get('settings', 'API\UserAPIController@settings');
 
 Route::resource('cuisines', 'API\CuisineAPIController');
 Route::resource('categories', 'API\CategoryAPIController');
+Route::resource('subcategories', 'API\SubCategoryAPIController');
 Route::resource('restaurants', 'API\RestaurantAPIController');
 
 Route::resource('faq_categories', 'API\FaqCategoryAPIController');

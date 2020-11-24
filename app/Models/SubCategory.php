@@ -24,20 +24,20 @@ use Spatie\MediaLibrary\Models\Media;
  * @property string name
  * @property string description
  */
-class Category extends Model implements HasMedia
+class SubCategory extends Model implements HasMedia
 {
     use HasMediaTrait {
         getFirstMediaUrl as protected getFirstMediaUrlTrait;
     }
 
-    public $table = 'categories';
+    public $table = 'categories_sub';
     
 
 
     public $fillable = [
         'name',
         'description',
-	    'isGeneralCat'
+	    'category_id'
 ];
 
     /**
@@ -48,8 +48,7 @@ class Category extends Model implements HasMedia
     protected $casts = [
         'name' => 'string',
         'description' => 'string',
-        'image' => 'string',
-        'isGeneralCat' => 'boolean'
+        'category_id' => 'int'
     ];
 
     /**
@@ -60,17 +59,6 @@ class Category extends Model implements HasMedia
     public static $rules = [
         'name' => 'required',
         'description' => 'required'
-    ];
-
-    /**
-     * New Attributes
-     *
-     * @var array
-     */
-    protected $appends = [
-        'custom_fields',
-        'has_media'
-        
     ];
 
     /**
@@ -86,11 +74,6 @@ class Category extends Model implements HasMedia
         $this->addMediaConversion('icon')
             ->fit(Manipulations::FIT_CROP, 100, 100)
             ->sharpen(10);
-    }
-
-    public function customFieldsValues()
-    {
-        return $this->morphMany('App\Models\CustomFieldValue', 'customizable');
     }
 
     /**
@@ -111,19 +94,6 @@ class Category extends Model implements HasMedia
         }
     }
 
-    public function getCustomFieldsAttribute()
-    {
-        $hasCustomField = in_array(static::class,setting('custom_field_models',[]));
-        if (!$hasCustomField){
-            return [];
-        }
-        $array = $this->customFieldsValues()
-            ->join('custom_fields','custom_fields.id','=','custom_field_values.custom_field_id')
-            ->where('custom_fields.in_table','=',true)
-            ->get()->toArray();
-
-        return convertToAssoc($array,'name');
-    }
 
     /**
      * Add Media to api results
@@ -140,14 +110,6 @@ class Category extends Model implements HasMedia
     public function foods()
     {
         return $this->hasMany(\App\Models\Food::class, 'category_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     **/
-    public function restaurants()
-    {
-        return $this->belongsToMany(\App\Models\Restaurant::class, 'foods');
     }
 
 

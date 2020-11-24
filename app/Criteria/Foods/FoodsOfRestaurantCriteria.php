@@ -1,11 +1,5 @@
 <?php
-/**
- * File name: FoodsOfRestaurantCriteria.php
- * Last modified: 2020.04.30 at 08:24:08
- * Author: SmarterVision - https://codecanyon.net/user/smartervision
- * Copyright (c) 2020
- *
- */
+
 
 namespace App\Criteria\Foods;
 

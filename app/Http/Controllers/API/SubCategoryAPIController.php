@@ -9,60 +9,39 @@
 
 namespace App\Http\Controllers\API;
 
-
-use App\Criteria\Categories\CategoriesOfCuisinesCriteria;
-use App\Criteria\Categories\MainCategoriesCriteria;
-use App\Criteria\Categories\UsedCategoriesCriteria;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
-use App\Models\Food;
 use App\Repositories\CategoryRepository;
+use App\Repositories\SubCategoryRepository;
 use Flash;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use InfyOm\Generator\Criteria\LimitOffsetCriteria;
-use Prettus\Repository\Criteria\RequestCriteria;
-use Prettus\Repository\Exceptions\RepositoryException;
 
 /**
  * Class CategoryController
  * @package App\Http\Controllers\API
  */
-class CategoryAPIController extends Controller
+class SubCategoryAPIController extends Controller
 {
     /** @var  CategoryRepository */
-    private $categoryRepository;
+    private $subcategoryRepository;
 
-    public function __construct(CategoryRepository $categoryRepo)
+    public function __construct(SubCategoryRepository $subcategoryRepo)
     {
-        $this->categoryRepository = $categoryRepo;
+        $this->subcategoryRepository = $subcategoryRepo;
     }
 
     /**
      * Display a listing of the Category.
-     * GET|HEAD /categories
+     * GET|HEAD /subcategories
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function index(Request $request)
     {
-        try {
-            $this->categoryRepository->pushCriteria(new RequestCriteria($request));
-            $this->categoryRepository->pushCriteria(new LimitOffsetCriteria($request));
-            $this->categoryRepository->pushCriteria(new CategoriesOfCuisinesCriteria($request));
-            if ($request->has('storeID')) {
-                $this->categoryRepository->pushCriteria(new UsedCategoriesCriteria($request));
-            }
+        $subcategories = $this->subcategoryRepository->all();
 
-        } catch (RepositoryException $e) {
-            Flash::error($e->getMessage());
-        }
-        $categories = $this->categoryRepository->all();
-
-
-
-        return $this->sendResponse($categories->toArray(), 'Categories retrieved successfully');
+        return $this->sendResponse($subcategories->toArray(), 'Sub-Categories retrieved successfully');
     }
 
     /**
@@ -76,8 +55,8 @@ class CategoryAPIController extends Controller
     public function show($id)
     {
         /** @var Category $category */
-        if (!empty($this->categoryRepository)) {
-            $category = $this->categoryRepository->findWithoutFail($id);
+        if (!empty($this->subcategoryRepository)) {
+            $category = $this->subcategoryRepository->findWithoutFail($id);
         }
 
         if (empty($category)) {
@@ -97,9 +76,9 @@ class CategoryAPIController extends Controller
     public function store(Request $request)
     {
         $input = $request->all();
-        $customFields = $this->customFieldRepository->findByField('custom_field_model', $this->categoryRepository->model());
+        $customFields = $this->customFieldRepository->findByField('custom_field_model', $this->subcategoryRepository->model());
         try {
-            $category = $this->categoryRepository->create($input);
+            $category = $this->subcategoryRepository->create($input);
             $category->customFieldsValues()->createMany(getCustomFieldsValues($customFields, $request));
             if (isset($input['image']) && $input['image']) {
                 $cacheUpload = $this->uploadRepository->getByUuid($input['image']);
@@ -123,15 +102,15 @@ class CategoryAPIController extends Controller
      */
     public function update($id, Request $request)
     {
-        $category = $this->categoryRepository->findWithoutFail($id);
+        $category = $this->subcategoryRepository->findWithoutFail($id);
 
         if (empty($category)) {
             return $this->sendError('Category not found');
         }
         $input = $request->all();
-        $customFields = $this->customFieldRepository->findByField('custom_field_model', $this->categoryRepository->model());
+        $customFields = $this->customFieldRepository->findByField('custom_field_model', $this->subcategoryRepository->model());
         try {
-            $category = $this->categoryRepository->update($input, $id);
+            $category = $this->subcategoryRepository->update($input, $id);
 
             if (isset($input['image']) && $input['image']) {
                 $cacheUpload = $this->uploadRepository->getByUuid($input['image']);
@@ -159,13 +138,13 @@ class CategoryAPIController extends Controller
      */
     public function destroy($id)
     {
-        $category = $this->categoryRepository->findWithoutFail($id);
+        $category = $this->subcategoryRepository->findWithoutFail($id);
 
         if (empty($category)) {
             return $this->sendError('Category not found');
         }
 
-        $category = $this->categoryRepository->delete($id);
+        $category = $this->subcategoryRepository->delete($id);
 
         return $this->sendResponse($category, __('lang.deleted_successfully',['operator' => __('lang.category')]));
     }

@@ -10,6 +10,7 @@
 namespace App\Http\Controllers\API;
 
 
+use App\Criteria\Foods\FoodsOfCategoryCriteria;
 use App\Criteria\Foods\NearCriteria;
 use App\Criteria\Foods\FoodsOfCuisinesCriteria;
 use App\Criteria\Foods\TrendingWeekCriteria;
@@ -69,24 +70,19 @@ class FoodAPIController extends Controller
 	        if (isset($request['restaurant_id'])) {
                 $this->foodRepository->pushCriteria(new FoodsOfRestaurantCriteria($request['restaurant_id']));
             }
-
-
-
+            if (isset($request['category_id'])) {
+                $this->foodRepository->pushCriteria(new FoodsOfCategoryCriteria($request['category_id']));
+            }
 
 //            $this->foodRepository->orderBy('closed');
 //            $this->foodRepository->orderBy('area');
 
             if (isset($request['short'])){
-
                 $foods = $this->foodRepository->all(['id', 'name', 'price', 'discount_price', 'description', 'ingredients', 'weight',
                     'featured', 'deliverable', 'category_id', 'image_url', 'commission']);
-
             } else {
                 $foods = $this->foodRepository->all();
-
             }
-
-
 
             if (isset($request['id'])){
                 $range = explode( '-', $request['id'], 2);
@@ -100,14 +96,12 @@ class FoodAPIController extends Controller
                     };
                 }
                 $foods = $itemsInRange;
-//                return $this->sendResponse($itemsInRange, 'Foods retrieved successfully');
              }
 
 
         } catch (RepositoryException $e) {
             return $this->sendError($e->getMessage());
         }
-
         return $this->sendResponse($foods, 'Foods retrieved successfully');
     }
 
