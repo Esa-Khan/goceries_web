@@ -225,7 +225,7 @@ class OrderAPIController extends Controller
                 $temp_order['driver_id'] = 1;
                 $this->orderRepository->update($temp_order, $order->id);
 
-                sendNotification($order);
+//                sendNotification($order);
 
             }
         } catch (ValidatorException $e) {
