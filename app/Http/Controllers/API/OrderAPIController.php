@@ -280,7 +280,7 @@ class OrderAPIController extends Controller
             $temp_order['driver_id'] = 1;
             $this->orderRepository->update($temp_order, $order->id);
 
-            sendNotification($order);
+//            sendNotification($order);
 
 
         } catch
@@ -290,8 +290,7 @@ class OrderAPIController extends Controller
         return $this->sendResponse($order->toArray(), __('lang.saved_successfully', ['operator' => __('lang.order')]));
     }
 
-    private function sendNotification($order) {
-        return $order;
+    function sendNotification($order) {
         $drivers = $this->driverRepository->all();
         foreach ($drivers as $currDriver) {
             $driver = $this->userRepository->findWithoutFail($currDriver->user_id);
