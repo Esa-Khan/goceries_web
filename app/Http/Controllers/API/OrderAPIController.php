@@ -13,6 +13,7 @@ use App\Events\OrderChangedEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Driver;
 use App\Models\Order;
+use App\Models\UsedPromoCode;
 use App\Notifications\AssignedOrder;
 use App\Notifications\CancelledOrder;
 use App\Notifications\NewOrder;
@@ -22,9 +23,11 @@ use App\Repositories\NotificationRepository;
 use App\Repositories\OrderRepository;
 use App\Repositories\PaymentRepository;
 use App\Repositories\FoodOrderRepository;
+use App\Repositories\UsedPromoCodeRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\DriverRepository;
 use Braintree\Gateway;
+use DateTime;
 use Flash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -55,6 +58,8 @@ class OrderAPIController extends Controller
     private $paymentRepository;
     /** @var  NotificationRepository */
     private $notificationRepository;
+    /** @var UsedPromoCodeRepository */
+    private $usedPromoCodeRepository;
 
     /**
      * OrderAPIController constructor.
@@ -64,7 +69,8 @@ class OrderAPIController extends Controller
      * @param PaymentRepository $paymentRepo
      * @param NotificationRepository $notificationRepo
      * @param UserRepository $userRepository
-     * @param DriverRepository $driverRepository
+     * @param UsedPromoCodeRepository $usedPromoCodeRepository
+     * @param DriverRepository $driverRepo
      */
     public function __construct(OrderRepository $orderRepo,
                                 FoodOrderRepository $foodOrderRepository,
@@ -72,12 +78,14 @@ class OrderAPIController extends Controller
                                 PaymentRepository $paymentRepo,
                                 NotificationRepository $notificationRepo,
                                 UserRepository $userRepository,
+                                UsedPromoCodeRepository $usedPromoCodeRepository,
                                 DriverRepository $driverRepo)
     {
         $this->orderRepository = $orderRepo;
         $this->foodOrderRepository = $foodOrderRepository;
         $this->cartRepository = $cartRepo;
         $this->userRepository = $userRepository;
+        $this->usedPromoCodeRepository = $usedPromoCodeRepository;
         $this->driverRepository = $driverRepo;
         $this->paymentRepository = $paymentRepo;
         $this->notificationRepository = $notificationRepo;
@@ -133,6 +141,21 @@ class OrderAPIController extends Controller
 
     }
 
+    public function checkCode(Request $request) {
+        $code_used = $this->usedPromoCodeRepository->findByField('user_id', [$request['user_id']])->pluck('code_used')->toArray();
+        $response['isUsed'] = 'false';
+        foreach ($code_used as $code) {
+            if (strcmp($code, $request['code']) === 0) {
+                $response['isUsed'] = 'true';
+                break;
+            }
+        }
+
+        return $this->sendResponse($response, 'Check retrieved successfully');
+
+//        return $this->usedPromoCodeRepository->all();
+    }
+
     /**
      * Store a newly created Order in storage.
      *
@@ -142,6 +165,8 @@ class OrderAPIController extends Controller
      */
     public function store(Request $request)
     {
+
+
         $payment = $request->only('payment');
         if (isset($payment['payment']) && $payment['payment']['method']) {
             if ($payment['payment']['method'] == "Credit Card (Stripe Gateway)") {
@@ -176,6 +201,17 @@ class OrderAPIController extends Controller
                     "name" => $user->name,
                 )
             ));
+
+            if (isset($request['code'])) {
+                try {
+                    $this->usedPromoCodeRepository->create([
+                        "user_id" => $request['user_id'],
+                        "code_used" => $request['code'],
+                    ]);
+                } catch (ValidatorException $e) {
+                    echo $e;
+                }
+            }
 
             if ($stripeToken->created > 0) {
                 if (empty($input['delivery_address_id'])) {
@@ -261,6 +297,17 @@ class OrderAPIController extends Controller
                 "status" => 'Waiting for Client',
                 "method" => $input['payment']['method'],
             ]);
+
+            if (isset($request['code'])) {
+                try {
+                    $this->usedPromoCodeRepository->create([
+                        "user_id" => $request['user_id'],
+                        "code_used" => $request['code'],
+                    ]);
+                } catch (ValidatorException $e) {
+                    echo $e;
+                }
+            }
 
             $this->orderRepository->update(['payment_id' => $payment->id], $order->id);
 

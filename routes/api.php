@@ -84,6 +84,7 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('favorites', 'API\FavoriteAPIController');
 
     Route::resource('orders', 'API\OrderAPIController');
+    Route::post('checkpromo', 'API\OrderAPIController@checkCode');
 
     Route::resource('food_orders', 'API\FoodOrderAPIController');
 
@@ -93,4 +94,5 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('carts', 'API\CartAPIController');
 
     Route::resource('delivery_addresses', 'API\DeliveryAddressAPIController');
+
 });
