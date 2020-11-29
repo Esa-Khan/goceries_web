@@ -196,7 +196,7 @@ class OrderAPIController extends Controller
                     $this->foodOrderRepository->create($foodOrder);
                 }
                 $amount += $order->delivery_fee;
-                $amountWithTax = $amount + ($amount * $order->tax / 100);
+                $amountWithTax = $amount - $order->tax;
                 $charge = $user->charge((int)($amountWithTax * 100), ['source' => $stripeToken]);
                 $payment = $this->paymentRepository->create([
                     "user_id" => $input['user_id'],
@@ -225,7 +225,7 @@ class OrderAPIController extends Controller
                 $temp_order['driver_id'] = 1;
                 $this->orderRepository->update($temp_order, $order->id);
 
-                sendNotification($order);
+//                sendNotification($order);
 
             }
         } catch (ValidatorException $e) {
@@ -242,11 +242,10 @@ class OrderAPIController extends Controller
     {
         $input = $request->all();
         $amount = 0;
-
         try {
             $order = $this->orderRepository->create(
-		$request->only('user_id', 'order_status_id', 'tax', 'delivery_address_id', 'delivery_fee', 'hint', 'scheduled_time')
-	);
+		        $request->only('user_id', 'order_status_id', 'tax', 'delivery_address_id', 'delivery_fee', 'hint', 'scheduled_time')
+	        );
 
             foreach ($input['foods'] as $foodOrder) {
                 $foodOrder['order_id'] = $order->id;
@@ -254,7 +253,7 @@ class OrderAPIController extends Controller
                 $this->foodOrderRepository->create($foodOrder);
             }
             $amount += $order->delivery_fee;
-            $amountWithTax = $amount + ($amount * $order->tax / 100);
+            $amountWithTax = $amount - $order->tax;
             $payment = $this->paymentRepository->create([
                 "user_id" => $input['user_id'],
                 "description" => trans("lang.payment_order_waiting"),
@@ -296,7 +295,10 @@ class OrderAPIController extends Controller
             $driver = $this->userRepository->findWithoutFail($currDriver->user_id);
             Notification::send([$driver], new AssignedOrder($order));
         }
+    }
 
+    function applyPromo($order)
+    {
     }
 
     /**
