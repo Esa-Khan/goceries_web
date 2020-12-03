@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Driver;
 use App\Models\User;
 use App\Repositories\CustomFieldRepository;
 use App\Repositories\RoleRepository;
@@ -50,8 +51,18 @@ class UserAPIController extends Controller
             if (auth()->attempt(['email' => $request->input('email'), 'password' => $request->input('password')])) {
                 // Authentication passed...
                 $user = auth()->user();
+                if ($user['isDriver']) {
+                    Driver::where('user_id', '=', $user['id'])->update(['available' => 1]);
+                    if (!$user->hasRole('driver')) {
+                        return $this->sendError('User not driver', 401);
+                    }
+                }
                 $user->device_token = $request->input('device_token', '');
                 $user->save();
+                if ($user->isDriver) {
+                    $work_hours = Driver::select('work_hours')->where('user_id', $user->id)->get();
+                    $user['work_hours'] = $work_hours;
+                }
                 return $this->sendResponse($user, 'User retrieved successfully');
             }
         } catch (\Exception $e) {
