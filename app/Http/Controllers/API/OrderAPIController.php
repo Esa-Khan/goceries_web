@@ -165,8 +165,6 @@ class OrderAPIController extends Controller
      */
     public function store(Request $request)
     {
-
-
         $payment = $request->only('payment');
         if (isset($payment['payment']) && $payment['payment']['method']) {
             if ($payment['payment']['method'] == "Credit Card (Stripe Gateway)") {
@@ -332,7 +330,6 @@ class OrderAPIController extends Controller
 
             $drivers = $this->driverRepository->all();
             foreach ($drivers as $currDriver) {
-                echo $currDriver;
                 $driver = $this->userRepository->findWithoutFail($currDriver->user_id);
                 Notification::send([$driver], new AssignedOrder($order));
             }
