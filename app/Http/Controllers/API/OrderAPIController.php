@@ -9,15 +9,14 @@
 namespace App\Http\Controllers\API;
 
 
+use App\Criteria\Orders\OrdersNotDelivered;
+use App\Criteria\Orders\OrdersOfDriverCriteria;
 use App\Events\OrderChangedEvent;
 use App\Http\Controllers\Controller;
-use App\Models\Driver;
 use App\Models\Order;
-use App\Models\UsedPromoCode;
 use App\Notifications\AssignedOrder;
 use App\Notifications\CancelledOrder;
 use App\Notifications\NewOrder;
-use App\Notifications\StatusChangedOrder;
 use App\Repositories\CartRepository;
 use App\Repositories\NotificationRepository;
 use App\Repositories\OrderRepository;
@@ -30,7 +29,7 @@ use Braintree\Gateway;
 use DateTime;
 use Flash;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use InfyOm\Generator\Criteria\LimitOffsetCriteria;
 use Prettus\Repository\Criteria\RequestCriteria;
@@ -100,14 +99,21 @@ class OrderAPIController extends Controller
      */
     public function index(Request $request)
     {
+
         try {
             $this->orderRepository->pushCriteria(new RequestCriteria($request));
             $this->orderRepository->pushCriteria(new LimitOffsetCriteria($request));
+            if (isset($request['driver_id'])) {
+                $this->orderRepository->pushCriteria(new OrdersOfDriverCriteria($request));
+            }
         } catch (RepositoryException $e) {
             Flash::error($e->getMessage());
         }
-        $orders = $this->orderRepository->all();
 
+
+
+
+        $orders = $this->orderRepository->all();
         return $this->sendResponse($orders->toArray(), 'Orders retrieved successfully');
     }
 
@@ -215,12 +221,13 @@ class OrderAPIController extends Controller
                 if (empty($input['delivery_address_id'])) {
 
                     $order = $this->orderRepository->create(
-                        $request->only('user_id', 'order_status_id', 'tax', 'hint')
+                        $request->only('user_id', 'order_status_id', 'tax', 'hint', 'store_id')
                     );
                 } else {
 
                     $order = $this->orderRepository->create(
-                        $request->only('user_id', 'order_status_id', 'tax', 'delivery_address_id', 'delivery_fee', 'hint', 'scheduled_time')
+                        $request->only('user_id', 'order_status_id', 'tax', 'delivery_address_id',
+                            'delivery_fee', 'hint', 'scheduled_time', 'store_id')
                     );
                 }
 
@@ -229,6 +236,7 @@ class OrderAPIController extends Controller
                     $amount += $foodOrder['price'] * $foodOrder['quantity'];
                     $this->foodOrderRepository->create($foodOrder);
                 }
+
                 $amount += $order->delivery_fee;
                 $amountWithTax = $amount - $order->tax;
                 $charge = $user->charge((int)($amountWithTax * 100), ['source' => $stripeToken]);
@@ -282,7 +290,8 @@ class OrderAPIController extends Controller
         $amount = 0;
         try {
             $order = $this->orderRepository->create(
-		        $request->only('user_id', 'order_status_id', 'tax', 'delivery_address_id', 'delivery_fee', 'hint', 'scheduled_time')
+		        $request->only('user_id', 'order_status_id', 'tax', 'delivery_address_id',
+                    'delivery_fee', 'hint', 'scheduled_time', 'store_id')
 	        );
 
             foreach ($input['foods'] as $foodOrder) {
@@ -366,10 +375,10 @@ class OrderAPIController extends Controller
         try {
             $order = $this->orderRepository->update($input, $id);
             if (isset($input['active'])) {
-		$this->orderRepository->update(['active' => 0], $order->id);
-		if ($order->driver_id != 1){
+                $this->orderRepository->update(['active' => 0], $order->id);
+                if ($order->driver_id != 1){
                     $driver = $this->userRepository->findWithoutFail($order->driver_id);
-                    Notification::send([$driver], new CancelledOrder($order));
+//                    Notification::send([$driver], new CancelledOrder($order));
                 } else {
                     $drivers = $this->driverRepository->all();
                     foreach ($drivers as $currDriver) {
@@ -379,8 +388,6 @@ class OrderAPIController extends Controller
                 }
             }
 
-
-
             if (isset($input['order_status_id']) && $input['order_status_id'] == 5 && !empty($order)) {
                 $this->paymentRepository->update(['status' => 'Paid'], $order['payment_id']);
             }
@@ -388,7 +395,7 @@ class OrderAPIController extends Controller
 
             if (setting('enable_notifications', false)) {
                 if (isset($input['order_status_id']) && $input['order_status_id'] != $oldOrder->order_status_id) {
-                    Notification::send([$order->user], new StatusChangedOrder($order));
+//                    Notification::send([$order->user], new StatusChangedOrder($order));
                 }
             }
 

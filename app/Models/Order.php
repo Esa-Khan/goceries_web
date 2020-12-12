@@ -26,6 +26,7 @@ use Eloquent as Model;
  * @property double tax
  * @property double delivery_fee
  * @property string id
+ * @property int store_id
  * @property int delivery_address_id
  * @property string hint
  */
@@ -40,13 +41,14 @@ class Order extends Model
         'user_id',
         'order_status_id',
         'tax',
-	'hint',
-	'scheduled_time',
+        'hint',
+        'scheduled_time',
         'payment_id',
         'delivery_address_id',
         'delivery_fee',
         'active',
-        'driver_id'
+        'driver_id',
+        'store_id'
     ];
 
     /**
@@ -59,13 +61,14 @@ class Order extends Model
         'order_status_id' => 'integer',
         'tax' => 'double',
         'hint' => 'string',
-	'scheduled_time' => 'string',
-	'status' => 'string',
+        'scheduled_time' => 'string',
+        'status' => 'string',
         'payment_id' => 'integer',
         'delivery_address_id' => 'integer',
         'delivery_fee'=>'double',
         'active'=>'boolean',
         'driver_id' => 'integer',
+        'store_id' => 'integer'
     ];
 
     /**

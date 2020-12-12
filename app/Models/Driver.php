@@ -15,6 +15,8 @@ use Eloquent as Model;
  * @property integer total_orders
  * @property double earning
  * @property boolean available
+ * @property string work_hours
+ * @property string store_ids
  */
 class Driver extends Model
 {
@@ -29,6 +31,7 @@ class Driver extends Model
         'delivery_fee',
         'total_orders',
         'work_hours',
+        'store_ids',
         'earning',
         'available'
     ];
@@ -42,6 +45,7 @@ class Driver extends Model
         'user_id' => 'integer',
         'delivery_fee' => 'double',
         'work_hours' => 'string',
+        'store_ids' => 'string',
         'total_orders' => 'integer',
         'earning' => 'double',
         'available' => 'boolean'
