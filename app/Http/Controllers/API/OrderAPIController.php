@@ -17,6 +17,7 @@ use App\Models\Order;
 use App\Notifications\AssignedOrder;
 use App\Notifications\CancelledOrder;
 use App\Notifications\NewOrder;
+use App\Notifications\StatusChangedOrder;
 use App\Repositories\CartRepository;
 use App\Repositories\NotificationRepository;
 use App\Repositories\OrderRepository;
@@ -395,7 +396,7 @@ class OrderAPIController extends Controller
 
             if (setting('enable_notifications', false)) {
                 if (isset($input['order_status_id']) && $input['order_status_id'] != $oldOrder->order_status_id) {
-//                    Notification::send([$order->user], new StatusChangedOrder($order));
+                    Notification::send([$order->user], new StatusChangedOrder($order));
                 }
             }
 
