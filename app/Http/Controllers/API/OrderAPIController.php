@@ -137,6 +137,10 @@ class OrderAPIController extends Controller
                 Flash::error($e->getMessage());
             }
             $order = $this->orderRepository->findWithoutFail($id);
+
+            if (isset($request['isDriverOrder'])) {
+                $order['driver'] = $order->driver()->get(['name', 'number'])[0];
+            }
         }
 
         if (empty($order)) {
@@ -372,14 +376,19 @@ class OrderAPIController extends Controller
             return $this->sendError('Order not found');
         }
         $oldStatus = $oldOrder->payment->status;
+
         $input = $request->all();
+        if (isset($input['check_approval']) && $oldOrder['driver_id'] != 1 && $input['current_driver'] != $oldOrder['driver_id']) {
+            return "Order already assigned";
+        }
+
         try {
             $order = $this->orderRepository->update($input, $id);
             if (isset($input['active'])) {
                 $this->orderRepository->update(['active' => 0], $order->id);
                 if ($order->driver_id != 1){
                     $driver = $this->userRepository->findWithoutFail($order->driver_id);
-//                    Notification::send([$driver], new CancelledOrder($order));
+                    Notification::send([$driver], new CancelledOrder($order));
                 } else {
                     $drivers = $this->driverRepository->all();
                     foreach ($drivers as $currDriver) {
@@ -388,7 +397,6 @@ class OrderAPIController extends Controller
                     }
                 }
             }
-
             if (isset($input['order_status_id']) && $input['order_status_id'] == 5 && !empty($order)) {
                 $this->paymentRepository->update(['status' => 'Paid'], $order['payment_id']);
             }
