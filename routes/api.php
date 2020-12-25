@@ -95,4 +95,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::resource('delivery_addresses', 'API\DeliveryAddressAPIController');
 
+    //---------------------------------------------------------------------------
+    Route::get('orderhistory', 'API\OrderAPIController@getOrderHistory');
+
 });

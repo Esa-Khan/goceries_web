@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\API;
 
 
+use App\Criteria\Orders\OrdersHistoryCriteria;
 use App\Criteria\Orders\OrdersNotDelivered;
 use App\Criteria\Orders\OrdersOfDriverCriteria;
 use App\Events\OrderChangedEvent;
@@ -100,7 +101,6 @@ class OrderAPIController extends Controller
      */
     public function index(Request $request)
     {
-
         try {
             $this->orderRepository->pushCriteria(new RequestCriteria($request));
             $this->orderRepository->pushCriteria(new LimitOffsetCriteria($request));
@@ -117,6 +117,29 @@ class OrderAPIController extends Controller
         $orders = $this->orderRepository->all();
         return $this->sendResponse($orders->toArray(), 'Orders retrieved successfully');
     }
+
+    // GET order history for manager/driver
+    /**
+     * Get order history.
+     * GET|HEAD /orderhistory
+     *
+     * @param Request $request - driver_id
+     * @return \Illuminate\Http\JsonResponse - orders
+     */
+    public function getOrderHistory(Request $request) {
+        try {
+            $this->orderRepository->pushCriteria(new RequestCriteria($request));
+            $this->orderRepository->pushCriteria(new LimitOffsetCriteria($request));
+            $this->orderRepository->pushCriteria(new OrdersHistoryCriteria($request));
+
+        } catch (RepositoryException $e) {
+            Flash::error($e->getMessage());
+        }
+        $orders = $this->orderRepository->all();
+
+        return $this->sendResponse($orders->toArray(), 'Orders retrieved successfully');
+    }
+
 
     /**
      * Display the specified Order.

@@ -45,27 +45,32 @@ class OrdersOfDriverCriteria implements CriteriaInterface
 
         $isWorking = false;
         $isManager = DB::table('users')
-                            ->where('users.id', $this->request->get('driver_id'))
-                            ->pluck('users.isManager')
-                            ->first();
-        $work_hours = DB::table('drivers')
-                        ->where('drivers.user_id', $this->request->get('driver_id'))
-                        ->pluck('drivers.work_hours', 'drivers.store_ids')
-                        ->first();
-
-
-        if ($work_hours == '24/7') {
+            ->where('users.id', $this->request->get('driver_id'))
+            ->pluck('users.isManager')
+            ->first();
+        if (isset($request['check_workhours']) && $request['check_workhours'] == false) {
             $isWorking = true;
         } else {
-            $current_time = date("H:i:s");
-            $work_hours = explode('|', $work_hours);
-            $start_time = date('H:i:s',strtotime($work_hours[0]));
-            $end_time = date('H:i:s',strtotime($work_hours[1]));
+            $work_hours = DB::table('drivers')
+                ->where('drivers.user_id', $this->request->get('driver_id'))
+                ->pluck('drivers.work_hours', 'drivers.store_ids')
+                ->first();
 
-            if ($current_time >= $start_time && $current_time <= $end_time) {
+
+            if ($work_hours == '24/7') {
                 $isWorking = true;
+            } else {
+                $current_time = date("H:i:s");
+                $work_hours = explode('|', $work_hours);
+                $start_time = date('H:i:s',strtotime($work_hours[0]));
+                $end_time = date('H:i:s',strtotime($work_hours[1]));
+
+                if ($current_time >= $start_time && $current_time <= $end_time) {
+                    $isWorking = true;
+                }
             }
         }
+
         if ($isWorking) {
             if ($isManager) {
                 return $model->where('orders.order_status_id', '<', 5)
