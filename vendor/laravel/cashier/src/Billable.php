@@ -50,8 +50,13 @@ trait Billable
         if (! array_key_exists('source', $options) && ! array_key_exists('customer', $options)) {
             throw new InvalidArgumentException('No payment source provided.');
         }
+        try {
+            $charge = StripeCharge::create($options, ['api_key' => $this->getStripeKey()]);
+        } catch (Exception $e) {
+            return 'Error: Card Declined';
+        }
 
-        return StripeCharge::create($options, ['api_key' => $this->getStripeKey()]);
+        return $charge;
     }
 
     /**
