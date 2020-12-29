@@ -24,6 +24,7 @@ class UserRepository extends BaseRepository
         'name',
         'email',
         'isDriver',
+        'isManager',
         'password',
         'api_token',
         'store_id',

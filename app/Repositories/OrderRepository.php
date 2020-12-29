@@ -24,11 +24,12 @@ class OrderRepository extends BaseRepository
         'order_status_id',
         'tax',
         'hint',
-	'scheduled_time',
-	'payment_id',
+        'scheduled_time',
+        'payment_id',
         'delivery_address_id',
         'active',
         'driver_id',
+        'store_id'
     ];
 
     /**

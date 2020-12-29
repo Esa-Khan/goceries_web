@@ -9,12 +9,15 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Driver;
 use App\Models\User;
 use App\Repositories\CustomFieldRepository;
+use App\Repositories\DriverRepository;
 use App\Repositories\RoleRepository;
 use App\Repositories\UploadRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
@@ -52,10 +55,31 @@ class UserAPIController extends Controller
                 $user = auth()->user();
                 $user->device_token = $request->input('device_token', '');
                 $user->save();
+
+                if ($user->isDriver or $user->isManager) {
+//                    if (!DB::table('drivers')->where('drivers.user_id', $user->id)->exists()) {
+//                        echo $user;
+//                    }
+                    Driver::where('user_id', '=', $user['id'])->update(['available' => 1]);
+
+//                    if (!$user['isDriver'] and !$user['isManager']) {
+//                        return $this->sendError('User not driver', 401);
+//                    }
+                    $work_hours = Driver::select('work_hours')->where('user_id', $user->id)->get();
+                    $store_ids = Driver::select('store_ids')->where('user_id', $user->id)->get();
+
+                    $user['work_hours'] = $work_hours[0]['work_hours'];
+                    $user['store_ids'] = $store_ids[0]['store_ids'];
+
+                }
                 return $this->sendResponse($user, 'User retrieved successfully');
             }
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), 401);
+        }
+
+        if (DB::table('users')->where('users.email', $request['email'])->exists()) {
+            return 'Incorrect password';
         }
 
     }
