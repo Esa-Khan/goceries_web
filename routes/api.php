@@ -97,6 +97,7 @@ Route::middleware('auth:api')->group(function () {
 
     //---------------------------------------------------------------------------
     Route::get('orderhistory', 'API\OrderAPIController@getOrderHistory');
-    Route::get('similaritems', 'API\FoodAPIController@getSimilarItems');
 
 });
+
+Route::get('similaritems', 'API\FoodAPIController@getSimilarItems');
