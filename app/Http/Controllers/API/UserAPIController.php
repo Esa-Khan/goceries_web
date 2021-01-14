@@ -173,7 +173,8 @@ class UserAPIController extends Controller
                 'delivery_fee_limit' => '',
                 'whatsapp_number' => '',
                 'facebook_url' => '',
-                'instagram_url' => '',
+                'instagram_url_ios' => '',
+                'instagram_url_android' => '',
                 'phone_number' => '',
                 'promo' => ''
             ]

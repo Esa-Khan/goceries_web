@@ -268,6 +268,9 @@ class OrderAPIController extends Controller
                 $amount += $order->delivery_fee;
                 $amountWithTax = $amount - $order->tax;
                 $charge = $user->charge((int)($amountWithTax * 100), ['source' => $stripeToken]);
+                if ($charge == 'Error: Card Declined')
+                    return 'Error: Card Declined';
+
                 $payment = $this->paymentRepository->create([
                     "user_id" => $input['user_id'],
                     "description" => trans("lang.payment_order_done"),

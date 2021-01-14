@@ -22,6 +22,7 @@ use App\Repositories\FoodRepository;
 use App\Repositories\UploadRepository;
 use Flash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use InfyOm\Generator\Criteria\LimitOffsetCriteria;
 use PhpOffice\PhpSpreadsheet\Exception;
 use Prettus\Repository\Criteria\RequestCriteria;
@@ -206,15 +207,58 @@ class FoodAPIController extends Controller
     public function destroy($id)
     {
         $food = $this->foodRepository->findWithoutFail($id);
-
         if (empty($food)) {
             return $this->sendError('Food not found');
         }
-
         $food = $this->foodRepository->delete($id);
 
         return $this->sendResponse($food, __('lang.deleted_successfully', ['operator' => __('lang.food')]));
 
     }
+
+
+    /**
+     * Remove the specified Food from storage.
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\JsonResponse|\Illuminate\View\View
+     */
+    public function getSimilarItems(Request $request)
+    {
+        try {
+            $item = DB::table('foods')
+                ->select('name', 'restaurant_id')
+                ->where('foods.id', $request['id'])
+                ->first();
+
+            $comparison_str = explode(' ', $item->name)[0] . '%';
+
+            $items = DB::table('foods')
+                ->where('foods.restaurant_id', $item->restaurant_id)
+                ->where('name', 'like', $comparison_str)
+                ->get();
+            $count = 10;
+            $final_items = [];
+            foreach ($items as $curr_item) {
+                if ($count == 0) {
+                    break;
+                } else {
+                    $count--;
+                    $curr_item->featured = $curr_item->featured == true;
+                    $curr_item->deliverable = $curr_item->deliverable == true;
+                    array_push($final_items, $curr_item);
+                }
+            }
+
+            return $this->sendResponse($final_items, 'Similar Items retrieved successfully');
+
+        } catch (Exception $e) {
+            return $this->sendResponse('Similar Items retrieved unsuccessfully');
+        }
+
+
+    }
+
 
 }
