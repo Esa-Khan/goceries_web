@@ -15,6 +15,7 @@ use App\Criteria\Foods\NearCriteria;
 use App\Criteria\Foods\FoodsOfCuisinesCriteria;
 use App\Criteria\Foods\TrendingWeekCriteria;
 use App\Criteria\Foods\FoodsOfRestaurantCriteria;
+use App\Criteria\Foods\RestaurantsOrStoreCriteria;
 use App\Http\Controllers\Controller;
 use App\Models\Food;
 use App\Repositories\CustomFieldRepository;
@@ -74,6 +75,9 @@ class FoodAPIController extends Controller
             if (isset($request['category_id'])) {
                 $this->foodRepository->pushCriteria(new FoodsOfCategoryCriteria($request['category_id']));
             }
+
+            if ($request->has('isStore'))
+                $this->foodRepository->pushCriteria(new RestaurantsOrStoreCriteria($request));
 
 //            $this->foodRepository->orderBy('closed');
 //            $this->foodRepository->orderBy('area');

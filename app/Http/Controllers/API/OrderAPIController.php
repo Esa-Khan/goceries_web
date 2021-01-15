@@ -220,6 +220,8 @@ class OrderAPIController extends Controller
         $amount = 0;
 
         try {
+//            return substr($_ENV['APP_DEBUG'], 0, 4);
+
             $user = $this->userRepository->findWithoutFail($input['user_id']);
             if (empty($user)) {
                 return $this->sendError('User not found');
@@ -285,7 +287,7 @@ class OrderAPIController extends Controller
 
                 $this->cartRepository->deleteWhere(['user_id' => $order->user_id]);
 
-                Notification::send($order->foodOrders[0]->food->restaurant->users, new NewOrder($order));
+
 
                 $temp_order['user_id'] = $order->user_id;
                 $temp_order['order_status_id'] = $order->order_status_id;
@@ -298,11 +300,23 @@ class OrderAPIController extends Controller
                 $temp_order['driver_id'] = 1;
                 $this->orderRepository->update($temp_order, $order->id);
 
-                $drivers = $this->driverRepository->all();
-                foreach ($drivers as $currDriver) {
-                    $driver = $this->userRepository->findWithoutFail($currDriver->user_id);
-                    Notification::send([$driver], new AssignedOrder($order));
+                if ($_ENV['APP_DEBUG'] == 'true') {
+                    $manager = DB::table('users')
+                        ->where('users.isManager', true)
+                        ->where('users.id', 1)
+                        ->get();
+                    Notification::send($manager, new NewOrder($order));
+
+                } else {
+    //                Notification::send($order->foodOrders[0]->food->restaurant->users, new NewOrder($order));
+                    $drivers = $this->driverRepository->all();
+                    foreach ($drivers as $currDriver) {
+                        $driver = $this->userRepository->findWithoutFail($currDriver->user_id);
+                        Notification::send([$driver], new AssignedOrder($order));
+                    }
+
                 }
+
 
             }
         } catch (ValidatorException $e) {
