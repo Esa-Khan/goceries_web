@@ -14,6 +14,7 @@ use App\Criteria\Restaurants\RestaurantsOfCuisinesCriteria;
 use App\Criteria\Restaurants\RestaurantsOrStoreCriteria;
 use App\Criteria\Restaurants\NearCriteria;
 use App\Criteria\Restaurants\PopularCriteria;
+use App\Criteria\Restaurants\AvailableRestaurantsOrStoreCriteria;
 use App\Http\Controllers\Controller;
 use App\Models\Restaurant;
 use App\Repositories\CustomFieldRepository;
@@ -67,6 +68,7 @@ class RestaurantAPIController extends Controller
             $this->restaurantRepository->pushCriteria(new RequestCriteria($request));
             $this->restaurantRepository->pushCriteria(new LimitOffsetCriteria($request));
             $this->restaurantRepository->pushCriteria(new RestaurantsOfCuisinesCriteria($request));
+            $this->restaurantRepository->pushCriteria(new AvailableRestaurantsOrStoreCriteria($request));
 
             if ($request->has('isStore'))
                 $this->restaurantRepository->pushCriteria(new RestaurantsOrStoreCriteria($request));

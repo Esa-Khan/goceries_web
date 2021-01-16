@@ -199,6 +199,7 @@ class OrderAPIController extends Controller
      */
     public function store(Request $request)
     {
+
         $payment = $request->only('payment');
         if (isset($payment['payment']) && $payment['payment']['method']) {
             if ($payment['payment']['method'] == "Credit Card (Stripe Gateway)") {
@@ -300,15 +301,22 @@ class OrderAPIController extends Controller
                 $temp_order['driver_id'] = 1;
                 $this->orderRepository->update($temp_order, $order->id);
 
-                if ($_ENV['APP_DEBUG'] == 'true') {
-                    $manager = DB::table('users')
-                        ->where('users.isManager', true)
-                        ->where('users.id', 1)
-                        ->get();
-                    Notification::send($manager, new NewOrder($order));
+                if ($_ENV['APP_DEBUG'] == 'true' || (isset($request['DEBUG']) && $request['DEBUG'])) {
+//                    $driver = $this->driverRepository->find(3, ['user_id']);
+//                    foreach ($drivers as $currDriver) {
+//                        $driver = $this->userRepository->findWithoutFail($currDriver->user_id);
+//                        Notification::send([$driver], new AssignedOrder($order));
+//                    }
+//                    $manager = DB::table('users')
+//                        ->where('users.isManager', true)
+//                        ->where('users.id', 1)
+//                        ->get();
+//                    Notification::send($driver, new NewOrder($order));
+                    $dev = $this->userRepository->find(1);
+                    Notification::send($dev, new NewOrder($order));
 
                 } else {
-    //                Notification::send($order->foodOrders[0]->food->restaurant->users, new NewOrder($order));
+//                Notification::send($order->foodOrders[0]->food->restaurant->users, new NewOrder($order));
                     $drivers = $this->driverRepository->all();
                     foreach ($drivers as $currDriver) {
                         $driver = $this->userRepository->findWithoutFail($currDriver->user_id);
@@ -382,11 +390,37 @@ class OrderAPIController extends Controller
             $temp_order['driver_id'] = 1;
             $this->orderRepository->update($temp_order, $order->id);
 
-            $drivers = $this->driverRepository->all();
-            foreach ($drivers as $currDriver) {
-                $driver = $this->userRepository->findWithoutFail($currDriver->user_id);
-                Notification::send([$driver], new AssignedOrder($order));
+
+            if ($_ENV['APP_DEBUG'] == 'true' || (isset($request['DEBUG']) && $request['DEBUG'])) {
+                return 'True';
+//                    $driver = $this->driverRepository->find(3, ['user_id']);
+//                    foreach ($drivers as $currDriver) {
+//                        $driver = $this->userRepository->findWithoutFail($currDriver->user_id);
+//                        Notification::send([$driver], new AssignedOrder($order));
+//                    }
+//                    $manager = DB::table('users')
+//                        ->where('users.isManager', true)
+//                        ->where('users.id', 1)
+//                        ->get();
+//                    Notification::send($driver, new NewOrder($order));
+                $dev = $this->userRepository->find(1);
+                Notification::send($dev, new NewOrder($order));
+
+            } else {
+//                Notification::send($order->foodOrders[0]->food->restaurant->users, new NewOrder($order));
+                $drivers = $this->driverRepository->all();
+                foreach ($drivers as $currDriver) {
+                    $driver = $this->userRepository->findWithoutFail($currDriver->user_id);
+                    Notification::send([$driver], new AssignedOrder($order));
+                }
+
             }
+
+//            $drivers = $this->driverRepository->all();
+//            foreach ($drivers as $currDriver) {
+//                $driver = $this->userRepository->findWithoutFail($currDriver->user_id);
+//                Notification::send([$driver], new AssignedOrder($order));
+//            }
 
 
         } catch
@@ -396,10 +430,6 @@ class OrderAPIController extends Controller
         return $this->sendResponse($order->toArray(), __('lang.saved_successfully', ['operator' => __('lang.order')]));
     }
 
-
-    function applyPromo($order)
-    {
-    }
 
     /**
      * Update the specified Order in storage.
