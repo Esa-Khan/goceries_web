@@ -199,14 +199,12 @@ class OrderAPIController extends Controller
      */
     public function store(Request $request)
     {
-
         $payment = $request->only('payment');
         if (isset($payment['payment']) && $payment['payment']['method']) {
             if ($payment['payment']['method'] == "Credit Card (Stripe Gateway)") {
                 return $this->stripPayment($request);
             } else {
                 return $this->cashPayment($request);
-
             }
         }
     }
