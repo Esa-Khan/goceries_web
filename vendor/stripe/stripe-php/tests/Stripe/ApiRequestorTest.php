@@ -155,7 +155,7 @@ class ApiRequestorTest extends TestCase
         } catch (Error\Card $e) {
             $this->assertSame(402, $e->getHttpStatus());
             $this->assertTrue(is_array($e->getJsonBody()));
-//            $this->assertSame('Your card was declined.', $e->getMessage());
+            $this->assertSame('Your card was declined.', $e->getMessage());
             $this->assertSame('card_declined', $e->getStripeCode());
             $this->assertSame('generic_decline', $e->getDeclineCode());
         } catch (\Exception $e) {
