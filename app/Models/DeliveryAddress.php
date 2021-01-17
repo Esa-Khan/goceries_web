@@ -30,7 +30,8 @@ class DeliveryAddress extends Model
         'latitude',
         'longitude',
         'is_default',
-        'user_id'
+        'user_id',
+        'active'
     ];
 
     /**
@@ -44,6 +45,7 @@ class DeliveryAddress extends Model
         'latitude' => 'double',
         'longitude' => 'double',
         'is_default' => 'boolean',
+        'active' => 'boolean',
         'user_id' => 'integer'
     ];
 
