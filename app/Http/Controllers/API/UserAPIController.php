@@ -79,7 +79,7 @@ class UserAPIController extends Controller
         }
 
         if (DB::table('users')->where('users.email', $request['email'])->exists()) {
-            return 'Incorrect password';
+            return $this->sendError('Incorrect Password', 500);
         }
 
     }

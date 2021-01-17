@@ -391,7 +391,6 @@ class OrderAPIController extends Controller
 
 
             if ($_ENV['APP_DEBUG'] == 'true' || (isset($request['DEBUG']) && $request['DEBUG'])) {
-                return 'True';
 //                    $driver = $this->driverRepository->find(3, ['user_id']);
 //                    foreach ($drivers as $currDriver) {
 //                        $driver = $this->userRepository->findWithoutFail($currDriver->user_id);
