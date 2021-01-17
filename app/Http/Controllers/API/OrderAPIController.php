@@ -175,19 +175,31 @@ class OrderAPIController extends Controller
 
     }
 
-    public function checkCode(Request $request) {
-        $code_used = $this->usedPromoCodeRepository->findByField('user_id', [$request['user_id']])->pluck('code_used')->toArray();
-        $response['isUsed'] = 'false';
-        foreach ($code_used as $code) {
-            if (strcmp($code, $request['code']) === 0) {
-                $response['isUsed'] = 'true';
-                break;
-            }
-        }
 
+    public function checkCode(Request $request)
+    {
+        $code_used = DB::table('used_promo_codes')
+                            ->where('used_promo_codes.code_used', $request['code'])
+                            ->orWhere('used_promo_codes.number', $request['number'])
+                            ->exists();
+        if ($code_used) {
+            $response['isUsed'] = 'true';
+        } else {
+            $response['isUsed'] = 'false';
+        }
         return $this->sendResponse($response, 'Check retrieved successfully');
 
-//        return $this->usedPromoCodeRepository->all();
+//        $code_used = $this->usedPromoCodeRepository->
+//                        findByField('user_id', [$request['user_id']])->toArray();
+//        $response['isUsed'] = 'false';
+//        foreach ($code_used as $code) {
+//            echo $code['code_used'];
+//            if (strcmp($code['code_used'], $request['code']) === 0 OR strcmp($code['number'], $request['number']) === 0) {
+//                $response['isUsed'] = 'true';
+//                break;
+//            }
+//        }
+
     }
 
     /**
@@ -199,6 +211,7 @@ class OrderAPIController extends Controller
      */
     public function store(Request $request)
     {
+
         $payment = $request->only('payment');
         if (isset($payment['payment']) && $payment['payment']['method']) {
             if ($payment['payment']['method'] == "Credit Card (Stripe Gateway)") {
@@ -219,8 +232,6 @@ class OrderAPIController extends Controller
         $amount = 0;
 
         try {
-//            return substr($_ENV['APP_DEBUG'], 0, 4);
-
             $user = $this->userRepository->findWithoutFail($input['user_id']);
             if (empty($user)) {
                 return $this->sendError('User not found');
@@ -235,11 +246,12 @@ class OrderAPIController extends Controller
                 )
             ));
 
-            if (isset($request['code'])) {
+            if (isset($request['code_used'])) {
                 try {
                     $this->usedPromoCodeRepository->create([
                         "user_id" => $request['user_id'],
-                        "code_used" => $request['code'],
+                        "code_used" => $request['code_used'],
+                        "number" => $user->number,
                     ]);
                 } catch (ValidatorException $e) {
                     echo $e;
@@ -248,7 +260,6 @@ class OrderAPIController extends Controller
 
             if ($stripeToken->created > 0) {
                 if (empty($input['delivery_address_id'])) {
-
                     $order = $this->orderRepository->create(
                         $request->only('user_id', 'order_status_id', 'tax', 'hint', 'store_id')
                     );
@@ -361,16 +372,19 @@ class OrderAPIController extends Controller
                 "method" => $input['payment']['method'],
             ]);
 
-            if (isset($request['code'])) {
+            if (isset($request['code_used'])) {
                 try {
+                    $user_number = $this->userRepository->findWithoutFail($request['user_id'], ['number']);
                     $this->usedPromoCodeRepository->create([
                         "user_id" => $request['user_id'],
-                        "code_used" => $request['code'],
+                        "code_used" => $request['code_used'],
+                        "number" => $user_number->number,
                     ]);
                 } catch (ValidatorException $e) {
                     echo $e;
                 }
             }
+
 
             $this->orderRepository->update(['payment_id' => $payment->id], $order->id);
 

@@ -25,6 +25,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string name
  * @property string email
  * @property string password
+ * @property string number
  * @property string api_token
  * @property string device_token
  */

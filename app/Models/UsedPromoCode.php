@@ -22,7 +22,7 @@ class UsedPromoCode extends Model
     public $fillable = [
         'user_id',
         'code_used',
-        'phone_number',
+        'number',
     ];
 
     /**
@@ -34,7 +34,7 @@ class UsedPromoCode extends Model
         'user_id' => 'integer',
         'code_used' => 'string',
         'timestamp' => 'string',
-        'phone_number' => 'string',
+        'number' => 'string',
     ];
 
 

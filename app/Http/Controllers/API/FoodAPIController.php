@@ -228,18 +228,19 @@ class FoodAPIController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\JsonResponse|\Illuminate\View\View
      */
-    public function getSimilarItems(Request $request)
+    public function getSimilarItems(int $id)
     {
         try {
             $item = DB::table('foods')
                 ->select('name', 'restaurant_id')
-                ->where('foods.id', $request['id'])
+                ->where('foods.id', $id)
                 ->first();
 
             $comparison_str = explode(' ', $item->name)[0] . '%';
 
             $items = DB::table('foods')
                 ->where('foods.restaurant_id', $item->restaurant_id)
+                ->where('foods.id', '<>', $id)
                 ->where('name', 'like', $comparison_str)
                 ->get();
             $count = 10;

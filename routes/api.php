@@ -100,4 +100,4 @@ Route::middleware('auth:api')->group(function () {
     Route::put('deactivate_address/{id}', 'API\DeliveryAddressAPIController@deactivate');
 });
 
-Route::get('similaritems', 'API\FoodAPIController@getSimilarItems');
+Route::get('similaritems/{id}', 'API\FoodAPIController@getSimilarItems');
