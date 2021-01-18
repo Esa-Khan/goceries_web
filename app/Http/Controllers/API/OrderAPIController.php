@@ -246,7 +246,7 @@ class OrderAPIController extends Controller
                 )
             ));
 
-            if (isset($request['code_used'])) {
+            if (isset($request['code_used']) && $request['code_used'] != null) {
                 try {
                     $this->usedPromoCodeRepository->create([
                         "user_id" => $request['user_id'],
@@ -372,7 +372,7 @@ class OrderAPIController extends Controller
                 "method" => $input['payment']['method'],
             ]);
 
-            if (isset($request['code_used'])) {
+            if (isset($request['code_used']) && $request['code_used'] != null) {
                 try {
                     $user_number = $this->userRepository->findWithoutFail($request['user_id'], ['number']);
                     $this->usedPromoCodeRepository->create([
@@ -487,6 +487,10 @@ class OrderAPIController extends Controller
             if (setting('enable_notifications', false)) {
                 if (isset($input['order_status_id']) && $input['order_status_id'] != $oldOrder->order_status_id) {
                     Notification::send([$order->user], new StatusChangedOrder($order));
+//                    $managers = DB::table('users')->where('users.isManager', 1)->get();
+//                    foreach ($managers as $manager) {
+//                        Notification::send([$manager], new StatusChangedOrder($order));
+//                    }
                 }
             }
 
