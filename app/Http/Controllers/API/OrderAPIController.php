@@ -10,11 +10,11 @@ namespace App\Http\Controllers\API;
 
 
 use App\Criteria\Orders\OrdersHistoryCriteria;
-use App\Criteria\Orders\OrdersNotDelivered;
 use App\Criteria\Orders\OrdersOfDriverCriteria;
 use App\Events\OrderChangedEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\User;
 use App\Notifications\AssignedOrder;
 use App\Notifications\CancelledOrder;
 use App\Notifications\NewOrder;
@@ -27,9 +27,7 @@ use App\Repositories\FoodOrderRepository;
 use App\Repositories\UsedPromoCodeRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\DriverRepository;
-use Braintree\Gateway;
 use DateTime;
-use Flash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
@@ -453,6 +451,7 @@ class OrderAPIController extends Controller
      */
     public function update($id, Request $request)
     {
+
         $oldOrder = $this->orderRepository->findWithoutFail($id);
         if (empty($oldOrder)) {
             return $this->sendError('Order not found');
@@ -466,6 +465,7 @@ class OrderAPIController extends Controller
 
         try {
             $order = $this->orderRepository->update($input, $id);
+
             if (isset($input['active'])) {
                 $this->orderRepository->update(['active' => 0], $order->id);
                 if ($order->driver_id != 1){
@@ -486,11 +486,17 @@ class OrderAPIController extends Controller
 
             if (setting('enable_notifications', false)) {
                 if (isset($input['order_status_id']) && $input['order_status_id'] != $oldOrder->order_status_id) {
-                    Notification::send([$order->user], new StatusChangedOrder($order));
-//                    $managers = DB::table('users')->where('users.isManager', 1)->get();
-//                    foreach ($managers as $manager) {
-//                        Notification::send([$manager], new StatusChangedOrder($order));
-//                    }
+                    $repeated = false;
+                    $managers = User::where('isManager', '1')->get();
+                    foreach ($managers as $manager) {
+                        if ($manager['id'] == $order->user['id']) {
+                            $repeated = true;
+                        }
+                        Notification::send($manager, new StatusChangedOrder($order));
+                    }
+                    if (!$repeated) {
+                        Notification::send($order->user, new StatusChangedOrder($order));
+                    }
                 }
             }
 
