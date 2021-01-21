@@ -243,7 +243,7 @@ class FoodAPIController extends Controller
                 ->where('foods.id', '<>', $id)
                 ->where('name', 'like', $comparison_str)
                 ->get();
-            $count = 10;
+            $count = 5;
             $final_items = [];
             foreach ($items as $curr_item) {
                 if ($count == 0) {
