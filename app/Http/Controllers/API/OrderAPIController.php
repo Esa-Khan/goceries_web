@@ -31,6 +31,7 @@ use App\Repositories\DriverRepository;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use InfyOm\Generator\Criteria\LimitOffsetCriteria;
 use Prettus\Repository\Criteria\RequestCriteria;
@@ -417,7 +418,8 @@ class OrderAPIController extends Controller
             } else {
                 $drivers = Driver::where('available', '1')->pluck('user_id')->toArray();
                 foreach ($drivers as $currDriver_id) {
-                    $user = User::where('id', $currDriver_id)->get()->toArray();
+                    $user = User::where('id', $currDriver_id)->get();
+//                    Log::info($user->id);
                     Notification::send($user, new AssignedOrder($order));
                 }
             }
@@ -459,7 +461,7 @@ class OrderAPIController extends Controller
 
             if (isset($input['active'])) {
                 $this->orderRepository->update(['active' => 0], $order->id);
-                if ($order->driver_id != 1){
+                if ($order->driver_id !== 1){
                     $driver = $this->userRepository->findWithoutFail($order->driver_id);
                     Notification::send([$driver], new CancelledOrder($order));
                 } else {
