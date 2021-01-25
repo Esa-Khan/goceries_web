@@ -63,10 +63,11 @@ class UsedCategoriesCriteria implements CriteriaInterface
 
         return $model->select('categories.*')
                         ->whereIn('categories.id', $all);
+//                        ->where('categories.id', '<', '100');
 
     }
 
     function fcn($item) {
-        return intval(substr($item, -2, 2));
+        return (int)substr($item, -2, 2);
     }
 }

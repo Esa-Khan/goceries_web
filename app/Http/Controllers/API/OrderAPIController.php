@@ -13,6 +13,7 @@ use App\Criteria\Orders\OrdersHistoryCriteria;
 use App\Criteria\Orders\OrdersOfDriverCriteria;
 use App\Events\OrderChangedEvent;
 use App\Http\Controllers\Controller;
+use App\Models\Driver;
 use App\Models\Order;
 use App\Models\User;
 use App\Notifications\AssignedOrder;
@@ -110,10 +111,9 @@ class OrderAPIController extends Controller
         }
 
 
+        $orders = $this->orderRepository->all()->toArray();
 
-
-        $orders = $this->orderRepository->all();
-        return $this->sendResponse($orders->toArray(), 'Orders retrieved successfully');
+        return $this->sendResponse($orders, 'Orders retrieved successfully');
     }
 
     // GET order history for manager/driver
@@ -209,7 +209,6 @@ class OrderAPIController extends Controller
      */
     public function store(Request $request)
     {
-
         $payment = $request->only('payment');
         if (isset($payment['payment']) && $payment['payment']['method']) {
             if ($payment['payment']['method'] == "Credit Card (Stripe Gateway)") {
@@ -320,17 +319,15 @@ class OrderAPIController extends Controller
 //                        ->where('users.id', 1)
 //                        ->get();
 //                    Notification::send($driver, new NewOrder($order));
-                    $dev = $this->userRepository->find(1);
-                    Notification::send($dev, new NewOrder($order));
+//                $dev = $this->userRepository->find(1);
+//                Notification::send($dev, new NewOrder($order));
 
                 } else {
-//                Notification::send($order->foodOrders[0]->food->restaurant->users, new NewOrder($order));
-                    $drivers = $this->driverRepository->all();
-                    foreach ($drivers as $currDriver) {
-                        $driver = $this->userRepository->findWithoutFail($currDriver->user_id);
-                        Notification::send([$driver], new AssignedOrder($order));
+                    $drivers = Driver::where('available', '1')->pluck('user_id')->toArray();
+                    foreach ($drivers as $currDriver_id) {
+                        $user = User::where('id', $currDriver_id)->get()->toArray();
+                        Notification::send([$user], new AssignedOrder($order));
                     }
-
                 }
 
 
@@ -413,24 +410,17 @@ class OrderAPIController extends Controller
 //                        ->where('users.id', 1)
 //                        ->get();
 //                    Notification::send($driver, new NewOrder($order));
-                $dev = $this->userRepository->find(1);
-                Notification::send($dev, new NewOrder($order));
+//                $dev = $this->userRepository->find(1);
+//                Notification::send($dev, new NewOrder($order));
 
             } else {
-//                Notification::send($order->foodOrders[0]->food->restaurant->users, new NewOrder($order));
-                $drivers = $this->driverRepository->all();
-                foreach ($drivers as $currDriver) {
-                    $driver = $this->userRepository->findWithoutFail($currDriver->user_id);
-                    Notification::send([$driver], new AssignedOrder($order));
+                $drivers = Driver::where('available', '1')->pluck('user_id')->toArray();
+                foreach ($drivers as $currDriver_id) {
+                    $user = User::where('id', $currDriver_id)->get()->toArray();
+                    Notification::send([$user], new AssignedOrder($order));
                 }
-
             }
 
-//            $drivers = $this->driverRepository->all();
-//            foreach ($drivers as $currDriver) {
-//                $driver = $this->userRepository->findWithoutFail($currDriver->user_id);
-//                Notification::send([$driver], new AssignedOrder($order));
-//            }
 
 
         } catch

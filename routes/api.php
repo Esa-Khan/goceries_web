@@ -98,6 +98,12 @@ Route::middleware('auth:api')->group(function () {
     //---------------------------------------------------------------------------
     Route::get('orderhistory', 'API\OrderAPIController@getOrderHistory');
     Route::put('deactivate_address/{id}', 'API\DeliveryAddressAPIController@deactivate');
+
 });
 
 Route::get('similaritems/{id}', 'API\FoodAPIController@getSimilarItems');
+Route::get('getDriverAvail/{id}', 'API\UserAPIController@getDriverAvail');
+Route::put('setDriverAvail/{id}/{isAvail}', 'API\UserAPIController@toggleDriverAvail');
+Route::put('updateDriverAvail/{id}', 'API\UserAPIController@updateDriverAvail');
+Route::get('subcategories/getSubcatFromCat/{id}', 'API\SubCategoryAPIController@getSubcatFromCat');
+

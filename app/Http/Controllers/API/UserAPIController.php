@@ -67,9 +67,11 @@ class UserAPIController extends Controller
 //                    }
                     $work_hours = Driver::select('work_hours')->where('user_id', $user->id)->get();
                     $store_ids = Driver::select('store_ids')->where('user_id', $user->id)->get();
+                    $isAvailable = Driver::select('available')->where('user_id', $user->id)->get();
 
                     $user['work_hours'] = $work_hours[0]['work_hours'];
                     $user['store_ids'] = $store_ids[0]['store_ids'];
+                    $user['available'] = $isAvailable[0]['available'];
 
                 }
                 return $this->sendResponse($user, 'User retrieved successfully');
@@ -241,5 +243,46 @@ class UserAPIController extends Controller
             return $this->sendError('Reset link not sent', 401);
         }
 
+    }
+
+
+
+    //*******************************Driver Functions****************************
+    function toggleDriverAvail(int $id, bool $isAvail)
+    {
+        try {
+            Driver::where('user_id', $id)->update(['available' => $isAvail]);
+            $result['available'] = $isAvail;
+            $result['work_hours'] = Driver::select('work_hours')->where('user_id', $id)->get()[0]['work_hours'];
+            return $this->sendResponse($result, 'Success');
+        } catch (ValidatorException $e) {
+            return $this->sendError($e->getMessage(), 401);
+        }
+    }
+
+
+    function getDriverAvail(int $id)
+    {
+        try {
+            $result['available'] = Driver::where('user_id', $id)->pluck('available')->first();
+            $result['work_hours'] = Driver::where('user_id', $id)->pluck('work_hours')->first();
+
+            return $this->sendResponse($result, 'Success');
+        } catch (ValidatorException $e) {
+            return $this->sendError($e->getMessage(), 401);
+        }
+    }
+
+
+
+    function updateDriverAvail(int $id)
+    {
+        $work_hours = Driver::select('work_hours')->where('user_id', $id)->get()[0]['work_hours'];
+        $work_hours = explode('|', $work_hours);
+        $now = date("H:i:s");
+        if(date("Hi") < "1400") {
+
+        }
+        return $this->sendResponse($now, 'Success');
     }
 }
