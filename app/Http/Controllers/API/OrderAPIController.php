@@ -178,8 +178,9 @@ class OrderAPIController extends Controller
     {
         $code_used = DB::table('used_promo_codes')
                             ->where('used_promo_codes.code_used', $request['code'])
-                            ->orWhere('used_promo_codes.number', $request['number'])
+                            ->where('used_promo_codes.number', $request['number'])
                             ->exists();
+
         if ($code_used) {
             $response['isUsed'] = 'true';
         } else {
@@ -211,7 +212,7 @@ class OrderAPIController extends Controller
     {
         $payment = $request->only('payment');
         if (isset($payment['payment']) && $payment['payment']['method']) {
-            if ($payment['payment']['method'] == "Credit Card (Stripe Gateway)") {
+            if ($payment['payment']['method'] === "Credit Card (Stripe Gateway)") {
                 return $this->stripPayment($request);
             } else {
                 return $this->cashPayment($request);
@@ -399,7 +400,7 @@ class OrderAPIController extends Controller
             $this->orderRepository->update($temp_order, $order->id);
 
 
-            if ($_ENV['APP_DEBUG'] == 'true' || (isset($request['DEBUG']) && $request['DEBUG'])) {
+            if ($_ENV['APP_DEBUG'] === 'true' || (isset($request['DEBUG']) && $request['DEBUG'])) {
 //                    $driver = $this->driverRepository->find(3, ['user_id']);
 //                    foreach ($drivers as $currDriver) {
 //                        $driver = $this->userRepository->findWithoutFail($currDriver->user_id);
