@@ -418,7 +418,7 @@ class OrderAPIController extends Controller
                 $drivers = Driver::where('available', '1')->pluck('user_id')->toArray();
                 foreach ($drivers as $currDriver_id) {
                     $user = User::where('id', $currDriver_id)->get()->toArray();
-                    Notification::send([$user], new AssignedOrder($order));
+                    Notification::send($user, new AssignedOrder($order));
                 }
             }
 
