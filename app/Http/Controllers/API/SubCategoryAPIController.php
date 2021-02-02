@@ -161,28 +161,21 @@ class SubCategoryAPIController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function getSubcatFromCat(int $id, Request $request): JsonResponse
+    public function getSubcatFromCat(int $id, Request $request)
     {
         $storeID = $request['storeID'];
 
         $used_cat_ids = DB::table('categories')
-            ->where('foods.restaurant_id', $storeID)
-            ->join('foods', 'foods.category_id', '=', 'categories.id')
-            ->groupBy('categories.id')
-            ->pluck('categories.id')
-            ->toArray();
-        $b = array_unique(array_map(array($this, 'fcn'), $used_cat_ids));
-        $all = array_merge($used_cat_ids, $b);
+                            ->where('foods.restaurant_id', $storeID)
+                            ->join('foods', 'foods.category_id', '=', 'categories.id')
+                            ->groupBy('categories.id')
+                            ->pluck('categories.id')
+                            ->toArray();
 
-
-        $subcategories = SubCategory::whereIn('category_id', $all)
+        $subcategories = SubCategory::whereIn('id', $used_cat_ids)
                                         ->where('category_id', $id)
                                         ->get()
                                         ->toArray();
-
-
-//        return $this->sendResponse($used_cat_ids, 'SubCategory retrieved successfully');
-
 
 
         if ($subcategories === null || count($subcategories) === 0) {
@@ -192,8 +185,4 @@ class SubCategoryAPIController extends Controller
         return $this->sendResponse($subcategories, 'SubCategory retrieved successfully');
     }
 
-
-    function fcn($item) {
-        return (int)substr($item, -2, 2);
-    }
 }

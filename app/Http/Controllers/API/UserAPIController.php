@@ -16,6 +16,7 @@ use App\Repositories\DriverRepository;
 use App\Repositories\RoleRepository;
 use App\Repositories\UploadRepository;
 use App\Repositories\UserRepository;
+use Dotenv\Exception\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -285,4 +286,21 @@ class UserAPIController extends Controller
         }
         return $this->sendResponse($now, 'Success');
     }
+
+
+    function setDebugger($id, $isDebugger) {
+        $user = User::where('id', $id)->update(['debugger' => $isDebugger]);
+        if ($user === 1) {
+            return $this->sendResponse($user, 'Success');
+        } else {
+            return $this->sendResponse(null, 'Failed: Could not get user');
+
+        }
+    }
+
+
+
+
+
+
 }

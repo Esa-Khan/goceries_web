@@ -10,6 +10,8 @@
 namespace App\Criteria\Orders;
 
 use App\Models\User;
+use DateInterval;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Prettus\Repository\Contracts\CriteriaInterface;
@@ -48,8 +50,12 @@ class OrdersHistoryCriteria implements CriteriaInterface
             ->pluck('users.isManager')
             ->first();
 
+        $date = new DateTime("now");
+        $date->sub(new DateInterval('P1D'));
+
         if ($isManager) {
             return $model->where('orders.order_status_id', 5)
+                            ->whereDate('updated_at', '>', $date )
                             ->orderBy('orders.id', 'asc')
                             ->select('orders.*');
 
