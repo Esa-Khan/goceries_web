@@ -310,7 +310,7 @@ class OrderAPIController extends Controller
                 $temp_order['driver_id'] = 1;
                 $this->orderRepository->update($temp_order, $order->id);
 
-                if ($_ENV['APP_DEBUG'] == 'true' || (isset($request['DEBUG']) && $request['DEBUG'])) {
+                if ($_ENV['APP_DEBUG'] === 'true' || (isset($request['DEBUG']) && $request['DEBUG'])) {
 //                    $driver = $this->driverRepository->find(3, ['user_id']);
 //                    foreach ($drivers as $currDriver) {
 //                        $driver = $this->userRepository->findWithoutFail($currDriver->user_id);
@@ -327,8 +327,9 @@ class OrderAPIController extends Controller
                 } else {
                     $drivers = Driver::where('available', '1')->pluck('user_id')->toArray();
                     foreach ($drivers as $currDriver_id) {
-                        $user = User::where('id', $currDriver_id)->get()->toArray();
-                        Notification::send([$user], new AssignedOrder($order));
+                        $user = User::where('id', $currDriver_id)->get();
+//                    Log::info($user->id);
+                        Notification::send($user, new AssignedOrder($order));
                     }
                 }
 

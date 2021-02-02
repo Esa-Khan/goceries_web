@@ -62,8 +62,8 @@ class UsedCategoriesCriteria implements CriteriaInterface
         $all = array_merge($ids, $b);
 
         return $model->select('categories.*')
-                        ->whereIn('categories.id', $all);
-//                        ->where('categories.id', '<', '100');
+                        ->whereIn('categories.id', $all)
+                        ->where('categories.id', '<', '100');
 
     }
 

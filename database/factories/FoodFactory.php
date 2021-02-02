@@ -33,7 +33,7 @@ $factory->define(\App\Models\Food::class, function (Faker $faker) {
         'discount_price' => $faker->randomElement([$discountPrice,0]),
         'description' => $faker->text,
         'weight' => $faker->randomFloat(2,0.1,500),
-        'package_items_count' => $faker->numberBetween(1,6),
+        'quantity' => $faker->numberBetween(1,6),
         'unit' => $faker->randomElement(['L','g','Kg','ml']),
         'featured' => $faker->boolean,
         'deliverable' =>  $faker->boolean,

@@ -127,11 +127,11 @@
 {{--        </div>--}}
 {{--    </div>--}}
 
-    <!-- package_items_count Field -->
+    <!-- quantity Field -->
 {{--    <div class="form-group row ">--}}
-{{--        {!! Form::label('package_items_count', trans("lang.food_package_items_count"), ['class' => 'col-3 control-label text-right']) !!}--}}
+{{--        {!! Form::label('quantity', trans("lang.food_package_items_count"), ['class' => 'col-3 control-label text-right']) !!}--}}
 {{--        <div class="col-9">--}}
-{{--            {!! Form::number('package_items_count', null,  ['class' => 'form-control','placeholder'=>  trans("lang.food_package_items_count_placeholder"),'step'=>"any", 'min'=>"0"]) !!}--}}
+{{--            {!! Form::number('quantity', null,  ['class' => 'form-control','placeholder'=>  trans("lang.food_package_items_count_placeholder"),'step'=>"any", 'min'=>"0"]) !!}--}}
 {{--            <div class="form-text text-muted">--}}
 {{--                {{ trans("lang.food_package_items_count_help") }}--}}
 {{--            </div>--}}
