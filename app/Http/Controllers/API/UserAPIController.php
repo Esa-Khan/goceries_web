@@ -178,6 +178,7 @@ class UserAPIController extends Controller
                 'instagram_url_ios' => '',
                 'instagram_url_android' => '',
                 'phone_number' => '',
+                'debug_url' => '',
                 'promo' => ''
             ]
         );
