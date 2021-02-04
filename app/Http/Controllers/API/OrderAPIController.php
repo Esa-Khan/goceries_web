@@ -14,6 +14,8 @@ use App\Criteria\Orders\OrdersOfDriverCriteria;
 use App\Events\OrderChangedEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Driver;
+use App\Models\Food;
+use App\Models\FoodOrder;
 use App\Models\Order;
 use App\Models\User;
 use App\Notifications\AssignedOrder;
@@ -446,16 +448,18 @@ class OrderAPIController extends Controller
     public function update($id, Request $request)
     {
 
+
         $oldOrder = $this->orderRepository->findWithoutFail($id);
-        if (empty($oldOrder)) {
+        if ($oldOrder === null) {
             return $this->sendError('Order not found');
         }
         $oldStatus = $oldOrder->payment->status;
 
         $input = $request->all();
         if (isset($input['check_approval']) && $oldOrder['driver_id'] != 1 && $input['current_driver'] != $oldOrder['driver_id']) {
-            return "Order already assigned";
+            return $this->sendError("Order already assigned");
         }
+
 
         try {
             $order = $this->orderRepository->update($input, $id);
@@ -475,6 +479,12 @@ class OrderAPIController extends Controller
             }
             if (isset($input['order_status_id']) && $input['order_status_id'] == 5 && !empty($order)) {
                 $this->paymentRepository->update(['status' => 'Paid'], $order['payment_id']);
+                $foodorder_ids = FoodOrder::where('order_id', $input['id'])->pluck('id');
+                foreach ($foodorder_ids as $foodorder_id) {
+                    $foodorder = FoodOrder::find($foodorder_id)->toArray();
+                    Food::find($foodorder['food_id'])->decrement('quantity', $foodorder['quantity']);
+                }
+
             }
             event(new OrderChangedEvent($oldStatus, $order));
 
