@@ -46,17 +46,17 @@ class OrdersHistoryCriteria implements CriteriaInterface
     {
 
         $isManager = DB::table('users')
-            ->where('users.id', $this->request->get('driver_id'))
-            ->pluck('users.isManager')
-            ->first();
+                        ->where('users.id', $this->request->get('driver_id'))
+                        ->pluck('users.isManager')
+                        ->first();
 
         $date = new DateTime("now");
         $date->sub(new DateInterval('P1D'));
 
         if ($isManager) {
             return $model->where('orders.order_status_id', 5)
-                            ->whereDate('updated_at', '>', $date )
-                            ->orderBy('orders.id', 'asc')
+//                            ->whereDate('updated_at', '>', $date )
+                            ->orderBy('orders.id', 'desc')
                             ->select('orders.*');
 
         } else {
