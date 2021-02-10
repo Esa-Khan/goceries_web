@@ -69,7 +69,6 @@ class Food extends Model implements HasMedia
         'deliverable',
         'restaurant_id',
         'category_id',
-        'image_url'
     ];
     /**
      * The attributes that should be casted to native types.
@@ -90,7 +89,6 @@ class Food extends Model implements HasMedia
         'deliverable' => 'boolean',
         'restaurant_id' => 'integer',
         'category_id' => 'integer',
-        'image_url' => 'string'
     ];
     /**
      * New Attributes
