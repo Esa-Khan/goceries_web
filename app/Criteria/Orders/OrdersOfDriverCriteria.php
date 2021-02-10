@@ -96,11 +96,8 @@ class OrdersOfDriverCriteria implements CriteriaInterface
                                 ->select('orders.*');
 
             } else {
-                return $model->where([
-                                    ['orders.driver_id', '=', $this->request->get('driver_id')],
-                                    ['orders.order_status_id', '<', 5]
-                                ])
-                                ->orWhere('orders.driver_id', '1')
+                return $model->where('orders.driver_id', '=', $this->request->get('driver_id'))
+                                ->orWhere('orders.order_status_id', '<', 5)
                                 ->orderBy('orders.order_status_id', 'desc')
                                 ->orderBy('orders.id', 'asc')
                                 ->select('orders.*');
