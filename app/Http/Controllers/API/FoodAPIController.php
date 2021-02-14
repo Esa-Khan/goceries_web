@@ -54,6 +54,8 @@ class FoodAPIController extends Controller
         $this->foodRepository = $foodRepo;
         $this->customFieldRepository = $customFieldRepo;
         $this->uploadRepository = $uploadRepo;
+        define("LOCAL_PATH", substr($_SERVER['DOCUMENT_ROOT'], 0, -6));
+        define("SERVER_URL", env('APP_URL'));
     }
 
     /**
@@ -65,6 +67,7 @@ class FoodAPIController extends Controller
      */
     public function index(Request $request)
     {
+
         try{
             $this->foodRepository->pushCriteria(new RequestCriteria($request));
             $this->foodRepository->pushCriteria(new LimitOffsetCriteria($request));
@@ -84,7 +87,7 @@ class FoodAPIController extends Controller
 
             if (isset($request['short'])){
                 $foods = $this->foodRepository->all(['id', 'name', 'price', 'discount_price', 'quantity', 'description', 'ingredients', 'weight',
-                    'featured', 'deliverable', 'category_id', 'image_url', 'commission']);
+                    'featured', 'deliverable', 'category_id', 'commission']);
             } else {
                 $foods = $this->foodRepository->all();
             }
@@ -98,12 +101,22 @@ class FoodAPIController extends Controller
                         break;
                     } else if ($currID >= (int)$range[0] && $currID <= (int)$range[1]) {
                         array_push($itemsInRange, $currFood);
-                    };
+                    }
                 }
                 $foods = $itemsInRange;
              }
 
 
+
+
+            foreach ($foods as $currFood){
+                $filename = LOCAL_PATH."storage/app/public/foods/".$currFood['id'].".jpg";
+                if (file_exists($filename)){
+                    $currFood['image_url'] = SERVER_URL."storage/app/public/foods/".$currFood['id'].".jpg" ;
+                }else{
+                    $currFood['image_url'] =  SERVER_URL."images/image_default.png";
+                }
+            }
         } catch (RepositoryException $e) {
             return $this->sendError($e->getMessage());
         }
@@ -129,6 +142,12 @@ class FoodAPIController extends Controller
                 return $this->sendError($e->getMessage());
             }
             $food = $this->foodRepository->findWithoutFail($id);
+            $filename = LOCAL_PATH."storage/app/public/foods/".$food['id'].".jpg";
+            if (file_exists($filename)){
+                $food['image_url'] = SERVER_URL."storage/app/public/foods/".$food['id'].".jpg" ;
+            }else{
+                $food['image_url'] =  SERVER_URL."images/image_default.png";
+            }
         }
 
         if (empty($food)) {
@@ -175,7 +194,7 @@ class FoodAPIController extends Controller
     public function update($id, Request $request)
     {
         $food = $this->foodRepository->findWithoutFail($id);
-
+//        return $request;
         if (empty($food)) {
             return $this->sendError('Food not found');
         }

@@ -38,6 +38,7 @@ class UserAPIController extends Controller
      */
     public function __construct(UserRepository $userRepository, UploadRepository $uploadRepository, RoleRepository $roleRepository, CustomFieldRepository $customFieldRepo)
     {
+        parent::__construct();
         $this->userRepository = $userRepository;
         $this->uploadRepository = $uploadRepository;
         $this->roleRepository = $roleRepository;
@@ -80,10 +81,11 @@ class UserAPIController extends Controller
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), 401);
         }
-
         if (DB::table('users')->where('users.email', $request['email'])->exists()) {
             return $this->sendError('Incorrect Password', 500);
         }
+
+        return '';
 
     }
 
