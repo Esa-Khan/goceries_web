@@ -10,11 +10,14 @@ namespace App\Http\Controllers\API;
 
 
 use App\Criteria\Orders\OrdersHistoryCriteria;
-use App\Criteria\Orders\OrdersNotDelivered;
 use App\Criteria\Orders\OrdersOfDriverCriteria;
 use App\Events\OrderChangedEvent;
 use App\Http\Controllers\Controller;
+use App\Models\Driver;
+use App\Models\Food;
+use App\Models\FoodOrder;
 use App\Models\Order;
+use App\Models\User;
 use App\Notifications\AssignedOrder;
 use App\Notifications\CancelledOrder;
 use App\Notifications\NewOrder;
@@ -27,11 +30,10 @@ use App\Repositories\FoodOrderRepository;
 use App\Repositories\UsedPromoCodeRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\DriverRepository;
-use Braintree\Gateway;
 use DateTime;
-use Flash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use InfyOm\Generator\Criteria\LimitOffsetCriteria;
 use Prettus\Repository\Criteria\RequestCriteria;
@@ -112,10 +114,9 @@ class OrderAPIController extends Controller
         }
 
 
+        $orders = $this->orderRepository->all()->toArray();
 
-
-        $orders = $this->orderRepository->all();
-        return $this->sendResponse($orders->toArray(), 'Orders retrieved successfully');
+        return $this->sendResponse($orders, 'Orders retrieved successfully');
     }
 
     // GET order history for manager/driver
@@ -175,19 +176,32 @@ class OrderAPIController extends Controller
 
     }
 
-    public function checkCode(Request $request) {
-        $code_used = $this->usedPromoCodeRepository->findByField('user_id', [$request['user_id']])->pluck('code_used')->toArray();
-        $response['isUsed'] = 'false';
-        foreach ($code_used as $code) {
-            if (strcmp($code, $request['code']) === 0) {
-                $response['isUsed'] = 'true';
-                break;
-            }
-        }
 
+    public function checkCode(Request $request)
+    {
+        $code_used = DB::table('used_promo_codes')
+                            ->where('used_promo_codes.code_used', $request['code'])
+                            ->where('used_promo_codes.number', $request['number'])
+                            ->exists();
+
+        if ($code_used) {
+            $response['isUsed'] = 'true';
+        } else {
+            $response['isUsed'] = 'false';
+        }
         return $this->sendResponse($response, 'Check retrieved successfully');
 
-//        return $this->usedPromoCodeRepository->all();
+//        $code_used = $this->usedPromoCodeRepository->
+//                        findByField('user_id', [$request['user_id']])->toArray();
+//        $response['isUsed'] = 'false';
+//        foreach ($code_used as $code) {
+//            echo $code['code_used'];
+//            if (strcmp($code['code_used'], $request['code']) === 0 OR strcmp($code['number'], $request['number']) === 0) {
+//                $response['isUsed'] = 'true';
+//                break;
+//            }
+//        }
+
     }
 
     /**
@@ -201,7 +215,7 @@ class OrderAPIController extends Controller
     {
         $payment = $request->only('payment');
         if (isset($payment['payment']) && $payment['payment']['method']) {
-            if ($payment['payment']['method'] == "Credit Card (Stripe Gateway)") {
+            if ($payment['payment']['method'] === "Credit Card (Stripe Gateway)") {
                 return $this->stripPayment($request);
             } else {
                 return $this->cashPayment($request);
@@ -219,8 +233,6 @@ class OrderAPIController extends Controller
         $amount = 0;
 
         try {
-//            return substr($_ENV['APP_DEBUG'], 0, 4);
-
             $user = $this->userRepository->findWithoutFail($input['user_id']);
             if (empty($user)) {
                 return $this->sendError('User not found');
@@ -235,11 +247,12 @@ class OrderAPIController extends Controller
                 )
             ));
 
-            if (isset($request['code'])) {
+            if (isset($request['code_used']) && $request['code_used'] != null) {
                 try {
                     $this->usedPromoCodeRepository->create([
                         "user_id" => $request['user_id'],
-                        "code_used" => $request['code'],
+                        "code_used" => $request['code_used'],
+                        "number" => $user->number,
                     ]);
                 } catch (ValidatorException $e) {
                     echo $e;
@@ -248,7 +261,6 @@ class OrderAPIController extends Controller
 
             if ($stripeToken->created > 0) {
                 if (empty($input['delivery_address_id'])) {
-
                     $order = $this->orderRepository->create(
                         $request->only('user_id', 'order_status_id', 'tax', 'hint', 'store_id')
                     );
@@ -269,8 +281,9 @@ class OrderAPIController extends Controller
                 $amount += $order->delivery_fee;
                 $amountWithTax = $amount - $order->tax;
                 $charge = $user->charge((int)($amountWithTax * 100), ['source' => $stripeToken]);
-                if ($charge == 'Error: Card Declined')
-                    return 'Error: Card Declined';
+                if ($charge == 'Error: Card Declined') {
+                    return ['Error: Card Declined'];
+                }
 
                 $payment = $this->paymentRepository->create([
                     "user_id" => $input['user_id'],
@@ -299,7 +312,7 @@ class OrderAPIController extends Controller
                 $temp_order['driver_id'] = 1;
                 $this->orderRepository->update($temp_order, $order->id);
 
-                if ($_ENV['APP_DEBUG'] == 'true' || (isset($request['DEBUG']) && $request['DEBUG'])) {
+                if ($_ENV['APP_DEBUG'] === 'true' || (isset($request['DEBUG']) && $request['DEBUG'])) {
 //                    $driver = $this->driverRepository->find(3, ['user_id']);
 //                    foreach ($drivers as $currDriver) {
 //                        $driver = $this->userRepository->findWithoutFail($currDriver->user_id);
@@ -310,17 +323,16 @@ class OrderAPIController extends Controller
 //                        ->where('users.id', 1)
 //                        ->get();
 //                    Notification::send($driver, new NewOrder($order));
-                    $dev = $this->userRepository->find(1);
-                    Notification::send($dev, new NewOrder($order));
+//                $dev = $this->userRepository->find(1);
+//                Notification::send($dev, new NewOrder($order));
 
                 } else {
-//                Notification::send($order->foodOrders[0]->food->restaurant->users, new NewOrder($order));
-                    $drivers = $this->driverRepository->all();
-                    foreach ($drivers as $currDriver) {
-                        $driver = $this->userRepository->findWithoutFail($currDriver->user_id);
-                        Notification::send([$driver], new AssignedOrder($order));
+                    $drivers = Driver::where('available', '1')->pluck('user_id')->toArray();
+                    foreach ($drivers as $currDriver_id) {
+                        $user = User::where('id', $currDriver_id)->get();
+//                    Log::info($user->id);
+                        Notification::send($user, new AssignedOrder($order));
                     }
-
                 }
 
 
@@ -360,16 +372,19 @@ class OrderAPIController extends Controller
                 "method" => $input['payment']['method'],
             ]);
 
-            if (isset($request['code'])) {
+            if (isset($request['code_used']) && $request['code_used'] != null) {
                 try {
+                    $user_number = $this->userRepository->findWithoutFail($request['user_id'], ['number']);
                     $this->usedPromoCodeRepository->create([
                         "user_id" => $request['user_id'],
-                        "code_used" => $request['code'],
+                        "code_used" => $request['code_used'],
+                        "number" => $user_number->number,
                     ]);
                 } catch (ValidatorException $e) {
                     echo $e;
                 }
             }
+
 
             $this->orderRepository->update(['payment_id' => $payment->id], $order->id);
 
@@ -389,8 +404,7 @@ class OrderAPIController extends Controller
             $this->orderRepository->update($temp_order, $order->id);
 
 
-            if ($_ENV['APP_DEBUG'] == 'true' || (isset($request['DEBUG']) && $request['DEBUG'])) {
-                return 'True';
+            if ($_ENV['APP_DEBUG'] === 'true' || (isset($request['DEBUG']) && $request['DEBUG'])) {
 //                    $driver = $this->driverRepository->find(3, ['user_id']);
 //                    foreach ($drivers as $currDriver) {
 //                        $driver = $this->userRepository->findWithoutFail($currDriver->user_id);
@@ -401,24 +415,18 @@ class OrderAPIController extends Controller
 //                        ->where('users.id', 1)
 //                        ->get();
 //                    Notification::send($driver, new NewOrder($order));
-                $dev = $this->userRepository->find(1);
-                Notification::send($dev, new NewOrder($order));
+//                $dev = $this->userRepository->find(1);
+//                Notification::send($dev, new NewOrder($order));
 
             } else {
-//                Notification::send($order->foodOrders[0]->food->restaurant->users, new NewOrder($order));
-                $drivers = $this->driverRepository->all();
-                foreach ($drivers as $currDriver) {
-                    $driver = $this->userRepository->findWithoutFail($currDriver->user_id);
-                    Notification::send([$driver], new AssignedOrder($order));
+                $drivers = Driver::where('available', '1')->pluck('user_id')->toArray();
+                foreach ($drivers as $currDriver_id) {
+                    $user = User::where('id', $currDriver_id)->get();
+//                    Log::info($user->id);
+                    Notification::send($user, new AssignedOrder($order));
                 }
-
             }
 
-//            $drivers = $this->driverRepository->all();
-//            foreach ($drivers as $currDriver) {
-//                $driver = $this->userRepository->findWithoutFail($currDriver->user_id);
-//                Notification::send([$driver], new AssignedOrder($order));
-//            }
 
 
         } catch
@@ -439,22 +447,26 @@ class OrderAPIController extends Controller
      */
     public function update($id, Request $request)
     {
+
+
         $oldOrder = $this->orderRepository->findWithoutFail($id);
-        if (empty($oldOrder)) {
+        if ($oldOrder === null) {
             return $this->sendError('Order not found');
         }
         $oldStatus = $oldOrder->payment->status;
 
         $input = $request->all();
         if (isset($input['check_approval']) && $oldOrder['driver_id'] != 1 && $input['current_driver'] != $oldOrder['driver_id']) {
-            return "Order already assigned";
+            return $this->sendError("Order already assigned");
         }
+
 
         try {
             $order = $this->orderRepository->update($input, $id);
+
             if (isset($input['active'])) {
                 $this->orderRepository->update(['active' => 0], $order->id);
-                if ($order->driver_id != 1){
+                if ($order->driver_id !== 1){
                     $driver = $this->userRepository->findWithoutFail($order->driver_id);
                     Notification::send([$driver], new CancelledOrder($order));
                 } else {
@@ -467,12 +479,28 @@ class OrderAPIController extends Controller
             }
             if (isset($input['order_status_id']) && $input['order_status_id'] == 5 && !empty($order)) {
                 $this->paymentRepository->update(['status' => 'Paid'], $order['payment_id']);
+                $foodorder_ids = FoodOrder::where('order_id', $input['id'])->pluck('id');
+                foreach ($foodorder_ids as $foodorder_id) {
+                    $foodorder = FoodOrder::find($foodorder_id)->toArray();
+                    Food::find($foodorder['food_id'])->decrement('quantity', $foodorder['quantity']);
+                }
+
             }
             event(new OrderChangedEvent($oldStatus, $order));
 
             if (setting('enable_notifications', false)) {
                 if (isset($input['order_status_id']) && $input['order_status_id'] != $oldOrder->order_status_id) {
-                    Notification::send([$order->user], new StatusChangedOrder($order));
+                    $repeated = false;
+                    $managers = User::where('isManager', '1')->get();
+                    foreach ($managers as $manager) {
+                        if ($manager['id'] == $order->user['id']) {
+                            $repeated = true;
+                        }
+                        Notification::send($manager, new StatusChangedOrder($order));
+                    }
+                    if (!$repeated) {
+                        Notification::send($order->user, new StatusChangedOrder($order));
+                    }
                 }
             }
 

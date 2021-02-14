@@ -23,6 +23,7 @@ class UsedPromoCodeRepository extends BaseRepository
         'user_id' => 'integer',
         'code_used' => 'string',
         'timestamp' => 'string',
+        'number' => 'string',
     ];
 
     /**

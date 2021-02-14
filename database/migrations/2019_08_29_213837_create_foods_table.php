@@ -27,7 +27,7 @@ class CreateFoodsTable extends Migration
             $table->double('discount_price', 8, 2)->nullable()->default(0);
             $table->text('description')->nullable();
             $table->text('ingredients')->nullable();
-            $table->double('package_items_count', 9, 2)->nullable()->default(0); // added
+            $table->integer('quantity')->unsigned(); // added
             $table->double('weight', 9, 2)->nullable()->default(0);
             $table->string('unit', 127)->nullable(); // added
             $table->boolean('featured')->nullable()->default(0);

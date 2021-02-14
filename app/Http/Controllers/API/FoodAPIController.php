@@ -83,7 +83,7 @@ class FoodAPIController extends Controller
 //            $this->foodRepository->orderBy('area');
 
             if (isset($request['short'])){
-                $foods = $this->foodRepository->all(['id', 'name', 'price', 'discount_price', 'description', 'ingredients', 'weight',
+                $foods = $this->foodRepository->all(['id', 'name', 'price', 'discount_price', 'quantity', 'description', 'ingredients', 'weight',
                     'featured', 'deliverable', 'category_id', 'image_url', 'commission']);
             } else {
                 $foods = $this->foodRepository->all();
@@ -183,7 +183,6 @@ class FoodAPIController extends Controller
         $customFields = $this->customFieldRepository->findByField('custom_field_model', $this->foodRepository->model());
         try {
             $food = $this->foodRepository->update($input, $id);
-
             if (isset($input['image']) && $input['image']) {
                 $cacheUpload = $this->uploadRepository->getByUuid($input['image']);
                 $mediaItem = $cacheUpload->getMedia('image')->first();
@@ -228,21 +227,22 @@ class FoodAPIController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\JsonResponse|\Illuminate\View\View
      */
-    public function getSimilarItems(Request $request)
+    public function getSimilarItems(int $id)
     {
         try {
             $item = DB::table('foods')
                 ->select('name', 'restaurant_id')
-                ->where('foods.id', $request['id'])
+                ->where('foods.id', $id)
                 ->first();
 
             $comparison_str = explode(' ', $item->name)[0] . '%';
 
             $items = DB::table('foods')
                 ->where('foods.restaurant_id', $item->restaurant_id)
+                ->where('foods.id', '<>', $id)
                 ->where('name', 'like', $comparison_str)
                 ->get();
-            $count = 10;
+            $count = 5;
             $final_items = [];
             foreach ($items as $curr_item) {
                 if ($count == 0) {
@@ -251,7 +251,7 @@ class FoodAPIController extends Controller
                     $count--;
                     $curr_item->featured = $curr_item->featured == true;
                     $curr_item->deliverable = $curr_item->deliverable == true;
-                    array_push($final_items, $curr_item);
+                    $final_items[] = $curr_item;
                 }
             }
 
@@ -260,7 +260,19 @@ class FoodAPIController extends Controller
         } catch (Exception $e) {
             return $this->sendResponse('Similar Items retrieved unsuccessfully');
         }
+    }
 
+
+    function searchInSubcat(Request $request) {
+        try {
+
+            $items = Food::where('category_id', $request['id'])
+                        ->where('name', 'LIKE', '%'.$request['search'].'%')->get()->toArray();
+            return $this->sendResponse($items, 'Searched Items retrieved successfully');
+
+        } catch (Exception $e) {
+            return $this->sendResponse('Searched Items retrieved unsuccessfully');
+        }
 
     }
 

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\SubCategoryDataTable;
 use App\Http\Requests\CreateCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Repositories\CustomFieldRepository;
+use App\Repositories\SubCategoryRepository;
 use App\Repositories\UploadRepository;
 use Flash;
 use Illuminate\Http\Request;
@@ -53,8 +55,6 @@ class SubCategoryController extends Controller
      */
     public function create()
     {
-
-
         $hasCustomField = in_array($this->categoryRepository->model(), setting('custom_field_models', []));
         if ($hasCustomField) {
             $customFields = $this->customFieldRepository->findByField('custom_field_model', $this->categoryRepository->model());

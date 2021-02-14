@@ -10,11 +10,13 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
+use App\Models\SubCategory;
 use App\Repositories\CategoryRepository;
 use App\Repositories\SubCategoryRepository;
 use Flash;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class CategoryController
@@ -35,7 +37,7 @@ class SubCategoryAPIController extends Controller
      * GET|HEAD /subcategories
      *
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function index(Request $request)
     {
@@ -50,7 +52,7 @@ class SubCategoryAPIController extends Controller
      *
      * @param  int $id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function show($id)
     {
@@ -59,7 +61,7 @@ class SubCategoryAPIController extends Controller
             $category = $this->subcategoryRepository->findWithoutFail($id);
         }
 
-        if (empty($category)) {
+        if ($category === null) {
             return $this->sendError('Category not found');
         }
 
@@ -71,7 +73,7 @@ class SubCategoryAPIController extends Controller
      *
      * @param Request $request
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function store(Request $request)
     {
@@ -98,7 +100,7 @@ class SubCategoryAPIController extends Controller
      * @param int $id
      * @param Request $request
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function update($id, Request $request)
     {
@@ -134,7 +136,7 @@ class SubCategoryAPIController extends Controller
      *
      * @param int $id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function destroy($id)
     {
@@ -148,4 +150,39 @@ class SubCategoryAPIController extends Controller
 
         return $this->sendResponse($category, __('lang.deleted_successfully',['operator' => __('lang.category')]));
     }
+
+//***********************************************************************
+
+    /**
+     * Display the specified Category.
+     * GET|HEAD /categories/{id}
+     *
+     * @param int $id
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getSubcatFromCat(int $id, Request $request)
+    {
+        $storeID = $request['storeID'];
+
+        $used_cat_ids = DB::table('categories')
+                            ->where('foods.restaurant_id', $storeID)
+                            ->join('foods', 'foods.category_id', '=', 'categories.id')
+                            ->groupBy('categories.id')
+                            ->pluck('categories.id')
+                            ->toArray();
+
+        $subcategories = SubCategory::whereIn('id', $used_cat_ids)
+                                        ->where('category_id', $id)
+                                        ->get()
+                                        ->toArray();
+
+
+        if ($subcategories === null || count($subcategories) === 0) {
+            return $this->sendError('Subcategory not found');
+        }
+
+        return $this->sendResponse($subcategories, 'SubCategory retrieved successfully');
+    }
+
 }
