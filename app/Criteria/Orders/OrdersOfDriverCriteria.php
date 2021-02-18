@@ -57,7 +57,7 @@ class OrdersOfDriverCriteria implements CriteriaInterface
                                 ->first();
 
         try {
-            if ($work_hours == '24/7') {
+            if ($work_hours === '24/7') {
                 $isWorking = true;
             } else {
                 $current_time = new DateTime("now");
