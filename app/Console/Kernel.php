@@ -3,10 +3,15 @@
 namespace App\Console;
 
 use App\Models\Driver;
+use App\Models\Order;
+use App\Models\User;
+use App\Notifications\AssignedOrder;
 use DateInterval;
 use DateTime;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 
 class Kernel extends ConsoleKernel
 {
@@ -27,9 +32,31 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->call(function() {$this->updateDriverActiveStatus();})
-            ->everyMinute();
+        $schedule->call(function() {
+            $this->updateDriverActiveStatus();
+            $this->resendNotifications();
+        })->everyMinute();
     }
+
+
+    private function resendNotifications(){
+        $pending_orders = Order::where('order_status_id', 1)
+            ->where('active', 1)
+            ->get();
+        $drivers = Driver::where('available', '1')
+            ->join('users', 'users.id', '=', 'user_id')
+            ->where('users.isDriver', 1)
+            ->pluck('user_id')->toArray();
+        foreach ($drivers as $currDriver_id) {
+            foreach ($pending_orders as $curr_order) {
+                $user = User::where('id', $currDriver_id)->get();
+                Log::info("Sending notification to ".$currDriver_id." for Order #".$curr_order['id']."\n");
+                echo "Sending notification to ".$currDriver_id." for Order #".$curr_order['id']."\n";
+                Notification::send($user, new AssignedOrder($curr_order));
+            }
+        }
+    }
+
 
     private function updateDriverActiveStatus(){
         $drivers = Driver::get()->toArray();
@@ -64,7 +91,7 @@ class Kernel extends ConsoleKernel
             } catch (\Exception $e) {
                 echo 'Error';
             }
-            Driver::where('user_id', $curr_driver['user_id'])->update(['available' => '1']);
+            Driver::where('user_id', $curr_driver['user_id'])->update(['available' => $isWorking]);
 
         }
     }
