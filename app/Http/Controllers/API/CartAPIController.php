@@ -6,6 +6,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Requests\CreateCartRequest;
 use App\Http\Requests\CreateFavoriteRequest;
 use App\Models\Cart;
+use App\Models\Food;
 use App\Repositories\CartRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -109,6 +110,7 @@ class CartAPIController extends Controller
                 $this->cartRepository->deleteWhere(['user_id'=> $input['user_id']]);
             }
             $cart = $this->cartRepository->create($input);
+            $cart['food'] = Food::where('id', $input['food_id'])->first()->toArray();
         } catch (ValidatorException $e) {
             return $this->sendError($e->getMessage());
         }
@@ -128,7 +130,7 @@ class CartAPIController extends Controller
     {
         $cart = $this->cartRepository->findWithoutFail($id);
 
-        if (empty($cart)) {
+        if ($cart === null) {
             return $this->sendError('Cart not found');
         }
         $input = $request->all();
