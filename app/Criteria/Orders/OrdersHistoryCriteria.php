@@ -55,6 +55,7 @@ class OrdersHistoryCriteria implements CriteriaInterface
 
         if ($isManager) {
             return $model->where('orders.order_status_id', 5)
+                            ->orWhere('orders.active', 0)
 //                            ->whereDate('updated_at', '>', $date )
                             ->orderBy('orders.id', 'desc')
                             ->select('orders.*');
@@ -62,6 +63,7 @@ class OrdersHistoryCriteria implements CriteriaInterface
         } else {
             return $model->where('orders.order_status_id', 5)
                             ->where('orders.driver_id', $this->request->get('driver_id'))
+                            ->orWhere('orders.active', 0)
                             ->orderBy('orders.id', 'asc')
                             ->select('orders.*');
         }

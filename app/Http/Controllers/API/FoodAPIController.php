@@ -54,8 +54,6 @@ class FoodAPIController extends Controller
         $this->foodRepository = $foodRepo;
         $this->customFieldRepository = $customFieldRepo;
         $this->uploadRepository = $uploadRepo;
-        define("LOCAL_PATH", substr($_SERVER['DOCUMENT_ROOT'], 0, -6));
-        define("SERVER_URL", env('APP_URL'));
     }
 
     /**
@@ -106,16 +104,8 @@ class FoodAPIController extends Controller
                 $foods = $itemsInRange;
              }
 
-
-
-
             foreach ($foods as $currFood){
-                $filename = LOCAL_PATH."storage/app/public/foods/".$currFood['id'].".jpg";
-                if (file_exists($filename)){
-                    $currFood['image_url'] = SERVER_URL."storage/app/public/foods/".$currFood['id'].".jpg" ;
-                }else{
-                    $currFood['image_url'] =  SERVER_URL."images/image_default.png";
-                }
+                $currFood = $this->getImageURL($currFood);
             }
         } catch (RepositoryException $e) {
             return $this->sendError($e->getMessage());
@@ -142,12 +132,8 @@ class FoodAPIController extends Controller
                 return $this->sendError($e->getMessage());
             }
             $food = $this->foodRepository->findWithoutFail($id);
-            $filename = LOCAL_PATH."storage/app/public/foods/".$food['id'].".jpg";
-            if (file_exists($filename)){
-                $food['image_url'] = SERVER_URL."storage/app/public/foods/".$food['id'].".jpg" ;
-            }else{
-                $food['image_url'] =  SERVER_URL."images/image_default.png";
-            }
+
+            $food = $this->getImageURL($food);
         }
 
         if (empty($food)) {
@@ -293,6 +279,21 @@ class FoodAPIController extends Controller
             return $this->sendResponse('Searched Items retrieved unsuccessfully');
         }
 
+    }
+
+    private function getImageURL(Food $food): Food
+    {
+        $LOCAL_PATH = substr($_SERVER['DOCUMENT_ROOT'], 0, -6);
+
+        $filename = $LOCAL_PATH."storage/app/public/foods/".$food['id'].".jpg";
+        if (file_exists($filename)){
+//            $food['image_url'] = "http://a3e469ca8146.ngrok.io/storage/app/public/foods/".$food['id'].".jpg" ;
+            $food['image_url'] = "http://saudagharpk.com/storage/app/public/foods/".$food['id'].".jpg" ;
+        }else{
+//            $food['image_url'] =  "http://a3e469ca8146.ngrok.io/images/image_default.png";
+            $food['image_url'] =  "http://saudagharpk.com/images/image_default.png";
+        }
+        return $food;
     }
 
 
