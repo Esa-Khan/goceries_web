@@ -92,12 +92,14 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('carts/count', 'API\CartAPIController@count')->name('carts.count');
     Route::resource('carts', 'API\CartAPIController');
+    Route::post('carts/addcart', 'API\CartAPIController@addCart');
 
     Route::resource('delivery_addresses', 'API\DeliveryAddressAPIController');
 
     //---------------------------------------------------------------------------
     Route::get('orderhistory', 'API\OrderAPIController@getOrderHistory');
     Route::put('deactivate_address/{id}', 'API\DeliveryAddressAPIController@deactivate');
+    Route::get('users/getpoints/{id}', 'API\UserAPIController@getPoints');
 
 });
 
@@ -108,4 +110,5 @@ Route::put('setDebugger/{id}/{isDebugger}', 'API\UserAPIController@setDebugger')
 Route::put('updateDriverAvail/{id}', 'API\UserAPIController@updateDriverAvail');
 Route::get('subcategories/getSubcatFromCat/{id}', 'API\SubCategoryAPIController@getSubcatFromCat');
 Route::get('searchInSubcat', 'API\FoodAPIController@searchInSubcat');
+Route::get('test', 'API\UserAPIController@test');
 

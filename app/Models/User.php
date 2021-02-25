@@ -59,9 +59,10 @@ class User extends Authenticatable implements HasMedia
         'email',
         'number',
         'password',
+        'points',
         'api_token',
         'device_token',
-        'debugger',
+        'isAdmin',
     ];
     /**
      * The attributes that should be casted to native types.
@@ -73,7 +74,8 @@ class User extends Authenticatable implements HasMedia
         'email' => 'string',
         'number' => 'string',
         'password' => 'string',
-        'debugger' => 'bool',
+        'points' => 'int',
+        'isAdmin' => 'bool',
         'api_token' => 'string',
         'device_token' => 'string',
         'remember_token' => 'string'

@@ -47,6 +47,7 @@ class Order extends Model
         'delivery_address_id',
         'delivery_fee',
         'active',
+        'points_redeemed',
         'driver_id',
         'store_id'
     ];
@@ -67,6 +68,7 @@ class Order extends Model
         'delivery_address_id' => 'integer',
         'delivery_fee'=>'double',
         'active'=>'boolean',
+        'points_redeemed'=>'int',
         'driver_id' => 'integer',
         'store_id' => 'integer'
     ];

@@ -385,6 +385,16 @@ class OrderAPIController extends Controller
                 }
             }
 
+            if (isset($request['points_redeemed']) && $request['points_redeemed'] !== 0) {
+                try {
+                    $user = User::find($request['user_id']);
+                    $user->points -= $input['points_redeemed'];
+                    $user->save();
+                } catch (ValidatorException $e) {
+                    echo $e;
+                }
+            }
+
 
             $this->orderRepository->update(['payment_id' => $payment->id], $order->id);
 
@@ -402,7 +412,6 @@ class OrderAPIController extends Controller
             $temp_order['delivery_fee'] = $order->delivery_fee;
             $temp_order['driver_id'] = 1;
             $this->orderRepository->update($temp_order, $order->id);
-
 
             if ($_ENV['APP_DEBUG'] === 'true' || (isset($request['DEBUG']) && $request['DEBUG'])) {
 //                    $driver = $this->driverRepository->find(3, ['user_id']);
