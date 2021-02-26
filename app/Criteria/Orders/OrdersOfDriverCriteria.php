@@ -99,6 +99,7 @@ class OrdersOfDriverCriteria implements CriteriaInterface
             } else {
                 return $model->where([
                                     ['orders.driver_id', '=', $this->request->get('driver_id')],
+                                    ['orders.order_status_id', '<', 5],
                                     ['orders.active', 1]])
                                 ->orWhere([
                                     ['orders.order_status_id', '<', 5],
