@@ -101,9 +101,6 @@ class OrdersOfDriverCriteria implements CriteriaInterface
                                     ['orders.driver_id', '=', $this->request->get('driver_id')],
                                     ['orders.order_status_id', '<', 5],
                                     ['orders.active', 1]])
-                                ->orWhere([
-                                    ['orders.order_status_id', '<', 5],
-                                    ['orders.active', 1]])
                                 ->orderBy('orders.order_status_id', 'desc')
                                 ->orderBy('orders.id', 'asc')
                                 ->select('orders.*');
