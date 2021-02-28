@@ -10,19 +10,25 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Driver;
+use App\Models\Order;
 use App\Models\User;
+use App\Notifications\AssignedOrder;
 use App\Repositories\CustomFieldRepository;
 use App\Repositories\DriverRepository;
 use App\Repositories\RoleRepository;
 use App\Repositories\UploadRepository;
 use App\Repositories\UserRepository;
+use DateInterval;
+use DateTime;
 use Dotenv\Exception\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Password;
 use Prettus\Validator\Exceptions\ValidatorException;
+use Psy\Exception\ErrorException;
 
 class UserAPIController extends Controller
 {
@@ -126,11 +132,13 @@ class UserAPIController extends Controller
 
     function logout(Request $request)
     {
+
         $user = $this->userRepository->findByField('api_token', $request->input('api_token'))->first();
         if (!$user) {
             return $this->sendError('User not found', 401);
         }
         try {
+            User::findOrFail($user->id)->update(['device_token' => '']);
             auth()->logout();
         } catch (\Exception $e) {
             $this->sendError($e->getMessage(), 401);
@@ -292,13 +300,29 @@ class UserAPIController extends Controller
 
 
     function setDebugger($id, $isDebugger) {
-        $user = User::where('id', $id)->update(['debugger' => $isDebugger]);
+        $user = User::where('id', $id)->update(['isAdmin' => $isDebugger]);
         if ($user === 1) {
-            return $this->sendResponse($user, 'Success');
-        } else {
-            return $this->sendResponse(null, 'Failed: Could not get user');
-
+            $url = setting()->all()['debug_url'];
+            return $this->sendResponse($url, 'Success');
         }
+
+        return $this->sendResponse(null, 'Failed: Could not get user');
+    }
+
+    function getPoints(int $id){
+        try {
+            $points = User::where('id', $id)->pluck('points')->first();
+            return $this->sendResponse($points, 'Success');
+        } catch (ValidatorException $e) {
+            return $this->sendError($e->getMessage(), 401);
+        }
+
+    }
+
+
+    function test(Request $request) {
+        $user = User::where('api_token', $request['api_token'])->update(['device_token' => '']);
+        return $user;
     }
 
 
