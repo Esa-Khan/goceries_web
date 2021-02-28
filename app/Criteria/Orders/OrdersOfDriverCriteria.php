@@ -57,7 +57,7 @@ class OrdersOfDriverCriteria implements CriteriaInterface
                                 ->first();
 
         try {
-            if ($work_hours == '24/7') {
+            if ($work_hours === '24/7') {
                 $isWorking = true;
             } else {
                 $current_time = new DateTime("now");
@@ -91,20 +91,27 @@ class OrdersOfDriverCriteria implements CriteriaInterface
         if ($isWorking) {
             if ($isManager) {
                 return $model->where('orders.order_status_id', '<', 5)
+                                ->where('orders.active', 1)
                                 ->orderBy('orders.order_status_id', 'desc')
                                 ->orderBy('orders.id', 'asc')
                                 ->select('orders.*');
 
             } else {
-                return $model->where('orders.driver_id', '=', $this->request->get('driver_id'))
-                                ->orWhere('orders.order_status_id', '<', 5)
+                return $model->where([
+                                    ['orders.driver_id', '=', $this->request->get('driver_id')],
+                                    ['orders.active', 1]])
+                                ->orWhere([
+                                    ['orders.order_status_id', '<', 5],
+                                    ['orders.active', 1]])
                                 ->orderBy('orders.order_status_id', 'desc')
                                 ->orderBy('orders.id', 'asc')
                                 ->select('orders.*');
+
             }
         } else {
             if ($isManager) {
                 return $model->whereIn('orders.order_status_id', [2,3,4])
+                                ->where('orders.active', 1)
                                 ->orderBy('orders.order_status_id', 'desc')
                                 ->orderBy('orders.id', 'asc')
                                 ->select('orders.*');
@@ -114,6 +121,7 @@ class OrdersOfDriverCriteria implements CriteriaInterface
                                     ['orders.driver_id', '=', $this->request->get('driver_id')],
                                     ['orders.order_status_id', '<>', 5],
                                     ['orders.order_status_id', '<>', 1],
+                                    ['orders.active', 1],
                                 ])
                                 ->orderBy('orders.order_status_id', 'desc')
                                 ->orderBy('orders.id', 'asc')
