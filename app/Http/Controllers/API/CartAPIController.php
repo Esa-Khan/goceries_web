@@ -8,8 +8,10 @@ use App\Http\Requests\CreateFavoriteRequest;
 use App\Models\Cart;
 use App\Models\Food;
 use App\Repositories\CartRepository;
+use ErrorException;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use InfyOm\Generator\Criteria\LimitOffsetCriteria;
 use Prettus\Repository\Criteria\RequestCriteria;
@@ -166,6 +168,38 @@ class CartAPIController extends Controller
 
         return $this->sendResponse($cart, __('lang.deleted_successfully',['operator' => __('lang.cart')]));
 
+    }
+
+
+
+    public function addCart(Request $request)
+    {
+        $input = $request->all();
+        try {
+            $orig_store_id = Cart::where('user_id', $input['user_id'])
+                                ->join('foods', 'foods.id', '=', 'food_id')
+                                ->pluck('restaurant_id')->first();
+            $new_store_id = Food::where('id', $input['food_id'])->pluck('restaurant_id')->first();
+            if (empty($orig_store_id) || $orig_store_id === $new_store_id) {
+                $item_exists = Cart::where('user_id', $input['user_id'])->where('food_id', $input['food_id'])->exists();
+                if ($item_exists) {
+                    $cart = Cart::where('user_id', $input['user_id'])
+                        ->where('food_id', $input['food_id'])
+                        ->first();
+                    $cart->quantity += $input['quantity'];
+                    $cart->save();
+                } else {
+                    $cart = Cart::create($input);
+                }
+                $cart['food'] = Food::where('id', $input['food_id'])->first()->toArray();
+            } else {
+                throw new ErrorException('Different Store', 0);
+            }
+        } catch (ErrorException $e) {
+            return $this->sendError($e->getMessage());
+        }
+
+        return $this->sendResponse($cart->toArray(), __('lang.saved_successfully',['operator' => __('lang.cart')]));
     }
 
 }

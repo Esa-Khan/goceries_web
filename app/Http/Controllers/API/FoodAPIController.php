@@ -98,14 +98,14 @@ class FoodAPIController extends Controller
                     if ($currID > (int)$range[1]) {
                         break;
                     } else if ($currID >= (int)$range[0] && $currID <= (int)$range[1]) {
-                        array_push($itemsInRange, $currFood);
+                        $itemsInRange[] = $currFood;
                     }
                 }
                 $foods = $itemsInRange;
              }
 
             foreach ($foods as $currFood){
-                $currFood = $this->getImageURL($currFood);
+                $this->getImageURL($currFood);
             }
         } catch (RepositoryException $e) {
             return $this->sendError($e->getMessage());
@@ -133,7 +133,7 @@ class FoodAPIController extends Controller
             }
             $food = $this->foodRepository->findWithoutFail($id);
 
-            $food = $this->getImageURL($food);
+            $this->getImageURL($food);
         }
 
         if (empty($food)) {
@@ -194,8 +194,7 @@ class FoodAPIController extends Controller
                 $mediaItem->copy($food, 'image');
             }
             foreach (getCustomFieldsValues($customFields, $request) as $value) {
-                $food->customFieldsValues()
-                    ->updateOrCreate(['custom_field_id' => $value['custom_field_id']], $value);
+                $food->customFieldsValues()->updateOrCreate(['custom_field_id' => $value['custom_field_id']], $value);
             }
         } catch (ValidatorException $e) {
             return $this->sendError($e->getMessage());
@@ -236,34 +235,31 @@ class FoodAPIController extends Controller
     {
         try {
             $item = DB::table('foods')
-                ->select('name', 'restaurant_id')
-                ->where('foods.id', $id)
-                ->first();
+                        ->select('name', 'restaurant_id')
+                        ->where('foods.id', $id)
+                        ->first();
 
             $comparison_str = explode(' ', $item->name)[0] . '%';
 
-            $items = DB::table('foods')
-                ->where('foods.restaurant_id', $item->restaurant_id)
-                ->where('foods.id', '<>', $id)
-                ->where('name', 'like', $comparison_str)
-                ->get();
+            $items = Food::where('foods.restaurant_id', $item->restaurant_id)
+                    ->where('foods.id', '<>', $id)
+                    ->where('name', 'like', $comparison_str)
+                    ->get();
             $count = 5;
             $final_items = [];
             foreach ($items as $curr_item) {
-                if ($count == 0) {
-                    break;
-                } else {
-                    $count--;
-                    $curr_item->featured = $curr_item->featured == true;
-                    $curr_item->deliverable = $curr_item->deliverable == true;
-                    $final_items[] = $curr_item;
-                }
+                if ($count === 0) break;
+                $count--;
+                $this->getImageURL($curr_item);
+                $curr_item->featured = $curr_item->featured === true;
+                $curr_item->deliverable = $curr_item->deliverable === true;
+                $final_items[] = $curr_item;
             }
 
             return $this->sendResponse($final_items, 'Similar Items retrieved successfully');
 
         } catch (Exception $e) {
-            return $this->sendResponse('Similar Items retrieved unsuccessfully');
+            return $this->sendResponse(null, 'Similar Items retrieved unsuccessfully');
         }
     }
 
@@ -276,21 +272,19 @@ class FoodAPIController extends Controller
             return $this->sendResponse($items, 'Searched Items retrieved successfully');
 
         } catch (Exception $e) {
-            return $this->sendResponse('Searched Items retrieved unsuccessfully');
+            return $this->sendResponse(null, 'Searched Items retrieved unsuccessfully');
         }
 
     }
 
-    private function getImageURL(Food $food): Food
+    private function getImageURL($food): Food
     {
         $LOCAL_PATH = substr($_SERVER['DOCUMENT_ROOT'], 0, -6);
-
         $filename = $LOCAL_PATH."storage/app/public/foods/".$food['id'].".jpg";
+
         if (file_exists($filename)){
-//            $food['image_url'] = "http://a3e469ca8146.ngrok.io/storage/app/public/foods/".$food['id'].".jpg" ;
             $food['image_url'] = "http://saudagharpk.com/storage/app/public/foods/".$food['id'].".jpg" ;
         }else{
-//            $food['image_url'] =  "http://a3e469ca8146.ngrok.io/images/image_default.png";
             $food['image_url'] =  "http://saudagharpk.com/images/image_default.png";
         }
         return $food;
