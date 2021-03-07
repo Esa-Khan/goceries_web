@@ -16,7 +16,9 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::get('/download', function(){
+    return redirect('https://linktr.ee/saudaghar_pk');
+});
 Route::get('login/{service}', 'Auth\LoginController@redirectToProvider');
 Route::get('login/{service}/callback', 'Auth\LoginController@handleProviderCallback');
 Auth::routes();
