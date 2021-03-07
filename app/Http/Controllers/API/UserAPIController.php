@@ -11,6 +11,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Driver;
 use App\Models\Order;
+use App\Models\Restaurant;
 use App\Models\User;
 use App\Notifications\AssignedOrder;
 use App\Repositories\CustomFieldRepository;
@@ -321,8 +322,14 @@ class UserAPIController extends Controller
 
 
     function test(Request $request) {
-        $user = User::where('api_token', $request['api_token'])->update(['device_token' => '']);
-        return $user;
+        $user = User::find($request['user_id']);
+        $points_percentage = Restaurant::where('id', $request['store_id'])->pluck('points_percentage')->first();
+        $user->points += (1 + $points_percentage/100)*$request['amountWithTax'];
+        $user->save();
+//        $store = Restaurant::where()
+//        $user->points -= $input['points_redeemed'];
+
+        return $user->points;
     }
 
 

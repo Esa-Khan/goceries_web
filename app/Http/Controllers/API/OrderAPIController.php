@@ -17,6 +17,7 @@ use App\Models\Driver;
 use App\Models\Food;
 use App\Models\FoodOrder;
 use App\Models\Order;
+use App\Models\Restaurant;
 use App\Models\User;
 use App\Notifications\AssignedOrder;
 use App\Notifications\CancelledOrder;
@@ -385,15 +386,19 @@ class OrderAPIController extends Controller
                 }
             }
 
+            $user = User::find($request['user_id']);
             if (isset($request['points_redeemed']) && $request['points_redeemed'] !== 0) {
                 try {
-                    $user = User::find($request['user_id']);
                     $user->points -= $input['points_redeemed'];
+                    $order->points_redeemed = $input['points_redeemed'];
                     $user->save();
                 } catch (ValidatorException $e) {
                     echo $e;
                 }
             }
+            $points_percentage = Restaurant::where('id', $request['store_id'])->pluck('points_percentage')->first();
+            $user->points += ($points_percentage/100)*$amountWithTax;
+            $user->save();
 
 
             $this->orderRepository->update(['payment_id' => $payment->id], $order->id);
@@ -402,16 +407,21 @@ class OrderAPIController extends Controller
 
             Notification::send($order->foodOrders[0]->food->restaurant->users, new NewOrder($order));
 
-            $temp_order['user_id'] = $order->user_id;
-            $temp_order['order_status_id'] = $order->order_status_id;
-            $temp_order['status'] = $payment->status;
-            $temp_order['tax'] = $order->tax;
-            $temp_order['hint'] = $order->hint;
-            $temp_order['delivery_address_id'] = $order->delivery_address_id;
-            $temp_order['payment_id'] = $payment->id;
-            $temp_order['delivery_fee'] = $order->delivery_fee;
-            $temp_order['driver_id'] = 1;
-            $this->orderRepository->update($temp_order, $order->id);
+//            $order->status = $payment->status;
+            $order->payment_id = $payment->id;
+            $order->driver_id = 1;
+            $order->save();
+
+//            $temp_order['user_id'] = $order->user_id;
+//            $temp_order['order_status_id'] = $order->order_status_id;
+//            $temp_order['status'] = $payment->status;
+//            $temp_order['tax'] = $order->tax;
+//            $temp_order['hint'] = $order->hint;
+//            $temp_order['delivery_address_id'] = $order->delivery_address_id;
+//            $temp_order['payment_id'] = $payment->id;
+//            $temp_order['delivery_fee'] = $order->delivery_fee;
+//            $temp_order['driver_id'] = 1;
+//            $this->orderRepository->update($temp_order, $order->id);
 
             if ($_ENV['APP_DEBUG'] === 'true' || (isset($request['DEBUG']) && $request['DEBUG'])) {
 //                    $driver = $this->driverRepository->find(3, ['user_id']);
@@ -456,8 +466,6 @@ class OrderAPIController extends Controller
      */
     public function update($id, Request $request)
     {
-
-
         $oldOrder = $this->orderRepository->findWithoutFail($id);
         if ($oldOrder === null) {
             return $this->sendError('Order not found');
