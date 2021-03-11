@@ -18,6 +18,7 @@ use App\Models\Food;
 use App\Models\FoodOrder;
 use App\Models\Order;
 use App\Models\Restaurant;
+use App\Models\UsedPromoCode;
 use App\Models\User;
 use App\Notifications\AssignedOrder;
 use App\Notifications\CancelledOrder;
@@ -180,10 +181,15 @@ class OrderAPIController extends Controller
 
     public function checkCode(Request $request)
     {
-        $code_used = DB::table('used_promo_codes')
-                            ->where('used_promo_codes.code_used', $request['code'])
-                            ->where('used_promo_codes.number', $request['number'])
-                            ->exists();
+        $code_used = UsedPromoCode::where([
+                                        ['code_used', $request['code']],
+                                        ['number', $request['number']],
+                                    ])
+                                    ->orWhere([
+                                        ['code_used', $request['code']],
+                                        ['user_id', $request['user_id']],
+                                    ])
+                                    ->exists();
 
         if ($code_used) {
             $response['isUsed'] = 'true';
