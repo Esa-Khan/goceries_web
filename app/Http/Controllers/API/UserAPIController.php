@@ -116,6 +116,7 @@ class UserAPIController extends Controller
             $user->device_token = $request->input('device_token', '');
             $user->password = Hash::make($request->input('password'));
             $user->api_token = str_random(60);
+            $user->points = 0;
             $user->save();
 
             $defaultRoles = $this->roleRepository->findByField('default', '1');

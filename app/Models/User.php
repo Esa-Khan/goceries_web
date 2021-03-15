@@ -26,6 +26,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string email
  * @property string password
  * @property string number
+ * @property int points
  * @property string api_token
  * @property string device_token
  */
@@ -98,6 +99,9 @@ class User extends Authenticatable implements HasMedia
     protected $hidden = [
         'password', 'remember_token',
     ];
+    /**
+     * @var int|mixed
+     */
 
     /**
      * Specifies the user's FCM token
