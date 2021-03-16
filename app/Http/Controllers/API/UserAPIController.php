@@ -116,6 +116,7 @@ class UserAPIController extends Controller
             $user->device_token = $request->input('device_token', '');
             $user->password = Hash::make($request->input('password'));
             $user->api_token = str_random(60);
+            $user->points = 0;
             $user->save();
 
             $defaultRoles = $this->roleRepository->findByField('default', '1');
@@ -191,7 +192,10 @@ class UserAPIController extends Controller
                 'instagram_url_android' => '',
                 'phone_number' => '',
                 'debug_url' => '',
-                'promo' => ''
+                'promo' => '',
+                'app_version_android' => '',
+                'app_version_ios' => '',
+
             ]
         );
 

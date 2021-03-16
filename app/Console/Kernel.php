@@ -91,6 +91,7 @@ class Kernel extends ConsoleKernel
             } catch (\Exception $e) {
                 echo 'Error';
             }
+            echo "Updated status of Driver ${$curr_driver['user_id']} to ${$isWorking} \n";
             Driver::where('user_id', $curr_driver['user_id'])->update(['available' => $isWorking]);
 
         }

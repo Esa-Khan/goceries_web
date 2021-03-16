@@ -66,7 +66,7 @@ class AssignedOrder extends Notification
         ];
         $data = [
             'click_action' => "FLUTTER_NOTIFICATION_CLICK",
-            'id' => '1',
+            'id' => 'order',
             'status' => 'done',
             'message' => $notification,
         ];
