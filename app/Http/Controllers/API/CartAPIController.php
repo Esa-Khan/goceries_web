@@ -161,7 +161,6 @@ class CartAPIController extends Controller
 
         if (empty($cart)) {
             return $this->sendError('Cart not found');
-
         }
 
         $cart = $this->cartRepository->delete($id);
@@ -180,7 +179,7 @@ class CartAPIController extends Controller
                                 ->join('foods', 'foods.id', '=', 'food_id')
                                 ->pluck('restaurant_id')->first();
             $new_store_id = Food::where('id', $input['food_id'])->pluck('restaurant_id')->first();
-            if (empty($orig_store_id) || $orig_store_id === $new_store_id) {
+            if (($orig_store_id !== 0 && empty($orig_store_id)) || $orig_store_id === $new_store_id) {
                 $item_exists = Cart::where('user_id', $input['user_id'])->where('food_id', $input['food_id'])->exists();
                 if ($item_exists) {
                     $cart = Cart::where('user_id', $input['user_id'])
@@ -192,14 +191,27 @@ class CartAPIController extends Controller
                     $cart = Cart::create($input);
                 }
                 $cart['food'] = Food::where('id', $input['food_id'])->first()->toArray();
+
             } else {
                 throw new ErrorException('Different Store', 0);
             }
+
         } catch (ErrorException $e) {
             return $this->sendError($e->getMessage());
         }
 
         return $this->sendResponse($cart->toArray(), __('lang.saved_successfully',['operator' => __('lang.cart')]));
+    }
+
+
+    public function clearCart(int $id)
+    {
+        try {
+            $records_deleted = Cart::where('user_id', $id)->delete();
+            return $this->sendResponse($records_deleted, 'Success: Cleared Cart');
+        } catch (ErrorException $e) {
+            return $this->sendError($e->getMessage());
+        }
     }
 
 }

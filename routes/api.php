@@ -93,6 +93,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('carts/count', 'API\CartAPIController@count')->name('carts.count');
     Route::resource('carts', 'API\CartAPIController');
     Route::post('carts/addcart', 'API\CartAPIController@addCart');
+    Route::delete('carts/clearcart/{id}', 'API\CartAPIController@clearCart');
 
     Route::resource('delivery_addresses', 'API\DeliveryAddressAPIController');
 
