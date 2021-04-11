@@ -49,17 +49,31 @@ class OrdersHistoryCriteria implements CriteriaInterface
                         ->where('users.id', $this->request->get('driver_id'))
                         ->pluck('users.isManager')
                         ->first();
-        $date = new DateTime("now");
-        $date->sub(new DateInterval('P10D'));
+
+        $start_date = '';
+        $end_date = '';
+        if ($this->request->get('start_date') !== null && $this->request->get('end_date') !== null) {
+            $start_date = new DateTime($this->request->get('start_date'));
+            $start_date->setTime(0, 0, 0);
+
+            $end_date = new DateTime($this->request->get('end_date'));
+            $end_date->add(new DateInterval('P1D'));
+            $end_date->setTime(0, 0, 0);
+        } else {
+            $start_date = '2000/01/01';
+            $end_date = '3000/01/01';
+        }
 
         if ($isManager) {
             return $model->where([
                                 ['orders.order_status_id', 5],
-//                                ['updated_at', '>', $date],
+                                ['created_at', '>', $start_date],
+                                ['created_at', '<', $end_date],
                             ])
                             ->orWhere([
                                 ['orders.active', 0],
-//                                ['updated_at', '>', $date],
+                                ['created_at', '>', $start_date],
+                                ['created_at', '<', $end_date],
                             ])
                             ->orderBy('orders.id', 'desc')
                             ->select('orders.*');
@@ -67,11 +81,13 @@ class OrdersHistoryCriteria implements CriteriaInterface
         } else {
             return $model->where([
                                 ['orders.driver_id', $this->request->get('driver_id')],
-//                                ['updated_at', '>', $date],
+                                ['created_at', '>', $start_date],
+                                ['created_at', '<', $end_date],
                             ])
                             ->orWhere([
                                 ['orders.active', 0],
-//                                ['updated_at', '>', $date],
+                                ['created_at', '>', $start_date],
+                                ['created_at', '<', $end_date],
                             ])
                             ->orderBy('orders.id', 'asc')
                             ->select('orders.*');
