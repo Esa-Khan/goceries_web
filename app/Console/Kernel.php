@@ -51,7 +51,6 @@ class Kernel extends ConsoleKernel
             foreach ($pending_orders as $curr_order) {
                 $user = User::where('id', $currDriver_id)->get();
                 Log::info("Sending notification to ".$currDriver_id." for Order #".$curr_order['id']."\n");
-                echo "Sending notification to ".$currDriver_id." for Order #".$curr_order['id']."\n";
                 Notification::send($user, new AssignedOrder($curr_order));
             }
         }
@@ -89,9 +88,8 @@ class Kernel extends ConsoleKernel
                     }
                 }
             } catch (\Exception $e) {
-                echo 'Error';
+                Log::error("Error: Sending notification to \n");
             }
-            echo "Updated status of Driver ${$curr_driver['user_id']} to ${$isWorking} \n";
             Driver::where('user_id', $curr_driver['user_id'])->update(['available' => $isWorking]);
 
         }
