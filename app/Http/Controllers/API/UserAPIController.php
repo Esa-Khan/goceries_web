@@ -228,7 +228,6 @@ class UserAPIController extends Controller
             if ($request->has('device_token')) {
                 $user = $this->userRepository->update($request->only('device_token'), $id);
                 $user = $this->userRepository->update($input, $id);
-		
 
 	    } else {
                 $customFields = $this->customFieldRepository->findByField('custom_field_model', $this->userRepository->model());
@@ -324,16 +323,23 @@ class UserAPIController extends Controller
 
     }
 
+    function getUser(int $id){
+        try {
+            $user = User::where('id', $id)->first();
+            return $this->sendResponse($user, 'User retrieved successfully');
+        } catch (ValidatorException $e) {
+            return $this->sendError($e->getMessage(), 401);
+        }
+    }
+
 
     function test(Request $request) {
-        $user = User::find($request['user_id']);
-        $points_percentage = Restaurant::where('id', $request['store_id'])->pluck('points_percentage')->first();
-        $user->points += (1 + $points_percentage/100)*$request['amountWithTax'];
-        $user->save();
-//        $store = Restaurant::where()
-//        $user->points -= $input['points_redeemed'];
-
-        return $user->points;
+        try {
+            $user = User::where('id', $request['id'])->get();
+            return $this->sendResponse($user, 'Success');
+        } catch (ValidatorException $e) {
+            return $this->sendError($e->getMessage(), 401);
+        }
     }
 
 

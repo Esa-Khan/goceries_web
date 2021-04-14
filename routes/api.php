@@ -101,6 +101,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('orderhistory', 'API\OrderAPIController@getOrderHistory');
     Route::put('deactivate_address/{id}', 'API\DeliveryAddressAPIController@deactivate');
     Route::get('users/getpoints/{id}', 'API\UserAPIController@getPoints');
+    Route::get('users/getuser/{id}', 'API\UserAPIController@getUser');
 
 });
 

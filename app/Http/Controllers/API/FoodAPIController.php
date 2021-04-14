@@ -85,7 +85,7 @@ class FoodAPIController extends Controller
 
             if (isset($request['short'])){
                 $foods = $this->foodRepository->all(['id', 'name', 'price', 'discount_price', 'quantity', 'description', 'ingredients', 'weight',
-                    'featured', 'deliverable', 'category_id', 'commission']);
+                    'listing_order', 'featured', 'deliverable', 'category_id', 'commission']);
             } else {
                 $foods = $this->foodRepository->all();
             }

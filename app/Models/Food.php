@@ -31,6 +31,7 @@ use Spatie\MediaLibrary\Models\Media;
  * @property string description
  * @property string ingredients
  * @property double weight
+ * @property int listing_order
  * @property boolean featured
  * @property integer quantity
  * @property string unit
@@ -63,6 +64,7 @@ class Food extends Model implements HasMedia
         'description',
         'ingredients',
         'weight',
+        'listing_order',
         'quantity',
         'unit',
         'featured',
@@ -83,6 +85,7 @@ class Food extends Model implements HasMedia
         'description' => 'string',
         'ingredients' => 'string',
         'weight' => 'string',
+        'listing_order' => 'integer',
         'quantity' => 'integer',
         'unit' => 'string',
         'featured' => 'boolean',
